@@ -1,8 +1,8 @@
--- Wait for the ScreenGUI named "BanBoi" to load
-local screenGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("BanBoi")
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local unbanEvent = replicatedStorage:FindFirstChild("UnBan")
 
--- Ensure the ScreenGUI is enabled and visible
-screenGui.Enabled = true
-
--- Print a confirmation message
-print("BanBoi ScreenGUI has been opened.")
+if unbanEvent then
+    unbanEvent:FireServer(102685525) -- Replace with the correct user ID
+else
+    warn("UnBan RemoteEvent not found!")
+end
