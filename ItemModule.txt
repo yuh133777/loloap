@@ -1,0 +1,270 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:33
+-- Luau version 6, Types version 3
+-- Time taken: 0.008454 seconds
+
+local module = {}
+local tbl_upvr_2 = {
+	Weapons = true;
+	Pets = true;
+}
+function module.GetImage(arg1) -- Line 11
+	local var3
+	if var3 ~= nil then
+		var3 = _G.Cache[arg1]
+		return var3
+	end
+	local function INLINED() -- Internal function, doesn't exist in bytecode
+		var3 = "http://www.roblox.com/Thumbs/Asset.ashx?format=png&width=250&height=250&assetId="..arg1
+		return var3
+	end
+	if not tonumber(arg1) or not INLINED() then
+		var3 = arg1
+	end
+	var3 = var3.."&bust="..math.random(1, 10000)
+	_G.Cache[arg1] = var3
+	return var3
+end
+function module.GetImageSmall(arg1) -- Line 24
+	local var4
+	if var4 ~= nil then
+		var4 = _G.SmallCache[arg1]
+		return var4
+	end
+	local function INLINED_2() -- Internal function, doesn't exist in bytecode
+		var4 = "http://www.roblox.com/Thumbs/Asset.ashx?format=png&width=110&height=110&assetId="..arg1
+		return var4
+	end
+	if not tonumber(arg1) or not INLINED_2() then
+		var4 = arg1
+	end
+	var4 = var4.."&bust="..math.random(1, 10000)
+	_G.SmallCache[arg1] = var4
+	return var4
+end
+local tbl_upvr = {
+	Chroma = function(arg1, arg2) -- Line 38
+		local Tags_5 = arg1.Tags
+		if arg2.Chroma ~= true then
+			Tags_5 = false
+		else
+			Tags_5 = true
+		end
+		Tags_5.Chroma.Visible = Tags_5
+	end;
+	FX = function(arg1, arg2) -- Line 41
+		local Tags_2 = arg1.Tags
+		if arg2.FX ~= true then
+			Tags_2 = false
+		else
+			Tags_2 = true
+		end
+		Tags_2.FX.Visible = Tags_2
+	end;
+	Evo = function(arg1, arg2) -- Line 44
+		local Tags_4 = arg1.Tags
+		if arg2.EvoBaseID == nil then
+			Tags_4 = false
+		else
+			Tags_4 = true
+		end
+		Tags_4.Evo.Visible = Tags_4
+	end;
+	Halloween = function(arg1, arg2) -- Line 47
+		--[[ Upvalues[1]:
+			[1]: tbl_upvr_2 (readonly)
+		]]
+		if not tbl_upvr_2[arg2.DataType] then
+			local Tags = arg1.Tags
+			if arg2.Event ~= "Halloween" then
+				Tags = false
+			else
+				Tags = true
+			end
+			Tags.Halloween.Visible = Tags
+			arg1.Tags.Halloween.Year.Text = arg2.Year or ""
+		end
+	end;
+	Christmas = function(arg1, arg2) -- Line 53
+		--[[ Upvalues[1]:
+			[1]: tbl_upvr_2 (readonly)
+		]]
+		if not tbl_upvr_2[arg2.DataType] then
+			local Tags_3 = arg1.Tags
+			if arg2.Event ~= "Christmas" then
+				Tags_3 = false
+			else
+				Tags_3 = true
+			end
+			Tags_3.Christmas.Visible = Tags_3
+			arg1.Tags.Christmas.Year.Text = arg2.Year or ""
+		end
+	end;
+}
+local Rarities_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync")).Rarities
+function module.DisplayItem(arg1, arg2, arg3, arg4) -- Line 71
+	--[[ Upvalues[2]:
+		[1]: Rarities_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+	]]
+	if arg2 == nil then
+		arg1.ItemName.Label.Text = ""
+		arg1.Container.Icon.Image = ""
+		arg1.Container.Amount.Text = ""
+		arg1.ItemName.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+		for _, v in pairs(arg1.Tags:GetChildren()) do
+			if v:IsA("Frame") then
+				v.Visible = false
+			end
+		end
+	else
+		local ItemName = arg2.ItemName
+		if not ItemName then
+			ItemName = arg2.Name
+		end
+		arg1.ItemName.Label.Text = ItemName
+		arg2.Rarity = arg2.Rarity or "Common"
+		local Color_2 = Rarities_upvr[arg2.Rarity].Color
+		local Color3_fromRGB_result1_2 = Color3.fromRGB(Color_2.r, Color_2.g, Color_2.b)
+		if not Color3_fromRGB_result1_2 then
+			Color3_fromRGB_result1_2 = Color3.new(1, 1, 1)
+		end
+		arg1.ItemName.BackgroundColor3 = Color3_fromRGB_result1_2
+		local Container = arg1.Container
+		local Image_2 = arg2.Image
+		local var72
+		if var72 ~= nil then
+			var72 = _G.Cache
+			Container = var72[Image_2]
+		else
+			local function INLINED_7() -- Internal function, doesn't exist in bytecode
+				var72 = "http://www.roblox.com/Thumbs/Asset.ashx?format=png&width=250&height=250&assetId="..Image_2
+				return var72
+			end
+			if not tonumber(Image_2) or not INLINED_7() then
+				var72 = Image_2
+			end
+			var72 = var72.."&bust="..math.random(1, 10000)
+			_G.Cache[Image_2] = var72
+			Container = var72
+		end
+		Container.Icon.Image = Container
+		if arg1.Container:FindFirstChild("Amount") then
+			local var73 = arg3
+			if not var73 then
+				var73 = arg2.Amount
+			end
+			local function INLINED_8() -- Internal function, doesn't exist in bytecode
+				var72 = 1
+				return var72 >= var73
+			end
+			local function INLINED_9() -- Internal function, doesn't exist in bytecode
+				var72 = 'x'
+				return var72..var73
+			end
+			if not var73 or INLINED_8() or not INLINED_9() then
+			end
+			arg1.Container.Amount.Text = ""
+		end
+		if arg1.Container:FindFirstChild("Classic") then
+			local Container_3 = arg1.Container
+			if arg2.Classic == nil then
+				Container_3 = false
+			else
+				Container_3 = true
+			end
+			Container_3.Classic.Visible = Container_3
+		end
+		local var75
+		if arg1.ItemName:FindFirstChild("ColoredName") then
+			local ItemName_2 = arg2.ItemName
+			if not ItemName_2 then
+				ItemName_2 = arg2.Name
+			end
+			arg1.ItemName.ColoredName.Text = ItemName_2
+			local var77 = Color3_fromRGB_result1_2
+			if arg2.Rarity == "Common" then
+				var72 = 1
+				var77 = Color3.new(1, var72, 1)
+			end
+			arg1.ItemName.ColoredName.TextColor3 = var77
+			arg1.ItemName.RarityBar.BackgroundColor3 = var77
+		end
+		for i_2, v_2 in pairs(tbl_upvr) do
+			if arg1.Tags:FindFirstChild(i_2) then
+				v_2(arg1, arg2)
+			end
+		end
+		if arg2.Signature then
+			local Signature_2 = arg2.Signature
+			if Signature_2 ~= "" then
+				i_2 = arg1.Tags
+				i_2 = Signature_2
+				v_2 = "'s"
+				i_2.Unique.PlayerName.Text = i_2..v_2
+				arg1.Tags.Unique.Visible = true
+				if tonumber(Signature_2) then
+					spawn(function() -- Line 128
+						--[[ Upvalues[2]:
+							[1]: arg1 (readonly)
+							[2]: arg2 (readonly)
+						]]
+						arg1.Tags.Unique.PlayerName.Text = game.Players:GetNameFromUserIdAsync(math.abs(arg2.Signature)).."'s"
+					end)
+				end
+			end
+			i_2 = arg2.Rank
+			local function INLINED_10() -- Internal function, doesn't exist in bytecode
+				v_2 = arg2.Rank
+				i_2 = '#'
+				return i_2..v_2
+			end
+			if not i_2 or not INLINED_10() then
+			end
+			arg1.Container.Amount.Text = ""
+		end
+		if arg4 then
+			for _, v_3 in pairs(arg1.Tags:GetChildren()) do
+				if v_3:IsA("Frame") and v_3.Visible == false then
+					v_3:Destroy()
+				end
+			end
+			if #arg1.Tags:GetChildren() == 1 then
+				arg1.Tags:Destroy()
+			end
+		end
+	end
+end
+function module.Commafy(arg1) -- Line 151
+	local var87
+	repeat
+		local string_gsub_result1, string_gsub_result2 = string.gsub(var87, "^(-?%d+)(%d%d%d)", "%1,%2")
+		k = string_gsub_result2 -- Setting global
+		var87 = string_gsub_result1
+	until k == 0
+	return var87
+end
+function module.AnimateItemIconIntoInventory(arg1, arg2, arg3) -- Line 165
+	local clone_upvr = arg1:Clone()
+	local X = arg1.AbsoluteSize.X
+	local Y = arg1.AbsoluteSize.Y
+	clone_upvr.Size = UDim2.new(0, X, 0, Y)
+	clone_upvr.BackgroundTransparency = 1
+	clone_upvr.Position = UDim2.new(0, arg1.AbsolutePosition.X + X / 2, 0, arg1.AbsolutePosition.Y + Y / 2)
+	clone_upvr.AnchorPoint = Vector2.new(0.5, 0.5)
+	clone_upvr.ZIndex = 10
+	clone_upvr.Parent = arg3
+	spawn(function() -- Line 182
+		--[[ Upvalues[2]:
+			[1]: clone_upvr (readonly)
+			[2]: arg2 (readonly)
+		]]
+		clone_upvr:TweenSizeAndPosition(UDim2.new(0, 25, 0, 25), UDim2.new(0, arg2.AbsolutePosition.X + arg2.AbsoluteSize.X / 2 - 3, 0, arg2.AbsolutePosition.Y + arg2.AbsoluteSize.Y / 2 - 20), "InOut", "Sine", 0.5)
+		wait(0.5)
+		clone_upvr:Destroy()
+	end)
+end
+return module

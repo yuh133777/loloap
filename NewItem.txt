@@ -1,0 +1,118 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:12
+-- Luau version 6, Types version 3
+-- Time taken: 0.002063 seconds
+
+local Game_upvr = script.Parent.Parent.Game
+local ItemModule_upvr = require(game.ReplicatedStorage.Modules.ItemModule)
+local NewItem_2_upvr = Game_upvr.NewItem
+local var4_upvw
+local tbl_upvr = {}
+game.Lighting.NewItemBlur.Enabled = false
+local var6_upvw = 1
+local var7_upvw = 1
+local function _() -- Line 15, Named "UpdateClaimText"
+	--[[ Upvalues[3]:
+		[1]: var7_upvw (read and write)
+		[2]: NewItem_2_upvr (readonly)
+		[3]: var6_upvw (read and write)
+	]]
+	if 1 < var7_upvw then
+		NewItem_2_upvr.Container.Claim.Text = "Claim ("..var6_upvw..'/'..var7_upvw..')'
+	else
+		NewItem_2_upvr.Container.Claim.Text = "Claim"
+	end
+end
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+local function ShowItem_upvr() -- Line 23, Named "ShowItem"
+	--[[ Upvalues[5]:
+		[1]: tbl_upvr (readonly)
+		[2]: module_upvr (readonly)
+		[3]: ItemModule_upvr (readonly)
+		[4]: NewItem_2_upvr (readonly)
+		[5]: var4_upvw (read and write)
+	]]
+	local _1 = tbl_upvr[1]
+	local var10 = module_upvr[_1.Type][_1.ItemName]
+	ItemModule_upvr.DisplayItem(NewItem_2_upvr.Container.NewItem, var10, _1.Amount or nil)
+	local Color = module_upvr.Rarities[var10.Rarity].Color
+	local Color3_fromRGB_result1 = Color3.fromRGB(Color.r, Color.g, Color.b)
+	if not Color3_fromRGB_result1 then
+		Color3_fromRGB_result1 = Color3.new(1, 1, 1)
+	end
+	NewItem_2_upvr.Container.Starburst.ImageColor3 = Color3_fromRGB_result1
+	NewItem_2_upvr.Container.Title.Text = _1.TitleText
+	if _1.LFrame then
+		var4_upvw = _1.LFrame
+		var4_upvw.Visible = false
+	end
+	game.Lighting.NewItemBlur.Enabled = true
+	NewItem_2_upvr.Visible = true
+end
+function _G.NewItem(arg1, arg2, arg3, arg4, arg5) -- Line 43
+	--[[ Upvalues[5]:
+		[1]: tbl_upvr (readonly)
+		[2]: NewItem_2_upvr (readonly)
+		[3]: var6_upvw (read and write)
+		[4]: var7_upvw (read and write)
+		[5]: ShowItem_upvr (readonly)
+	]]
+	local tbl = {}
+	tbl.ItemName = arg1
+	tbl.TitleText = arg2 or "You Got..."
+	tbl.LFrame = arg3
+	tbl.Type = arg4 or "Weapons"
+	tbl.Amount = arg5
+	table.insert(tbl_upvr, tbl)
+	if not NewItem_2_upvr.Visible then
+		var6_upvw = 1
+		var7_upvw = #tbl_upvr
+		ShowItem_upvr()
+	else
+		var7_upvw += 1
+	end
+	if 1 < var7_upvw then
+		NewItem_2_upvr.Container.Claim.Text = "Claim ("..var6_upvw..'/'..var7_upvw..')'
+	else
+		NewItem_2_upvr.Container.Claim.Text = "Claim"
+	end
+end
+NewItem_2_upvr.Container.Claim.MouseButton1Click:connect(function() -- Line 66
+	--[[ Upvalues[8]:
+		[1]: ItemModule_upvr (readonly)
+		[2]: NewItem_2_upvr (readonly)
+		[3]: Game_upvr (readonly)
+		[4]: tbl_upvr (readonly)
+		[5]: var6_upvw (read and write)
+		[6]: var7_upvw (read and write)
+		[7]: ShowItem_upvr (readonly)
+		[8]: var4_upvw (read and write)
+	]]
+	ItemModule_upvr.AnimateItemIconIntoInventory(NewItem_2_upvr.Container.NewItem.Container.Icon, Game_upvr.Dock.Inventory, Game_upvr)
+	NewItem_2_upvr.Visible = false
+	_G.UnfinishedItem = nil
+	_G.UnfinishedType = nil
+	table.remove(tbl_upvr, 1)
+	game.Lighting.NewItemBlur.Enabled = false
+	if tbl_upvr[1] ~= nil then
+		var6_upvw += 1
+		if 1 < var7_upvw then
+			NewItem_2_upvr.Container.Claim.Text = "Claim ("..var6_upvw..'/'..var7_upvw..')'
+		else
+			NewItem_2_upvr.Container.Claim.Text = "Claim"
+		end
+		ShowItem_upvr()
+	else
+		var7_upvw = 1
+		var6_upvw = 1
+		if var4_upvw then
+			var4_upvw.Visible = true
+		end
+	end
+end)
+game.ReplicatedStorage:WaitForChild("ItemGift").OnClientEvent:connect(function(arg1, arg2) -- Line 87
+	_G.NewItem(arg1, "You Got...", nil, arg2)
+end)

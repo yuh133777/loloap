@@ -1,0 +1,189 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:37:18
+-- Luau version 6, Types version 3
+-- Time taken: 0.004674 seconds
+
+local module_upvr = {}
+local module_upvr_2 = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+local tbl_upvr = {
+	Unique = 100000;
+	Ancient = 200000;
+	Godly = 300000;
+	Legendary = 400000;
+	Rare = 500000;
+	Uncommon = 600000;
+	Common = 700000;
+}
+module_upvr.BaseItemFrame = script:WaitForChild("ItemFrame")
+local function GetItemNameOrder_upvr(arg1) -- Line 44, Named "GetItemNameOrder"
+	local string_lower_result1 = string.lower(arg1)
+	local var7 = 0
+	for i = 1, math.min(#string_lower_result1, 3) do
+		var7 = (var7 * 26) + (string.byte(string_lower_result1, i) - 97 + 1)
+	end
+	return var7
+end
+function module_upvr.GetItemInfo(arg1, arg2, arg3) -- Line 57
+	--[[ Upvalues[1]:
+		[1]: module_upvr_2 (readonly)
+	]]
+	local var8
+	if arg2 == "Emotes" then
+		local var9 = module_upvr_2.Emotes[arg3]
+		if not var9 then
+			var9 = module_upvr_2.Toys[arg3]
+		end
+		var8 = var9
+	else
+		var8 = module_upvr_2[arg2][arg3]
+	end
+	if var8 then
+		return var8
+	end
+	warn("ItemService: Failed to find data for item: "..tostring(arg3)..", "..tostring(arg2))
+	return module_upvr_2.Materials.ErrorItem
+end
+local Color3_fromRGB_result1_upvr = Color3.fromRGB(95, 95, 95)
+function module_upvr.GetRarityColor(arg1, arg2) -- Line 72
+	--[[ Upvalues[2]:
+		[1]: Color3_fromRGB_result1_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+	]]
+	local Rarity = arg2.Rarity
+	if Rarity == "Common" or Rarity == nil then
+		return Color3_fromRGB_result1_upvr
+	end
+	return module_upvr_2.Rarity[Rarity]
+end
+function module_upvr.GetDisplayName(arg1, arg2) -- Line 81
+	local Name = arg2.Name
+	if not Name then
+		Name = arg2.DisplayName
+		if not Name then
+			Name = arg2.ItemName
+		end
+	end
+	return Name
+end
+function module_upvr.GetItemImage(arg1, arg2) -- Line 86
+	local Image = arg2.Image
+	if not Image then
+		Image = arg2.Icon
+	end
+	local tonumber_result1 = tonumber(Image)
+	if tonumber_result1 then
+		return "rbxthumb://type=Asset&w=150&h=150&id="..tonumber_result1
+	end
+	if typeof(Image) == "string" then
+		return Image
+	end
+	return ""
+end
+function module_upvr.GetAmountText(arg1, arg2) -- Line 98
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [3] 3. Error Block 6 start (CF ANALYSIS FAILED)
+	local var16 = 'x'..arg2
+	if not var16 then
+		-- KONSTANTERROR: [7] 7. Error Block 3 start (CF ANALYSIS FAILED)
+		var16 = ""
+		-- KONSTANTERROR: [7] 7. Error Block 3 end (CF ANALYSIS FAILED)
+	end
+	do
+		return var16
+	end
+	-- KONSTANTERROR: [3] 3. Error Block 6 end (CF ANALYSIS FAILED)
+end
+function module_upvr.GetLayoutOrder(arg1, arg2, arg3) -- Line 103
+	--[[ Upvalues[3]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: GetItemNameOrder_upvr (readonly)
+	]]
+	if arg3 == "DefaultKnife" then
+		return 0
+	end
+	if arg3 == "DefaultGun" then
+		return 1
+	end
+	local any_GetItemInfo_result1 = module_upvr:GetItemInfo(arg2, arg3)
+	local var18 = tbl_upvr[any_GetItemInfo_result1.Rarity]
+	if not var18 then
+		var18 = tbl_upvr.Common
+	end
+	return var18 + GetItemNameOrder_upvr(module_upvr:GetDisplayName(any_GetItemInfo_result1) or "")
+end
+function module_upvr.UpdateTags(arg1, arg2, arg3) -- Line 118
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	-- KONSTANTERROR: [0] 1. Error Block 32 start (CF ANALYSIS FAILED)
+	local var27 = arg3
+	if not var27 then
+		var27 = {}
+	end
+	if var27.Chroma ~= true then
+	else
+	end
+	arg2.Tags.Chroma.Visible = true
+	if var27.FX ~= true then
+		-- KONSTANTWARNING: GOTO [26] #17
+	end
+	-- KONSTANTERROR: [0] 1. Error Block 32 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [25] 16. Error Block 34 start (CF ANALYSIS FAILED)
+	arg2.Tags.FX.Visible = true
+	if var27.EvoBaseID == nil then
+	else
+	end
+	arg2.Tags.Evo.Visible = true
+	for _, v in arg2.Tags:GetChildren() do
+		if v:IsA("Frame") and v.Visible then
+		end
+	end
+	do
+		return 0 + 1
+	end
+	-- KONSTANTERROR: [25] 16. Error Block 34 end (CF ANALYSIS FAILED)
+end
+function module_upvr.ApplyTags(arg1, arg2, arg3) -- Line 139
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	if module_upvr:UpdateTags(arg2, arg3) < 1 then
+		arg2.Tags:Destroy()
+	end
+end
+function module_upvr.ApplyMiniItemFrame(arg1, arg2, arg3, arg4) -- Line 147
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	if arg3 == nil then
+		arg2.Title.Text = ""
+		arg2.Icon.Image = ""
+		arg2.Amount.Text = ""
+	else
+		arg2.Title.Text = module_upvr:GetDisplayName(arg3)
+		arg2.Icon.Image = module_upvr:GetItemImage(arg3)
+		arg2.Amount.Text = module_upvr:GetAmountText(arg4 or 1)
+	end
+end
+function module_upvr.ApplyItemToFrame(arg1, arg2, arg3, arg4) -- Line 161
+	--[[ Upvalues[2]:
+		[1]: module_upvr_2 (readonly)
+		[2]: module_upvr (readonly)
+	]]
+	if arg3 == nil then
+		arg2.ItemName.Label.Text = ""
+		arg2.ItemName.BackgroundColor3 = module_upvr_2.Rarity.Common
+		arg2.Container.Icon.Image = ""
+		arg2.Container.Amount.Text = ""
+		return arg2
+	end
+	arg2.ItemName.Label.Text = module_upvr:GetDisplayName(arg3)
+	arg2.ItemName.BackgroundColor3 = module_upvr:GetRarityColor(arg3)
+	arg2.Container.Icon.Image = module_upvr:GetItemImage(arg3)
+	arg2.Container.Amount.Text = module_upvr:GetAmountText(arg4 or 1)
+	return arg2
+end
+return module_upvr

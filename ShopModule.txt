@@ -1,0 +1,889 @@
+-- Decompiler will be improved VERY SOON!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-21 13:11:32
+-- Luau version 6, Types version 3
+-- Time taken: 0.027890 seconds
+
+local module_upvr = {
+	GUI = {};
+}
+local module_upvr_3 = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+local module_upvr_2 = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("ProfileData"))
+local ItemModule_upvr = require(script.Parent.ItemModule)
+local var9_upvw = "Featured"
+local var10_upvw = "Featured"
+local var11_upvw
+local var12_upvw
+local var13_upvw
+local Shop_upvr = module_upvr_3.Shop
+local tbl_4_upvr = {
+	Gems = true;
+	Candies2024 = true;
+}
+local tbl_2_upvr = {
+	Coins = {
+		DisplayName = "Coins";
+		Icon = "rbxassetid://3150319038";
+	};
+	Gems = {
+		DisplayName = "Gems";
+		Icon = "rbxassetid://377010926";
+	};
+}
+for i, v in module_upvr_3.Materials do
+	if v.Currency then
+		local tbl_6 = {}
+		local ItemName = v.ItemName
+		if not ItemName then
+			ItemName = v.Name
+		end
+		tbl_6.DisplayName = ItemName
+		tbl_6.Icon = v.Image
+		tbl_2_upvr[i] = tbl_6
+	end
+end
+local function _(arg1, arg2) -- Line 53, Named "CheckForItem"
+	--[[ Upvalues[1]:
+		[1]: module_upvr_2 (readonly)
+	]]
+	if module_upvr_2[arg2].Owned[arg1] then
+		return true
+	end
+	for _, v_2 in module_upvr_2[arg2].Owned do
+		if v_2 == arg1 then
+			return true
+		end
+	end
+	return false
+end
+function module_upvr.CheckOwned(arg1, arg2) -- Line 66
+	--[[ Upvalues[1]:
+		[1]: module_upvr_2 (readonly)
+	]]
+	if arg2 ~= "Weapons" and arg2 ~= "Pets" and arg2 ~= "MysteryBox" and arg2 ~= "Eggs" and arg2 ~= "Item" then
+		if module_upvr_2[arg2].Owned[arg1] then
+			return true
+		end
+		for _, v_3 in module_upvr_2[arg2].Owned do
+			if v_3 == arg1 then
+				return true
+			end
+		end
+		return false
+	end
+	return false
+end
+function module_upvr.SelectObject() -- Line 74
+end
+function module_upvr.BuyItem(arg1, arg2, arg3, arg4) -- Line 77
+	--[[ Upvalues[3]:
+		[1]: Shop_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+		[3]: module_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	-- KONSTANTERROR: [0] 1. Error Block 72 start (CF ANALYSIS FAILED)
+	local var27 = Shop_upvr[arg2][arg1]
+	local var28 = false
+	if arg3 == "Coins" or arg3 == "Gems" then
+		if var27.Price[arg3] > module_upvr_2[arg3] then
+			var28 = false
+		else
+			var28 = true
+		end
+	else
+		-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+		if var27.Price[arg3] > (module_upvr_2.Materials.Owned[arg3] or 0) then
+			var28 = false
+		else
+			var28 = true
+		end
+	end
+	-- KONSTANTERROR: [0] 1. Error Block 72 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [69] 53. Error Block 27 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+	-- KONSTANTERROR: [69] 53. Error Block 27 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [70] 54. Error Block 63 start (CF ANALYSIS FAILED)
+	arg4.PriceFrame[arg3].Visible = false
+	arg4.PriceFrame.PurchaseLoading.LayoutOrder = arg4.PriceFrame[arg3].LayoutOrder
+	arg4.PriceFrame.PurchaseLoading.Visible = true
+	spawn(function() -- Line 98
+		--[[ Upvalues[1]:
+			[1]: arg4 (readonly)
+		]]
+		while arg4.PriceFrame.PurchaseLoading.Visible == true do
+			arg4.PriceFrame.PurchaseLoading.Container.Spinner.Rotation = arg4.PriceFrame.PurchaseLoading.Container.Spinner.Rotation + 5
+			game:GetService("RunService").RenderStepped:wait()
+		end
+	end)
+	arg4.PriceFrame.PurchaseLoading.Visible = false
+	if game.ReplicatedStorage.Remotes.Shop.BuyItem:InvokeServer(arg1, arg2, arg3) then
+		if var27.ExchangeAmount then
+		end
+		module_upvr.UpdateShopFrames()
+	end
+	module_upvr.SelectObject(true)
+	do
+		return
+	end
+	-- KONSTANTERROR: [70] 54. Error Block 63 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [137] 98. Error Block 33 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [137] 98. Error Block 33 end (CF ANALYSIS FAILED)
+end
+local Featured_upvr = module_upvr_3.Featured
+local HotItems_upvr = script.HotItems
+function module_upvr.GenerateHotItems() -- Line 128
+	--[[ Upvalues[7]:
+		[1]: module_upvr (readonly)
+		[2]: ItemModule_upvr (readonly)
+		[3]: module_upvr_3 (readonly)
+		[4]: Featured_upvr (readonly)
+		[5]: var10_upvw (read and write)
+		[6]: HotItems_upvr (readonly)
+		[7]: Shop_upvr (readonly)
+	]]
+	function module_upvr.GenerateFeaturedBox() -- Line 130
+		--[[ Upvalues[5]:
+			[1]: ItemModule_upvr (copied, readonly)
+			[2]: module_upvr (copied, readonly)
+			[3]: module_upvr_3 (copied, readonly)
+			[4]: Featured_upvr (copied, readonly)
+			[5]: var10_upvw (copied, read and write)
+		]]
+		ItemModule_upvr.DisplayItem(module_upvr.GUI.FeaturedFrame.Box.ItemFrame.ItemContainer, module_upvr_3.MysteryBox[Featured_upvr.Box])
+		local Box_upvr_2 = module_upvr_3.Featured.Box
+		local var79_upvr = module_upvr_3.MysteryBox[Box_upvr_2]
+		local var80_upvr = module_upvr_3.Shop.Weapons[Box_upvr_2]
+		module_upvr.GUI.Main.Featured.Box.ItemFrame.ItemContainer.Container.ActionButton.MouseButton1Click:connect(function() -- Line 136
+			--[[ Upvalues[5]:
+				[1]: var10_upvw (copied, read and write)
+				[2]: module_upvr (copied, readonly)
+				[3]: Box_upvr_2 (readonly)
+				[4]: var79_upvr (readonly)
+				[5]: var80_upvr (readonly)
+			]]
+			var10_upvw = "Featured"
+			module_upvr.ViewBoxContents(Box_upvr_2, var79_upvr, var80_upvr)
+		end)
+		module_upvr.GUI.Main.Featured.Box.Buy.MouseButton1Click:Connect(function() -- Line 140
+			--[[ Upvalues[5]:
+				[1]: var10_upvw (copied, read and write)
+				[2]: module_upvr (copied, readonly)
+				[3]: Box_upvr_2 (readonly)
+				[4]: var79_upvr (readonly)
+				[5]: var80_upvr (readonly)
+			]]
+			var10_upvw = "Featured"
+			module_upvr.ViewBoxContents(Box_upvr_2, var79_upvr, var80_upvr)
+		end)
+		for _, v_4 in pairs(module_upvr.GUI.Main.Featured.Box.ItemFrame.Price:GetChildren()) do
+			local var86
+			if v_4:IsA("Frame") then
+				local Name_2 = v_4.Name
+				if var80_upvr.Price[Name_2] == nil then
+					var86 = false
+				else
+					var86 = true
+				end
+				v_4.Visible = var86
+				var86 = v_4.PriceFrame.PriceLabel
+				var86.Text = ItemModule_upvr.Commafy(var80_upvr.Price[Name_2] or 0)
+			end
+		end
+	end
+	module_upvr.GenerateFeaturedBox()
+	module_upvr.GUI.HotItemsContainer:ClearAllChildren()
+	local HotItemLayout_2 = module_upvr.GUI.HotItemLayout
+	if not HotItemLayout_2 then
+		HotItemLayout_2 = HotItems_upvr.HotItemLayout
+	end
+	local clone_6 = HotItemLayout_2:Clone()
+	clone_6.Parent = module_upvr.GUI.HotItemsContainer
+	local ItemSizer_2 = module_upvr.GUI.HotItemsContainer.Parent.Parent:FindFirstChild("ItemSizer")
+	if ItemSizer_2 then
+		local CellSize_4 = clone_6.CellSize
+		clone_6.CellSize = UDim2.new(0, ItemSizer_2.AbsoluteSize.X, CellSize_4.Y.Scale, CellSize_4.Y.Offset)
+	end
+	for _, v_5_upvr in pairs(Featured_upvr.HotItems) do
+		local NewHotItem = module_upvr.GUI.NewHotItem
+		if not NewHotItem then
+			NewHotItem = HotItems_upvr.NewHotItem
+		end
+		local clone_7 = NewHotItem:Clone()
+		local var97_upvr = module_upvr_3[v_5_upvr.Type][v_5_upvr.ItemID]
+		ItemModule_upvr.DisplayItem(clone_7, var97_upvr)
+		local var98 = module_upvr_3.Shop[v_5_upvr.Type]
+		if var98 then
+			local var99_upvr = var98[v_5_upvr.ItemID]
+			if var99_upvr then
+				local var100
+				if var100 then
+					var100 = var99_upvr.Price.Gems
+					if not var100 then
+						var100 = var99_upvr.Price.Coins
+					end
+					if var100 then
+						clone_7.Tags.Price.PriceFrame.Amount.Text = ItemModule_upvr.Commafy(var100)
+						local var101 = module_upvr_3
+						if var99_upvr.Price.Gems ~= nil then
+							var101 = "Gems"
+						else
+							var101 = "Coins"
+						end
+						clone_7.Tags.Price.Icon.Image = var101.Currencies[var101]
+						clone_7.Tags.Price.Visible = true
+					else
+						clone_7.Tags.Price.Visible = false
+					end
+				end
+				clone_7.Container.ActionButton.MouseButton1Click:connect(function() -- Line 191
+					--[[ Upvalues[5]:
+						[1]: Shop_upvr (copied, readonly)
+						[2]: v_5_upvr (readonly)
+						[3]: module_upvr (copied, readonly)
+						[4]: var97_upvr (readonly)
+						[5]: var99_upvr (readonly)
+					]]
+					local DataType_2 = Shop_upvr[v_5_upvr.Type][v_5_upvr.ItemID].DataType
+					if not DataType_2 then
+						DataType_2 = v_5_upvr.Type
+					end
+					module_upvr.OpenBuyPopup(v_5_upvr.ItemID, var97_upvr, DataType_2, v_5_upvr.Type, var99_upvr)
+				end)
+			end
+		end
+		local Container_3 = clone_7.Container
+		var99_upvr = Container_3.New
+		if var97_upvr.New ~= true then
+			Container_3 = false
+		else
+			Container_3 = true
+		end
+		var99_upvr.Visible = Container_3
+		var99_upvr = module_upvr.GUI.HotItemsContainer
+		clone_7.Parent = var99_upvr
+	end
+end
+function module_upvr.SelectItemToPurchase(arg1, arg2, arg3, arg4, arg5) -- Line 206
+	--[[ Upvalues[3]:
+		[1]: ItemModule_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+		[3]: module_upvr_3 (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	ItemModule_upvr.DisplayItem(arg1.ItemFrame.ItemContainer, arg3)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [16] 11. Error Block 74 start (CF ANALYSIS FAILED)
+	if arg3.Description == nil then
+	else
+	end
+	-- KONSTANTERROR: [16] 11. Error Block 74 end (CF ANALYSIS FAILED)
+end
+local tbl_7_upvw = {}
+function module_upvr.OpenBuyPopup(arg1, arg2, arg3, arg4, arg5) -- Line 229
+	--[[ Upvalues[2]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_7_upvw (read and write)
+	]]
+	module_upvr.SelectItemToPurchase(module_upvr.GUI.Main.BuyPopup.Container, arg1, arg2, arg3, arg5)
+	local tbl = {}
+	tbl.ItemID = arg1
+	tbl.ItemData = arg2
+	tbl.ItemType = arg3
+	tbl.ShopType = arg4
+	tbl.ItemShopData = arg5
+	tbl_7_upvw = tbl
+	module_upvr.GUI.Main.BuyPopup.Visible = true
+end
+local tbl_3_upvr = {}
+function module_upvr.GenerateShopItems() -- Line 247
+	--[[ Upvalues[8]:
+		[1]: Shop_upvr (readonly)
+		[2]: module_upvr (readonly)
+		[3]: module_upvr_3 (readonly)
+		[4]: ItemModule_upvr (readonly)
+		[5]: module_upvr_2 (readonly)
+		[6]: tbl_4_upvr (readonly)
+		[7]: var10_upvw (read and write)
+		[8]: tbl_3_upvr (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	local pairs_result1_21, pairs_result2_12, pairs_result3_15 = pairs(Shop_upvr)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [317] 219. Error Block 70 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [317] 219. Error Block 70 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [13] 10. Error Block 77 start (CF ANALYSIS FAILED)
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [317.7]
+	if not nil then
+	end
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [317.8]
+	if nil then
+	end
+	-- KONSTANTERROR: [13] 10. Error Block 77 end (CF ANALYSIS FAILED)
+end
+function module_upvr.UpdateShopFrames() -- Line 329
+	--[[ Upvalues[2]:
+		[1]: tbl_3_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	local pairs_result1, pairs_result2_14, pairs_result3_5 = pairs(tbl_3_upvr)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [77] 55. Error Block 28 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [77] 55. Error Block 28 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [5] 5. Error Block 2 start (CF ANALYSIS FAILED)
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [77.3]
+	-- KONSTANTERROR: [5] 5. Error Block 2 end (CF ANALYSIS FAILED)
+end
+function module_upvr.ViewBoxContents(arg1, arg2, arg3) -- Line 345
+	--[[ Upvalues[9]:
+		[1]: module_upvr (readonly)
+		[2]: var9_upvw (read and write)
+		[3]: var11_upvw (read and write)
+		[4]: var12_upvw (read and write)
+		[5]: var13_upvw (read and write)
+		[6]: ItemModule_upvr (readonly)
+		[7]: module_upvr_2 (readonly)
+		[8]: tbl_4_upvr (readonly)
+		[9]: module_upvr_3 (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	-- KONSTANTERROR: [0] 1. Error Block 111 start (CF ANALYSIS FAILED)
+	local var210
+	if arg1 == "Christmas2019Box" then
+		var210 = _G.ViewHalloweenBox
+		var210()
+		var210 = game:GetService("UserInputService").GamepadEnabled
+		if var210 then
+			var210 = _G.ReturnToHWBox
+			var210()
+		end
+		return
+	end
+	var210 = _G.MobileDevice
+	if var210 == "Phone" then
+		var210 = pairs(module_upvr.GUI.Main:GetChildren())
+		local pairs_result1_5, pairs_result2_5, pairs_result3_16 = pairs(module_upvr.GUI.Main:GetChildren())
+		for _, v_6 in pairs_result1_5, pairs_result2_5, pairs_result3_16 do
+			local var214
+			if v_6.Name ~= "Weapons" then
+				var214 = false
+			else
+				var214 = true
+			end
+			v_6.Visible = var214
+		end
+		pairs_result1_5 = "Weapons"
+		var9_upvw = pairs_result1_5
+		pairs_result1_5 = module_upvr.GUI.ShopFrame.Title:FindFirstChild("Back")
+		if pairs_result1_5 then
+			pairs_result1_5 = module_upvr.GUI.ShopFrame.Title.Back
+			pairs_result1_5.Visible = true
+			pairs_result1_5 = module_upvr.GUI.ShopFrame.Title.Title
+			pairs_result1_5.Visible = false
+		end
+	end
+	var11_upvw = arg1
+	var12_upvw = arg2
+	var13_upvw = arg3
+	pairs_result1_5 = arg2.BoxType
+	var9_upvw = pairs_result1_5
+	pairs_result1_5 = ItemModule_upvr.DisplayItem
+	pairs_result1_5(module_upvr.GUI.ViewBoxFrame.BoxFrame.ItemContainer, arg2)
+	pairs_result1_5 = pairs(arg2.RarityChances)
+	local pairs_result1_10, pairs_result2_7, pairs_result3 = pairs(arg2.RarityChances)
+	for i_7, v_7 in pairs_result1_10, pairs_result2_7, pairs_result3 do
+		module_upvr.GUI.ViewBoxFrame.BoxFrame.RarityFrame[i_7].Chance.Text = v_7..'%'
+	end
+	pairs_result1_10 = module_upvr.GUI.ViewBoxFrame.BuyFrame.GetKeys
+	local var218 = false
+	if arg3.Price.Key ~= nil then
+		var218 = not game.ReplicatedFirst:GetAttribute("CratesRestricted")
+	end
+	pairs_result1_10.Visible = var218
+	pairs_result1_10 = module_upvr.GUI.ViewBoxFrame.BuyFrame.PurchaseOptions.Container:GetChildren()
+	local children_4, NONE_3, NONE_6 = module_upvr.GUI.ViewBoxFrame.BuyFrame.PurchaseOptions.Container:GetChildren()
+	for _, v_8 in children_4, NONE_3, NONE_6 do
+		local children_5 = v_8:IsA("TextButton")
+		if children_5 then
+			if arg3.Price[v_8.Name] == nil then
+				children_5 = false
+			else
+				children_5 = true
+			end
+			v_8.Visible = children_5
+			children_5 = ItemModule_upvr.Commafy(arg3.Price[v_8.Name] or 0)
+			if tonumber(children_5) == 1 then
+				children_5 = 'x'..children_5
+			end
+			v_8.Cost.Text = children_5
+			local var223
+			if var223 == "Coins" then
+				local function INLINED_2() -- Internal function, doesn't exist in bytecode
+					var223 = Enum.ButtonStyle.RobloxRoundDefaultButton
+					return var223
+				end
+				if (arg3.Price[v_8.Name] or 0) > module_upvr_2.Coins or not INLINED_2() then
+					var223 = Enum.ButtonStyle.RobloxRoundButton
+				end
+				v_8.Style = var223
+			end
+			if tbl_4_upvr[v_8.Name] then
+				-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+				if game.ReplicatedFirst:GetAttribute("CratesRestricted") then
+					v_8.Visible = false
+				end
+			end
+		end
+	end
+	children_4 = pairs(module_upvr.GUI.Main:GetChildren())
+	local pairs_result1_3_upvr, pairs_result2_6, pairs_result3_9 = pairs(module_upvr.GUI.Main:GetChildren())
+	for _, v_9 in pairs_result1_3_upvr, pairs_result2_6, pairs_result3_9 do
+		if v_9.Name ~= "ViewCrate" then
+			children_5 = false
+		else
+			children_5 = true
+		end
+		v_9.Visible = children_5
+	end
+	pairs_result1_3_upvr = module_upvr.GUI.Nav.Container[var9_upvw].NotSelected
+	pairs_result1_3_upvr.Visible = false
+	pairs_result1_3_upvr = module_upvr.GUI.Nav.Container[var9_upvw].IsSelected
+	pairs_result1_3_upvr.Visible = false
+	pairs_result1_3_upvr = module_upvr.GUI.Nav.Container[var9_upvw].Back
+	pairs_result1_3_upvr.Visible = true
+	pairs_result1_3_upvr = module_upvr.GUI.ViewBoxFrame.BoxContents:FindFirstChild("Container")
+	if not pairs_result1_3_upvr then
+		pairs_result1_3_upvr = module_upvr.GUI.ViewBoxFrame.BoxContents.ScrollingFrame.Container
+	end
+	pairs_result1_3_upvr:ClearAllChildren()
+	local BoxContentsLayout_2 = module_upvr.GUI.BoxContentsLayout
+	if not BoxContentsLayout_2 then
+		BoxContentsLayout_2 = script.ViewBoxContents.BoxContentsLayout
+	end
+	local clone_4_upvr = BoxContentsLayout_2:Clone()
+	clone_4_upvr.Parent = pairs_result1_3_upvr
+	if pairs_result1_3_upvr.Parent:IsA("ScrollingFrame") then
+		clone_4_upvr:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() -- Line 420
+			--[[ Upvalues[2]:
+				[1]: pairs_result1_3_upvr (readonly)
+				[2]: clone_4_upvr (readonly)
+			]]
+			pairs_result1_3_upvr.Parent.CanvasSize = UDim2.new(0, 0, 0, clone_4_upvr.AbsoluteContentSize.Y + 5)
+		end)
+	end
+	local ItemSizer_4 = pairs_result1_3_upvr.Parent:FindFirstChild("ItemSizer")
+	if ItemSizer_4 then
+		local CellSize_3 = clone_4_upvr.CellSize
+		clone_4_upvr.CellSize = UDim2.new(CellSize_3.X.Scale, CellSize_3.X.Offset, 0, ItemSizer_4.AbsoluteSize.Y)
+	end
+	local pairs_result1_2, pairs_result2_4, pairs_result3_7 = pairs(arg2.Contents)
+	-- KONSTANTERROR: [0] 1. Error Block 111 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [463] 301. Error Block 61 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: Expression was reused, decompilation is incorrect (x2)
+	arg3.Price.Visible = v_8.Name
+	-- KONSTANTERROR: [463] 301. Error Block 61 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [405] 260. Error Block 98 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+	if not ItemSizer_4.AbsoluteSize.Y then
+	end
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [465.17]
+	if nil then
+		-- KONSTANTWARNING: GOTO [463] #301
+	end
+	-- KONSTANTERROR: [405] 260. Error Block 98 end (CF ANALYSIS FAILED)
+end
+function module_upvr.ViewBoxContentsXbox(arg1, arg2, arg3) -- Line 446
+	--[[ Upvalues[3]:
+		[1]: var11_upvw (read and write)
+		[2]: var12_upvw (read and write)
+		[3]: var13_upvw (read and write)
+	]]
+	var11_upvw = arg1
+	var12_upvw = arg2
+	var13_upvw = arg3
+end
+function module_upvr.ConnectNavButtons() -- Line 456
+	--[[ Upvalues[3]:
+		[1]: module_upvr (readonly)
+		[2]: var9_upvw (read and write)
+		[3]: var10_upvw (read and write)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	local tbl_5_upvr = {}
+	for _, v_10 in pairs(module_upvr.GUI.Nav.Container:GetChildren()) do
+		if v_10:IsA("TextButton") then
+			table.insert(tbl_5_upvr, v_10)
+		end
+	end
+	function module_upvr.ResetNavButtons() -- Line 460
+		--[[ Upvalues[1]:
+			[1]: tbl_5_upvr (readonly)
+		]]
+		for _, v_11 in pairs(tbl_5_upvr) do
+			v_11.IsSelected.Visible = false
+			v_11.NotSelected.Visible = true
+			v_11.Back.Visible = false
+		end
+	end
+	function module_upvr.ViewFeatured() -- Line 468
+		--[[ Upvalues[2]:
+			[1]: module_upvr (copied, readonly)
+			[2]: var9_upvw (copied, read and write)
+		]]
+		module_upvr.ResetNavButtons()
+		for _, v_12 in pairs(module_upvr.GUI.Main:GetChildren()) do
+			local var273
+			if v_12.Name ~= "Featured" then
+				var273 = false
+			else
+				var273 = true
+			end
+			v_12.Visible = var273
+		end
+		var9_upvw = "Featured"
+	end
+	for _, v_13_upvr in pairs(tbl_5_upvr) do
+		v_13_upvr.MouseButton1Click:connect(function() -- Line 477
+			--[[ Upvalues[5]:
+				[1]: var9_upvw (copied, read and write)
+				[2]: v_13_upvr (readonly)
+				[3]: tbl_5_upvr (readonly)
+				[4]: module_upvr (copied, readonly)
+				[5]: var10_upvw (copied, read and write)
+			]]
+			if var9_upvw ~= v_13_upvr.Name then
+				for _, v_14 in pairs(tbl_5_upvr) do
+					local var293
+					if v_14 ~= v_13_upvr then
+						var293 = false
+					else
+						var293 = true
+					end
+					v_14.IsSelected.Visible = var293
+					if v_14 == v_13_upvr then
+						var293 = false
+					else
+						var293 = true
+					end
+					v_14.NotSelected.Visible = var293
+					var293 = false
+					v_14.Back.Visible = var293
+				end
+				for _, v_15 in pairs(module_upvr.GUI.Main:GetChildren()) do
+					var293 = v_15.Name
+					local var297
+					if var293 ~= v_13_upvr.Name then
+						var297 = false
+					else
+						var297 = true
+					end
+					v_15.Visible = var297
+				end
+				var9_upvw = v_13_upvr.Name
+			else
+				if module_upvr.GUI.ViewBoxFrame.Parent.Visible == true then
+					if var10_upvw == "Weapons" or var10_upvw == "Pets" then
+						v_13_upvr.Back.Visible = false
+						v_13_upvr.IsSelected.Visible = true
+						for _, v_26 in pairs(module_upvr.GUI.Main:GetChildren()) do
+							var293 = v_26.Name
+							if var293 ~= var10_upvw then
+								var297 = false
+							else
+								var297 = true
+							end
+							v_26.Visible = var297
+						end
+					else
+						module_upvr.ViewFeatured()
+					end
+				end
+				module_upvr.ViewFeatured()
+			end
+		end)
+	end
+	if module_upvr.GUI.ShopFrame.Title:FindFirstChild("Back") then
+		module_upvr.GUI.ShopFrame.Title.Back.Visible = true
+		module_upvr.GUI.ShopFrame.Title.Title.Visible = false
+	end
+end
+function module_upvr.ConnectNavButtonsPhone() -- Line 514
+	--[[ Upvalues[2]:
+		[1]: module_upvr (readonly)
+		[2]: var9_upvw (read and write)
+	]]
+	for _, v_16 in pairs(module_upvr.GUI.Nav.Container:GetChildren()) do
+		if v_16:IsA("TextButton") then
+			table.insert({}, v_16)
+		end
+	end
+	function module_upvr.ResetNavButtons() -- Line 518
+	end
+	-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+	for _, v_17_upvr in pairs({}) do
+		v_17_upvr.MouseButton1Click:connect(function() -- Line 521
+			--[[ Upvalues[3]:
+				[1]: module_upvr (copied, readonly)
+				[2]: v_17_upvr (readonly)
+				[3]: var9_upvw (copied, read and write)
+			]]
+			for _, v_18 in pairs(module_upvr.GUI.Main:GetChildren()) do
+				local var321
+				if v_18.Name ~= v_17_upvr.Name then
+					var321 = false
+				else
+					var321 = true
+				end
+				v_18.Visible = var321
+			end
+			var9_upvw = v_17_upvr.Name
+			if module_upvr.GUI.ShopFrame.Title:FindFirstChild("Back") then
+				module_upvr.GUI.ShopFrame.Title.Back.Visible = true
+				module_upvr.GUI.ShopFrame.Title.Title.Visible = false
+			end
+		end)
+	end
+	module_upvr.GUI.ShopFrame.Title.Gems.More.MouseButton1Click:connect(function() -- Line 533
+		--[[ Upvalues[1]:
+			[1]: module_upvr (copied, readonly)
+		]]
+		module_upvr.GUI.ShopFrame.Title.Back.Visible = true
+		module_upvr.GUI.ShopFrame.Title.Title.Visible = false
+	end)
+	module_upvr.GUI.ShopFrame.Title.Gems.GetMore.MouseButton1Click:connect(function() -- Line 537
+		--[[ Upvalues[1]:
+			[1]: module_upvr (copied, readonly)
+		]]
+		module_upvr.GUI.ShopFrame.Title.Back.Visible = true
+		module_upvr.GUI.ShopFrame.Title.Title.Visible = false
+	end)
+end
+function module_upvr.PurchaseBox(arg1, arg2, arg3) -- Line 546
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	if arg2.BoxType == "Pets" then
+		module_upvr.PurchaseEgg(arg1, arg2, arg3)
+	else
+		module_upvr.GUI.ShopFrame.Visible = false
+		_G.Process("Unboxing")
+		local any_InvokeServer_result1 = game.ReplicatedStorage.Remotes.Shop.OpenCrate:InvokeServer(arg1, "MysteryBox", arg3)
+		wait((0.75) - (time() - time()))
+		module_upvr.GUI.Processing.Visible = false
+		if any_InvokeServer_result1 then
+			game.ReplicatedStorage.Remotes.Shop.BoxController:Fire(arg1, any_InvokeServer_result1)
+		end
+	end
+end
+function module_upvr.PurchaseEgg(arg1, arg2, arg3) -- Line 574
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	module_upvr.GUI.ShopFrame.Visible = false
+	_G.Process("Unboxing")
+	local any_InvokeServer_result1_2 = game.ReplicatedStorage.Remotes.Shop.OpenCrate:InvokeServer(arg1, "Eggs", arg3)
+	wait((0.75) - (time() - time()))
+	module_upvr.GUI.Processing.Visible = false
+	if any_InvokeServer_result1_2 then
+		game.ReplicatedStorage.Remotes.Shop.EggController:Fire(arg1, any_InvokeServer_result1_2)
+	end
+end
+local PurchaseOption_upvw = script:WaitForChild("PurchaseOption")
+local Remotes_upvr = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+function module_upvr.ConnectViewBoxFrame() -- Line 596
+	--[[ Upvalues[9]:
+		[1]: PurchaseOption_upvw (read and write)
+		[2]: module_upvr (readonly)
+		[3]: module_upvr_3 (readonly)
+		[4]: module_upvr_2 (readonly)
+		[5]: Remotes_upvr (readonly)
+		[6]: tbl_2_upvr (readonly)
+		[7]: var13_upvw (read and write)
+		[8]: var11_upvw (read and write)
+		[9]: var12_upvw (read and write)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	if game.Players.LocalPlayer.PlayerGui:GetAttribute("Device") == "Phone" then
+		PurchaseOption_upvw = script:WaitForChild("PurchaseOptionPhone")
+	end
+	if not game.ReplicatedFirst:GetAttribute("CratesRestricted") then
+		module_upvr.GUI.ViewBoxFrame.BuyFrame.GetKeys.MouseButton1Click:connect(function() -- Line 604
+			--[[ Upvalues[2]:
+				[1]: module_upvr (copied, readonly)
+				[2]: module_upvr_3 (copied, readonly)
+			]]
+			module_upvr.OpenBuyPopup("Key", module_upvr_3.Weapons.Key, "Item", "Weapons", module_upvr_3.Shop.Weapons.Key)
+		end)
+	end
+	module_upvr.GUI.ViewBoxFrame.BuyFrame.GetKeys.Amount.Text = "You have "..(module_upvr_2.Weapons.Owned.Key or 0).." Keys"
+	Remotes_upvr:WaitForChild("Inventory"):WaitForChild("InventoryDataChanged").Event:Connect(function(arg1, arg2, arg3) -- Line 615
+		--[[ Upvalues[2]:
+			[1]: module_upvr (copied, readonly)
+			[2]: module_upvr_2 (copied, readonly)
+		]]
+		if arg2 ~= "Key" then
+		else
+			module_upvr.GUI.ViewBoxFrame.BuyFrame.GetKeys.Amount.Text = "You have "..(module_upvr_2.Weapons.Owned.Key or 0).." Keys"
+		end
+	end)
+	local Container = module_upvr.GUI.ViewBoxFrame.BuyFrame.PurchaseOptions.Container
+	for _, v_19 in Container:GetChildren() do
+		if v_19:IsA("TextButton") then
+			v_19:Destroy()
+		end
+	end
+	for i_20_upvr, v_20 in tbl_2_upvr do
+		local clone_5 = PurchaseOption_upvw:Clone()
+		clone_5.Icon.Image = v_20.Icon
+		clone_5.Title.Text = v_20.DisplayName
+		clone_5.Name = i_20_upvr
+		clone_5.Parent = Container
+		clone_5.Activated:Connect(function() -- Line 636
+			--[[ Upvalues[6]:
+				[1]: module_upvr_2 (copied, readonly)
+				[2]: i_20_upvr (readonly)
+				[3]: var13_upvw (copied, read and write)
+				[4]: module_upvr (copied, readonly)
+				[5]: var11_upvw (copied, read and write)
+				[6]: var12_upvw (copied, read and write)
+			]]
+			local var356 = module_upvr_2[i_20_upvr]
+			if not var356 then
+				var356 = module_upvr_2.Materials.Owned[i_20_upvr]
+				if not var356 then
+					var356 = 0
+				end
+			end
+			if var13_upvw.Price[i_20_upvr] <= var356 then
+				module_upvr.PurchaseBox(var11_upvw, var12_upvw, i_20_upvr)
+				_G.LastShopSelection = module_upvr.GUI.ViewBoxFrame.BuyFrame.PurchaseOptions.Container[i_20_upvr]
+				return
+			end
+		end)
+		local _
+	end
+end
+local PurchaseOptionFrame_upvr = script:WaitForChild("PurchaseOptionFrame")
+function module_upvr.ConnectBuyPopup() -- Line 749
+	--[[ Upvalues[6]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_2_upvr (readonly)
+		[3]: PurchaseOptionFrame_upvr (readonly)
+		[4]: tbl_7_upvw (read and write)
+		[5]: Shop_upvr (readonly)
+		[6]: module_upvr_2 (readonly)
+	]]
+	local PriceFrame = module_upvr.GUI.Main.BuyPopup.Container.PriceFrame
+	for _, v_21 in PriceFrame:GetChildren() do
+		if v_21.Name ~= "BuyTitle" and v_21.Name ~= "GetMoreGems" and v_21.Name ~= "PurchaseLoading" and v_21:IsA("Frame") then
+			v_21:Destroy()
+		end
+	end
+	for i_22_upvr, v_22 in tbl_2_upvr do
+		local clone_3 = PurchaseOptionFrame_upvr:Clone()
+		clone_3.Container.Icon.Image = v_22.Icon
+		clone_3.Name = i_22_upvr
+		clone_3.Parent = PriceFrame
+		clone_3.Buy.Activated:Connect(function() -- Line 765
+			--[[ Upvalues[3]:
+				[1]: tbl_7_upvw (copied, read and write)
+				[2]: module_upvr (copied, readonly)
+				[3]: i_22_upvr (readonly)
+			]]
+			if tbl_7_upvw then
+				module_upvr.BuyItem(tbl_7_upvw.ItemID, tbl_7_upvw.ShopType, i_22_upvr, module_upvr.GUI.Main.BuyPopup.Container)
+				module_upvr.GUI.Main.BuyPopup.Visible = false
+			end
+		end)
+	end
+	module_upvr.GUI.Main.BuyPopup.Container.Close.MouseButton1Click:connect(function() -- Line 774
+		--[[ Upvalues[1]:
+			[1]: module_upvr (copied, readonly)
+		]]
+		module_upvr.GUI.Main.BuyPopup.Visible = false
+	end)
+	module_upvr.GUI.Main.BuyPopup.Container.PriceFrame.GetMoreGems.Buy.MouseButton1Click:connect(function() -- Line 820
+		--[[ Upvalues[4]:
+			[1]: tbl_7_upvw (copied, read and write)
+			[2]: Shop_upvr (copied, readonly)
+			[3]: module_upvr (copied, readonly)
+			[4]: module_upvr_2 (copied, readonly)
+		]]
+		module_upvr.ViewGems(Shop_upvr[tbl_7_upvw.ShopType][tbl_7_upvw.ItemID].Price.Gems - module_upvr_2.Gems)
+	end)
+end
+function module_upvr.HighlightGem(arg1) -- Line 830
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	if arg1 ~= nil then
+		local children_2 = module_upvr.GUI.Main.Gems:GetChildren()
+		table.sort(children_2, function(arg1_2, arg2) -- Line 833
+			local var381
+			if tonumber(arg1_2.Name) >= tonumber(arg2.Name) then
+				var381 = false
+			else
+				var381 = true
+			end
+			return var381
+		end)
+		for _, v_23_upvr in pairs(children_2) do
+			local tonumber_result1 = tonumber(v_23_upvr.Name)
+			if arg1 <= tonumber_result1 then
+				print("RQ", tonumber_result1, arg1)
+				spawn(function() -- Line 838
+					--[[ Upvalues[1]:
+						[1]: v_23_upvr (readonly)
+					]]
+					wait(0.1)
+					v_23_upvr:TweenPosition(UDim2.new(v_23_upvr.Position.X.Scale, v_23_upvr.Position.X.Offset, v_23_upvr.Position.Y.Scale, v_23_upvr.Position.Y.Offset - 30), "Out", "Sine", 0.3)
+					wait(0.31)
+					v_23_upvr:TweenPosition(UDim2.new(v_23_upvr.Position.X.Scale, v_23_upvr.Position.X.Offset, v_23_upvr.Position.Y.Scale, v_23_upvr.Position.Y.Offset + 30), "In", "Sine", 0.3)
+					wait(0.31)
+					v_23_upvr.Position = v_23_upvr.Position
+				end)
+				return
+			end
+		end
+	end
+end
+function module_upvr.ViewGems(arg1) -- Line 863
+	--[[ Upvalues[2]:
+		[1]: module_upvr (readonly)
+		[2]: var9_upvw (read and write)
+	]]
+	module_upvr.ResetNavButtons()
+	for _, v_24 in pairs(module_upvr.GUI.Main:GetChildren()) do
+		local var395
+		if v_24.Name ~= "Gems" then
+			var395 = false
+		else
+			var395 = true
+		end
+		v_24.Visible = var395
+	end
+	var9_upvw = "Gems"
+	module_upvr.HighlightGem(arg1)
+end
+function module_upvr.ConnectGems() -- Line 871
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	for _, v_25_upvr in pairs(module_upvr.GUI.Main.Gems:GetChildren()) do
+		v_25_upvr.MouseButton1Click:connect(function() -- Line 873
+			--[[ Upvalues[1]:
+				[1]: v_25_upvr (readonly)
+			]]
+			script.Click:Play()
+			game.ReplicatedStorage.Remotes.Shop.PurchaseProduct:FireServer(v_25_upvr.Name, "Gems")
+		end)
+	end
+	module_upvr.GUI.Title.Gems.GetMore.MouseButton1Click:connect(function() -- Line 878
+		--[[ Upvalues[1]:
+			[1]: module_upvr (copied, readonly)
+		]]
+		module_upvr.ViewGems()
+	end)
+end
+return module_upvr

@@ -1,0 +1,44 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:52
+-- Luau version 6, Types version 3
+-- Time taken: 0.001344 seconds
+
+local module = {
+	Item = require(script:WaitForChild("Item"));
+	Weapons = module.Item;
+	Pets = require(script:WaitForChild("Pets"));
+	Effects = require(script:WaitForChild("Effects"));
+	Emotes = require(script:WaitForChild("Emotes"));
+	Perks = require(script:WaitForChild("Perks"));
+	Radios = require(script:WaitForChild("Radios"));
+	Materials = require(script:WaitForChild("Materials"));
+	Toys = require(script:WaitForChild("Toys"));
+	Rarity = require(script:WaitForChild("Rarity"));
+	Rarities = require(script:WaitForChild("Rarities"));
+	ItemPacks = require(script:WaitForChild("ItemPacks"));
+	Shop = require(script:WaitForChild("Shop"));
+	MysteryBox = require(script:WaitForChild("MysteryBox"));
+	Eggs = require(script:WaitForChild("Eggs"));
+	EliteRewards = require(script:WaitForChild("EliteRewards"));
+	Featured = require(script:WaitForChild("Featured"));
+	XboxFeatured = require(script:WaitForChild("XboxFeatured"));
+	Recipes = require(script:WaitForChild("Recipes"));
+	SalvageRewards = require(script:WaitForChild("SalvageRewards"));
+	DevProducts = require(script:WaitForChild("DevProducts"));
+	Badge = require(script:WaitForChild("Badge"));
+	Codes = require(script:WaitForChild("Codes"));
+	Currencies = require(script:WaitForChild("Currencies"));
+	NameTags = require(script:WaitForChild("NameTags"));
+	SlotInfo = require(script:WaitForChild("SlotInfo"));
+	GameModes = require(script:WaitForChild("GameModes"));
+	Halloween2024Pass = require(script:WaitForChild("Halloween2024Pass"));
+}
+for _, v in script:GetChildren() do
+	if not module[v.Name] then
+		warn("Sync data type not registered:"..v.Name)
+	end
+end
+return module

@@ -1,0 +1,203 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:37:19
+-- Luau version 6, Types version 3
+-- Time taken: 0.005795 seconds
+
+local module_4_upvr = {}
+local module_2_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("ClientServices"):WaitForChild("ItemService"))
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+local function ApplyFilter_upvr(arg1, arg2) -- Line 38, Named "ApplyFilter"
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	local var10 = arg1.Filters.Search or ""
+	local var11 = false
+	if var10 ~= "" then
+		if var10 == nil then
+			var11 = false
+		else
+			var11 = true
+		end
+	end
+	local var12 = false
+	if var11 then
+		local var13 = module_upvr[arg1.ItemType][arg2]
+		local Name = var13.Name
+		if not Name then
+			Name = var13.DisplayName
+			if not Name then
+				Name = var13.ItemName
+			end
+		end
+		if string.find(string.lower(Name), var10) == nil then
+			var12 = false
+		else
+			var12 = true
+		end
+	end
+	var13 = true
+	local var15 = var13
+	if arg1.Frames[arg2].ItemClass ~= arg1.Filters.ClassFilter then
+		if arg1.Filters.ClassFilter ~= nil then
+			var15 = false
+		else
+			var15 = true
+		end
+	end
+	if not var15 or not not var11 then
+	end
+	arg1.Frames[arg2].Frame.Visible = var11 and var12
+end
+local BaseItemFrame_upvr = module_2_upvr.BaseItemFrame
+function module_4_upvr.CreateItemFrame(arg1, arg2, arg3, arg4) -- Line 55
+	--[[ Upvalues[2]:
+		[1]: BaseItemFrame_upvr (readonly)
+		[2]: module_2_upvr (readonly)
+	]]
+	local clone = BaseItemFrame_upvr:Clone()
+	local any_GetItemInfo_result1 = module_2_upvr:GetItemInfo(arg2, arg3)
+	if not any_GetItemInfo_result1 then
+		warn("InventoryService: No info found for item:"..tostring(arg3)..", "..tostring(arg2))
+		return nil
+	end
+	module_2_upvr:ApplyItemToFrame(clone, any_GetItemInfo_result1, arg4)
+	module_2_upvr:ApplyTags(clone, any_GetItemInfo_result1)
+	clone.LayoutOrder = module_2_upvr:GetLayoutOrder(arg2, arg3)
+	local var19
+	if arg2 == "Weapons" then
+		if any_GetItemInfo_result1.Event ~= nil then
+			var19 = "Event"
+		elseif any_GetItemInfo_result1.Season == nil then
+			var19 = "Classic"
+		else
+			var19 = "Current"
+		end
+	end
+	local module_3 = {}
+	module_3.ItemType = arg2
+	module_3.Frame = clone
+	module_3.ItemClass = var19
+	return module_3
+end
+function module_4_upvr.AddItem(arg1, arg2, arg3, arg4) -- Line 85
+	--[[ Upvalues[2]:
+		[1]: module_4_upvr (readonly)
+		[2]: ApplyFilter_upvr (readonly)
+	]]
+	local any_CreateItemFrame_result1 = module_4_upvr:CreateItemFrame(arg2.ItemType, arg3, arg4)
+	if any_CreateItemFrame_result1 then
+		table.insert(arg2.SortedIDs, arg3)
+		arg2.Frames[arg3] = any_CreateItemFrame_result1
+		ApplyFilter_upvr(arg2, arg3)
+		if arg2.ListFrame then
+			any_CreateItemFrame_result1.Frame.Parent = arg2.ListFrame
+		end
+	end
+	return any_CreateItemFrame_result1
+end
+function module_4_upvr.GenerateInventoryInfo(arg1, arg2, arg3, arg4) -- Line 98
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	local module = {}
+	module.ItemType = arg2
+	module.Frames = {}
+	module.Filters = {
+		ClassFilter = nil;
+		Search = "";
+	}
+	module.SortedIDs = {}
+	module.ListFrame = arg4
+	for i, v in arg3 do
+		local var29
+		local var30
+		if tonumber(i) then
+			var29 = v
+			var30 = 1
+		else
+			var29 = i
+			var30 = v
+		end
+		module_4_upvr:AddItem(module, var29, var30)
+	end
+	return module
+end
+function module_4_upvr.UpdateFilter(arg1, arg2) -- Line 124
+	--[[ Upvalues[1]:
+		[1]: ApplyFilter_upvr (readonly)
+	]]
+	for i_2, _ in arg2.Frames do
+		ApplyFilter_upvr(arg2, i_2)
+	end
+end
+function module_4_upvr.ForEachFrame(arg1, arg2, arg3) -- Line 130
+	for i_3, v_3 in arg2.Frames do
+		arg3(i_3, v_3.Frame)
+	end
+end
+function module_4_upvr.ApplyChangesToInventoryInfo(arg1, arg2, arg3, arg4) -- Line 136
+	--[[ Upvalues[2]:
+		[1]: module_4_upvr (readonly)
+		[2]: module_2_upvr (readonly)
+	]]
+	if arg4 ~= nil and 0 < arg4 then
+		if not arg2.Frames[arg3] then
+			module_4_upvr:AddItem(arg2, arg3, arg4)
+		else
+			arg2.Frames[arg3].Frame.Container.Amount.Text = module_2_upvr:GetAmountText(arg4)
+		end
+	end
+	module_4_upvr:RemoveItem(arg2, arg3)
+end
+function module_4_upvr.ConnectSearchBox(arg1, arg2, arg3) -- Line 149
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	arg3:GetPropertyChangedSignal("Text"):Connect(function() -- Line 150
+		--[[ Upvalues[3]:
+			[1]: arg2 (readonly)
+			[2]: arg3 (readonly)
+			[3]: module_4_upvr (copied, readonly)
+		]]
+		arg2.Filters.Search = string.lower(arg3.Text)
+		module_4_upvr:UpdateFilter(arg2)
+	end)
+end
+local Remotes_upvr = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+function module_4_upvr.AutoUpdate(arg1, arg2) -- Line 156
+	--[[ Upvalues[2]:
+		[1]: Remotes_upvr (readonly)
+		[2]: module_4_upvr (readonly)
+	]]
+	arg2.UpdateConnection = Remotes_upvr:WaitForChild("Inventory"):WaitForChild("InventoryDataChanged").Event:Connect(function(arg1_2, arg2_2, arg3) -- Line 157
+		--[[ Upvalues[2]:
+			[1]: arg2 (readonly)
+			[2]: module_4_upvr (copied, readonly)
+		]]
+		if arg1_2 ~= arg2.ItemType then
+		else
+			if arg1_2 == "Toys" then
+			end
+			module_4_upvr:ApplyChangesToInventoryInfo(arg2, arg2_2, arg3)
+		end
+	end)
+end
+function module_4_upvr.RemoveItem(arg1, arg2, arg3) -- Line 168
+	arg2.Frames[arg3].Frame:Destroy()
+	arg2.Frames[arg3] = nil
+	table.remove(arg2.SortedIDs, table.find(arg2.SortedIDs, arg3))
+end
+function module_4_upvr.ClearInventory(arg1, arg2) -- Line 175
+	for _, v_4 in arg2.Frames do
+		v_4.Frame:Destroy()
+	end
+	arg2.Frames = {}
+	if arg2.UpdateConnection then
+		arg2.UpdateConnection:Disconnect()
+	end
+end
+return module_4_upvr

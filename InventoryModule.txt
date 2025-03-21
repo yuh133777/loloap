@@ -1,0 +1,727 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:32
+-- Luau version 6, Types version 3
+-- Time taken: 0.024132 seconds
+
+local module_4_upvr = {
+	GUI = {};
+	MyInventory = {};
+}
+local module_2_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+local module_3_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("ProfileData"))
+local tbl_upvr_3 = {"Weapons", "Effects", "Perks", "Emotes", "Radios", "Pets"}
+local tbl_upvr = {
+	Weapons = true;
+	Pets = true;
+}
+local tbl_upvr_4 = {
+	Christmas = true;
+	Halloween = true;
+}
+local ItemModule_upvr = require(game.ReplicatedStorage.Modules.ItemModule)
+function module_4_upvr.CreateBlankInventoryTable() -- Line 19
+	return {
+		Weapons = {
+			Current = {};
+			Classic = {};
+			Christmas = {};
+			Halloween = {};
+		};
+		Effects = {
+			Current = {};
+		};
+		Perks = {
+			Current = {};
+		};
+		Emotes = {
+			Current = {};
+		};
+		Radios = {
+			Current = {};
+		};
+		Pets = {
+			Current = {};
+		};
+	}
+end
+function module_4_upvr.CreateBlankTradeInventoryTable() -- Line 45
+	return {
+		Weapons = {
+			Current = {};
+		};
+		Pets = {
+			Current = {};
+		};
+	}
+end
+function module_4_upvr.CreateBlankInventorySort(arg1) -- Line 56
+	local module = {}
+	for i, _ in pairs(arg1) do
+		module[i] = {}
+		for i_2, _ in pairs(arg1[i]) do
+			module[i][i_2] = {}
+		end
+	end
+	return module
+end
+function module_4_upvr.CreateBlankInventory(arg1) -- Line 68
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	local module_5 = {}
+	local var38
+	local function INLINED() -- Internal function, doesn't exist in bytecode
+		var38 = module_4_upvr.CreateBlankTradeInventoryTable()
+		return var38
+	end
+	if arg1 ~= "Trading" or not INLINED() then
+		var38 = module_4_upvr.CreateBlankInventoryTable()
+	end
+	module_5.Data = var38
+	var38 = module_4_upvr.CreateBlankInventorySort(module_5.Data)
+	module_5.Sort = var38
+	return module_5
+end
+function module_4_upvr.CreateNewItemData(arg1, arg2, arg3) -- Line 75
+	--[[ Upvalues[1]:
+		[1]: module_2_upvr (readonly)
+	]]
+	local var44
+	if arg3 == "Emotes" or arg3 == "Toys" then
+		local var45 = module_2_upvr.Emotes[arg1]
+		if not var45 then
+			var45 = module_2_upvr.Toys[arg1]
+		end
+		var44 = var45
+	else
+		var44 = module_2_upvr[arg3][arg1]
+	end
+	if var44 ~= nil then
+		local pairs_result1_5, pairs_result2_11, pairs_result3_7 = pairs(var44)
+		for i_3, v_3 in pairs_result1_5, pairs_result2_11, pairs_result3_7 do
+			({})[i_3] = v_3
+			local var50
+		end
+		pairs_result1_5 = var44.ItemName
+		local var51 = pairs_result1_5
+		if not var51 then
+			var51 = var44.Name
+		end
+		var50.Name = var51
+		var50.Amount = arg2
+		var50.DataID = arg1
+		var50.DataType = arg3
+		if var50.Rarity == nil then
+			var50.Rarity = "Common"
+		end
+		var50.Frame = nil
+		var50.LayoutOrder = 0
+		return var50
+	end
+	print("ERROR LOADING ITEM: "..arg1, arg3, arg2)
+end
+local function _(arg1, arg2, arg3) -- Line 114, Named "GetTab"
+	if arg3 == "Trading" then
+		return "Current"
+	end
+	if arg2 == nil then
+		return "Weapons"
+	end
+	if arg1 ~= "Weapons" or not arg2.Event then
+		if arg2.Season then
+			return "Current"
+		end
+		if arg1 == "Weapons" then
+			return "Classic"
+		end
+	end
+	return "Current"
+end
+function module_4_upvr.GenerateInventoryTables(arg1, arg2) -- Line 128
+	--[[ Upvalues[3]:
+		[1]: module_4_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: module_2_upvr (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	local pairs_result1_3, pairs_result2, pairs_result3_9 = pairs(module_4_upvr.CreateBlankInventory(arg2).Data)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [82] 65. Error Block 24 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [82] 65. Error Block 24 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [11] 9. Error Block 2 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [11] 9. Error Block 2 end (CF ANALYSIS FAILED)
+end
+local Rarities_upvr = module_2_upvr.Rarities
+function module_4_upvr.SortTab(arg1, arg2, arg3) -- Line 186
+	--[[ Upvalues[1]:
+		[1]: Rarities_upvr (readonly)
+	]]
+	for i_4, v_4 in pairs(arg1.Sort[arg2][arg3]) do
+		if arg1.Data[arg2][arg3][v_4] == nil then
+			table.remove(arg1.Sort[arg2][arg3], i_4)
+		end
+	end
+	table.sort(arg1.Sort[arg2][arg3], function(arg1_2, arg2_2) -- Line 195
+		--[[ Upvalues[4]:
+			[1]: arg1 (readonly)
+			[2]: arg2 (readonly)
+			[3]: arg3 (readonly)
+			[4]: Rarities_upvr (copied, readonly)
+		]]
+		local var69 = arg1.Data[arg2][arg3][arg1_2]
+		local var70 = arg1.Data[arg2][arg3][arg2_2]
+		local var71
+		if var71 == "DefaultKnife" then
+			var71 = true
+			return var71
+		end
+		var71 = var70.DataID
+		if var71 == "DefaultKnife" then
+			var71 = false
+			return var71
+		end
+		var71 = var70.DataID
+		if var71 == "DefaultGun" then
+			var71 = false
+			return var71
+		end
+		var71 = var69.DataID
+		if var71 == "DefaultGun" then
+			var71 = var70.DataID
+			if var71 ~= "DefaultKnife" then
+				var71 = true
+				return var71
+			end
+		end
+		var71 = var69.Rarity
+		if var71 == var70.Rarity then
+			var71 = var69.SortGroup
+			if var71 then
+				var71 = var70.SortGroup
+				if var71 == nil then
+					var71 = true
+					return var71
+				end
+			end
+			var71 = var70.SortGroup
+			if var71 then
+				var71 = var69.SortGroup
+				if var71 == nil then
+					var71 = false
+					return var71
+				end
+			end
+			var71 = var69.SortGroup
+			if var71 then
+				var71 = var70.SortGroup
+				if var71 then
+					var71 = var69.SortGroup
+					if var71 ~= var70.SortGroup then
+						if var69.SortGroup >= var70.SortGroup then
+							var71 = false
+						else
+							var71 = true
+						end
+						return var71
+					end
+				end
+			end
+			if var69.SortGroup and var70.SortGroup and var69.SortGroup == var70.SortGroup then
+				if var69.SortWithinGroup >= var70.SortWithinGroup then
+				else
+				end
+				return true
+			end
+			if var69.Name >= var70.Name then
+			else
+			end
+			return true
+		end
+		if Rarities_upvr[var69.Rarity].Sort >= Rarities_upvr[var70.Rarity].Sort then
+		else
+		end
+		return true
+	end)
+	for i_5, v_5 in pairs(arg1.Sort[arg2][arg3]) do
+		arg1.Data[arg2][arg3][v_5].LayoutOrder = i_5
+		if arg1.Data[arg2][arg3][v_5].Frame ~= nil then
+			arg1.Data[arg2][arg3][v_5].Frame.LayoutOrder = i_5
+		end
+	end
+	return arg1
+end
+function module_4_upvr.SortInventory(arg1) -- Line 245
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	local var87
+	for i_6, v_6 in pairs(arg1.Sort) do
+		for i_7, _ in pairs(v_6) do
+			var87 = module_4_upvr.SortTab(var87, i_6, i_7)
+		end
+	end
+	return var87
+end
+function module_4_upvr.GenerateNewInventoryFrames(arg1, arg2, arg3) -- Line 257
+	--[[ Upvalues[3]:
+		[1]: tbl_upvr_4 (readonly)
+		[2]: module_4_upvr (readonly)
+		[3]: ItemModule_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	for i_8, v_8 in pairs(arg1.Data) do
+		for i_9, v_9 in pairs(v_8) do
+			local SOME_2_upvr = arg2:FindFirstChild(i_8).Items.Container:FindFirstChild(i_9)
+			if not SOME_2_upvr then
+				SOME_2_upvr = arg2:FindFirstChild(i_8).Items.Container:FindFirstChild("Holiday").Container:FindFirstChild(i_9)
+			end
+			local ItemSizer = SOME_2_upvr:FindFirstChild("ItemSizer")
+			if not ItemSizer then
+				ItemSizer = SOME_2_upvr.Parent.Parent:FindFirstChild("ItemSizer")
+			end
+			if ItemSizer then
+				local Y_2 = ItemSizer.AbsoluteSize.Y
+			end
+			local var170
+			if var170 then
+				var170 = arg3
+				if not var170 then
+					var170 = module_4_upvr.GUI.ItemGridLayout
+					if not var170 then
+						var170 = script.ItemGridLayout
+					end
+				end
+				var170:Clone().Parent = SOME_2_upvr.Container
+				local clone_3_upvr = var170:Clone()
+				var170:Clone():GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() -- Line 274
+					--[[ Upvalues[2]:
+						[1]: SOME_2_upvr (readonly)
+						[2]: clone_3_upvr (readonly)
+					]]
+					SOME_2_upvr.Size = UDim2.new(1, 0, 0, clone_3_upvr.AbsoluteContentSize.Y + 5 + 44)
+				end)
+				if Y_2 then
+					local CellSize = clone_3_upvr.CellSize
+					clone_3_upvr.CellSize = UDim2.new(CellSize.X.Scale, CellSize.X.Offset, 0, Y_2)
+					-- KONSTANTWARNING: GOTO [159] #109
+				end
+			else
+				clone_3_upvr = arg3
+				if not clone_3_upvr then
+					clone_3_upvr = module_4_upvr.GUI.ItemGridLayout
+					if not clone_3_upvr then
+						clone_3_upvr = script.ItemGridLayout
+					end
+				end
+				clone_3_upvr = clone_3_upvr:Clone()
+				clone_3_upvr.Parent = SOME_2_upvr.Container
+				clone_3_upvr:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() -- Line 288
+					--[[ Upvalues[2]:
+						[1]: SOME_2_upvr (readonly)
+						[2]: clone_3_upvr (readonly)
+					]]
+					SOME_2_upvr.CanvasSize = UDim2.new(0, 0, 0, clone_3_upvr.AbsoluteContentSize.Y + 5)
+				end)
+				if Y_2 then
+					local CellSize_3 = clone_3_upvr.CellSize
+					clone_3_upvr.CellSize = UDim2.new(CellSize_3.X.Scale, CellSize_3.X.Offset, 0, Y_2)
+				end
+			end
+			for i_10, v_10 in pairs(v_9) do
+				if v_10.Frame == nil then
+					local clone_2 = script.NewItem:Clone()
+					ItemModule_upvr.DisplayItem(clone_2, v_10, nil, true)
+					clone_2.Parent = SOME_2_upvr.Container
+					clone_2.LayoutOrder = v_10.LayoutOrder
+					arg1.Data[i_8][i_9][i_10].Frame = clone_2
+				end
+			end
+		end
+	end
+	return arg1
+end
+function module_4_upvr.ConnectEquipButtons() -- Line 317
+	--[[ Upvalues[4]:
+		[1]: module_4_upvr (readonly)
+		[2]: module_2_upvr (readonly)
+		[3]: ItemModule_upvr (readonly)
+		[4]: module_3_upvr (readonly)
+	]]
+	local pairs_result1, pairs_result2_16, pairs_result3_14 = pairs(module_4_upvr.MyInventory.Data)
+	for i_11_upvr, v_11 in pairs_result1, pairs_result2_16, pairs_result3_14 do
+		for i_12, v_12 in pairs(v_11) do
+			for i_13, v_13_upvr in pairs(v_12) do
+				local Frame = v_13_upvr.Frame
+				if Frame and v_13_upvr.EquipConnection == nil then
+					module_4_upvr.MyInventory.Data[i_11_upvr][i_12][i_13].EquipConnection = Frame.Container.ActionButton.MouseButton1Click:connect(function() -- Line 323
+						--[[ Upvalues[6]:
+							[1]: v_13_upvr (readonly)
+							[2]: i_11_upvr (readonly)
+							[3]: module_2_upvr (copied, readonly)
+							[4]: module_4_upvr (copied, readonly)
+							[5]: ItemModule_upvr (copied, readonly)
+							[6]: module_3_upvr (copied, readonly)
+						]]
+						if v_13_upvr.ItemType == "Misc" then
+						else
+							if i_11_upvr == "Emotes" or i_11_upvr == "Toys" then return end
+							if i_11_upvr == "Weapons" then
+								local var206 = module_2_upvr.Weapons[v_13_upvr.DataID]
+								local EvoBaseID = var206.EvoBaseID
+								local var208
+								if EvoBaseID then
+									local Evo = module_2_upvr.Weapons[EvoBaseID].Evo
+									var208 = module_4_upvr.GUI
+									local EvoMenu = var208.EvoMenu
+									var208 = EvoMenu.Container.TitleFrame.TitleLabel
+									var208.Text = var206.ItemName.." Evo"
+									var208 = 1
+									if Evo[1].XPRequired <= v_13_upvr.EvoXP then
+										var208 = 1
+									end
+									if Evo[2].XPRequired <= v_13_upvr.EvoXP then
+										var208 = 2
+									end
+									if Evo[3].XPRequired <= v_13_upvr.EvoXP then
+										var208 = 3
+									end
+									if Evo[4].XPRequired <= v_13_upvr.EvoXP then
+										var208 = 4
+									end
+									local pairs_result1_4, pairs_result2_13, pairs_result3_16 = pairs(Evo)
+									for i_24, v_24 in pairs_result1_4, pairs_result2_13, pairs_result3_16 do
+										local SOME = module_4_upvr.GUI.EvoMenu.Container.EvoContainer:FindFirstChild("Evo"..i_24)
+										local var215 = module_2_upvr.Weapons[v_24.ItemName]
+										ItemModule_upvr.DisplayItem(SOME, var215, nil, true)
+										local Rarity = var215.Rarity
+										SOME.ItemName.Label.Text = Rarity
+										local var217
+										if var208 >= i_24 then
+											Rarity = false
+										else
+											Rarity = true
+										end
+										SOME.Locked.Visible = Rarity
+										var217 = v_24.ItemName
+										SOME:SetAttribute("ItemID", var217)
+										var217 = v_13_upvr.ItemType
+										SOME:SetAttribute("ItemType", var217)
+										if var208 >= i_24 then
+											var217 = false
+										else
+											var217 = true
+										end
+										SOME:SetAttribute("Locked", var217)
+									end
+									pairs_result1_4 = var208 + 1
+									local var218 = pairs_result1_4
+									if Evo[var218] == nil then
+										var218 = var208
+									end
+									EvoMenu.Container.XPFrame.XPLabel.Text = ItemModule_upvr.Commafy(math.floor(v_13_upvr.EvoXP)).." / "..ItemModule_upvr.Commafy(Evo[var218].XPRequired)
+									local var219 = v_13_upvr.EvoXP / Evo[var218].XPRequired
+									if var219 < 0 then
+										var219 = 0
+									elseif 1 < var219 then
+										var219 = 1
+									end
+									EvoMenu.Container.XPFrame.Background.XPBar.Size = UDim2.new(var219, 0, 1, 0)
+									EvoMenu.Visible = true
+									return
+								end
+								module_3_upvr.Weapons.Equipped[v_13_upvr.ItemType] = v_13_upvr.DataID
+							else
+								for _, v_25 in module_3_upvr[i_11_upvr].Equipped do
+									if v_25 == v_13_upvr.DataType then return end
+								end
+								table.insert(module_3_upvr[i_11_upvr].Equipped, 1, v_13_upvr.DataID)
+								local len = #module_3_upvr[i_11_upvr].Equipped
+								if module_3_upvr[i_11_upvr].Slots < len then
+									table.remove(module_3_upvr[i_11_upvr].Equipped, len)
+								end
+							end
+							module_4_upvr.UpdateEquip(module_4_upvr.GUI.MyInventory.Main, module_4_upvr.MyInventory)
+							game.ReplicatedStorage.Remotes.Inventory.Equip:FireServer(v_13_upvr.DataID, v_13_upvr.DataType)
+						end
+					end)
+				end
+			end
+		end
+	end
+end
+function module_4_upvr.ConnectEvoMenu() -- Line 396
+	--[[ Upvalues[2]:
+		[1]: module_4_upvr (readonly)
+		[2]: module_3_upvr (readonly)
+	]]
+	module_4_upvr.GUI.EvoMenu.Container.Close.MouseButton1Click:connect(function() -- Line 397
+		--[[ Upvalues[1]:
+			[1]: module_4_upvr (copied, readonly)
+		]]
+		module_4_upvr.GUI.EvoMenu.Visible = false
+	end)
+	for _, v_14_upvr in pairs(module_4_upvr.GUI.EvoMenu.Container.EvoContainer:GetChildren()) do
+		if v_14_upvr:IsA("Frame") then
+			v_14_upvr.Container.Button.MouseButton1Click:connect(function() -- Line 403
+				--[[ Upvalues[3]:
+					[1]: v_14_upvr (readonly)
+					[2]: module_3_upvr (copied, readonly)
+					[3]: module_4_upvr (copied, readonly)
+				]]
+				local ItemID = v_14_upvr:GetAttribute("ItemID")
+				if v_14_upvr:GetAttribute("Locked") ~= true then
+					module_3_upvr.Weapons.Equipped[v_14_upvr:GetAttribute("ItemType")] = ItemID
+					module_4_upvr.UpdateEquip(module_4_upvr.GUI.MyInventory.Main, module_4_upvr.MyInventory)
+					game.ReplicatedStorage.Remotes.Inventory.Equip:FireServer(ItemID, "Weapons")
+				end
+			end)
+		end
+	end
+end
+function module_4_upvr.GenerateInventory(arg1, arg2, arg3, arg4) -- Line 419
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	return module_4_upvr.GenerateNewInventoryFrames(module_4_upvr.SortInventory(module_4_upvr.GenerateInventoryTables(arg2, arg3)), arg1.Main, arg4)
+end
+function module_4_upvr.UpdateInventory(arg1, arg2) -- Line 430
+	--[[ Upvalues[5]:
+		[1]: module_3_upvr (readonly)
+		[2]: tbl_upvr_3 (readonly)
+		[3]: tbl_upvr (readonly)
+		[4]: module_2_upvr (readonly)
+		[5]: module_4_upvr (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [120] 88. Error Block 31 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [120] 88. Error Block 31 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [5] 5. Error Block 2 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [5] 5. Error Block 2 end (CF ANALYSIS FAILED)
+end
+local tbl_upvr_2 = {}
+function module_4_upvr.UpdateEquip(arg1, arg2) -- Line 494
+	--[[ Upvalues[5]:
+		[1]: module_3_upvr (readonly)
+		[2]: module_2_upvr (readonly)
+		[3]: ItemModule_upvr (readonly)
+		[4]: module_4_upvr (readonly)
+		[5]: tbl_upvr_2 (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+	local pairs_result1_2, pairs_result2_2, pairs_result3_6 = pairs(arg2.Data)
+	-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [208] 143. Error Block 43 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [208] 143. Error Block 43 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [6] 5. Error Block 2 start (CF ANALYSIS FAILED)
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [208.7]
+	-- KONSTANTERROR: [6] 5. Error Block 2 end (CF ANALYSIS FAILED)
+end
+function module_4_upvr.UpdateMyEquip() -- Line 565
+	--[[ Upvalues[1]:
+		[1]: module_4_upvr (readonly)
+	]]
+	module_4_upvr.UpdateEquip(module_4_upvr.GUI.MyInventory.Main, module_4_upvr.MyInventory)
+end
+function module_4_upvr.ConnectNavButtons(arg1, arg2) -- Line 570
+	local children_upvr = arg1:GetChildren()
+	for _, v_15_upvr in pairs(children_upvr) do
+		if v_15_upvr:IsA("TextButton") then
+			v_15_upvr.MouseButton1Click:connect(function() -- Line 574
+				--[[ Upvalues[3]:
+					[1]: v_15_upvr (readonly)
+					[2]: children_upvr (readonly)
+					[3]: arg2 (readonly)
+				]]
+				if v_15_upvr.Name ~= "Close" then
+					for _, v_16 in pairs(children_upvr) do
+						local var257
+						if var257 then
+							local function INLINED_2() -- Internal function, doesn't exist in bytecode
+								var257 = Enum.ButtonStyle.RobloxRoundDefaultButton
+								return var257
+							end
+							if v_16.Name ~= v_15_upvr.Name or not INLINED_2() then
+								var257 = Enum.ButtonStyle.RobloxRoundButton
+							end
+							v_16.Style = var257
+						end
+					end
+					for _, v_17 in pairs(arg2:GetChildren()) do
+						if v_17.Name ~= v_15_upvr.Name then
+							var257 = false
+						else
+							var257 = true
+						end
+						v_17.Visible = var257
+					end
+				end
+			end)
+		end
+	end
+end
+function module_4_upvr.ConnectTabButtons(arg1, arg2, arg3, arg4, arg5) -- Line 589
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	local var278
+	if not var278 then
+		var278 = arg1.Main[arg2]
+	end
+	if not arg4 then
+	end
+	if not var278:FindFirstChild("TitleBar") or not var278.TitleBar.Container then
+		if not var278:FindFirstChild("Tabs") then
+			local Tabs = var278.Items.Tabs
+		end
+	end
+	local children_upvr_2 = Tabs:GetChildren()
+	for i_18, v_18 in pairs(children_upvr_2) do
+		if not v_18:FindFirstChild("View") then
+			children_upvr_2[i_18] = nil
+		end
+	end
+	for _, v_19 in pairs(children_upvr_2) do
+		local SearchText_upvr = Tabs.Search.Container.SearchText
+		local Name_upvr = v_19.Name
+		local Container_upvr = var278.Items.Container
+		v_19.View.MouseButton1Click:connect(function() -- Line 606
+			--[[ Upvalues[4]:
+				[1]: SearchText_upvr (readonly)
+				[2]: children_upvr_2 (readonly)
+				[3]: Name_upvr (readonly)
+				[4]: Container_upvr (readonly)
+			]]
+			-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+			SearchText_upvr.Text = ""
+			for _, v_20 in pairs(children_upvr_2) do
+				local var310
+				if v_20.Name ~= Name_upvr then
+					var310 = false
+				else
+					var310 = true
+				end
+				v_20.ViewBorder.Visible = var310
+				var310 = v_20.Name
+				if var310 == Name_upvr then
+				else
+				end
+				v_20.BackgroundTransparency = 0.9
+			end
+			for _, v_21 in pairs(Container_upvr:GetChildren()) do
+				var310 = v_21.Name
+				if var310 ~= Name_upvr then
+				else
+				end
+				v_21.Visible = true
+			end
+		end)
+		local _
+	end
+end
+local var315_upvw
+function module_4_upvr.ConnectCodeFrame(arg1) -- Line 716
+	--[[ Upvalues[3]:
+		[1]: module_2_upvr (readonly)
+		[2]: var315_upvw (read and write)
+		[3]: module_4_upvr (readonly)
+	]]
+	arg1.CodeBox.Changed:connect(function() -- Line 717
+		--[[ Upvalues[3]:
+			[1]: module_2_upvr (copied, readonly)
+			[2]: arg1 (readonly)
+			[3]: var315_upvw (copied, read and write)
+		]]
+		-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+		local pairs_result1_13, pairs_result2_20, _ = pairs(module_2_upvr.Codes)
+		local var329
+		for i_22, _ in pairs_result1_13, pairs_result2_20, var329 do
+			local var330
+			if arg1.CodeBox.Text ~= i_22 then
+				var330 = false
+			else
+				var330 = true
+			end
+			if not var330 or not Enum.ButtonStyle.RobloxRoundDefaultButton then
+			end
+			arg1.Redeem.Style = Enum.ButtonStyle.RobloxRoundButton
+			if var330 then
+				var315_upvw = "Normal"
+				return
+			end
+		end
+		var329 = arg1.CodeBox.Text
+		arg1.CodeBox.Text = string.gsub(var329, "%s+", "")
+		var329 = arg1.CodeBox.Text
+		arg1.CodeBox.Text = string.gsub(var329, '~', "")
+		local var331 = false
+		var329 = arg1.CodeBox.Text
+		if string.len(var329) == 7 then
+			var329 = arg1.CodeBox.Text
+			if string.sub(var329, 4, 4) ~= '-' then
+				var331 = false
+			else
+				var331 = true
+			end
+		end
+		var329 = arg1
+		local function INLINED_3() -- Internal function, doesn't exist in bytecode
+			var329 = Enum.ButtonStyle.RobloxRoundDefaultButton
+			return var329
+		end
+		if not var331 or not INLINED_3() then
+			var329 = Enum.ButtonStyle.RobloxRoundButton
+		end
+		var329.Redeem.Style = var329
+		if var331 then
+		else
+		end
+		var315_upvw = nil
+	end)
+	arg1.Redeem.MouseButton1Click:connect(function() -- Line 732
+		--[[ Upvalues[2]:
+			[1]: module_4_upvr (copied, readonly)
+			[2]: arg1 (readonly)
+		]]
+		module_4_upvr.Redeem(arg1)
+	end)
+end
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("WindowService"))
+function module_4_upvr.Redeem(arg1) -- Line 737
+	--[[ Upvalues[2]:
+		[1]: var315_upvw (read and write)
+		[2]: module_upvr (readonly)
+	]]
+	if var315_upvw ~= nil then
+		arg1.CodeBox.Text = "Redeeming..."
+		arg1.Redeem.Style = Enum.ButtonStyle.RobloxRoundButton
+		local any_InvokeServer_result1, any_InvokeServer_result2_2 = game.ReplicatedStorage.Remotes.Extras.RedeemCode:InvokeServer(arg1.CodeBox.Text, tostring(var315_upvw))
+		arg1.CodeBox.Text = any_InvokeServer_result1
+		if any_InvokeServer_result2_2 then
+			for _, v_23 in pairs(any_InvokeServer_result2_2) do
+				_G.NewItem(v_23.ID, "You Got...", module_upvr:GetFrame("Inventory"), v_23.Type)
+			end
+		end
+	end
+end
+function module_4_upvr.ConnectPetNaming(arg1) -- Line 758
+	--[[ Upvalues[1]:
+		[1]: module_3_upvr (readonly)
+	]]
+	arg1.PetNameBox.Text = module_3_upvr.PetName
+	arg1.Confirm.MouseButton1Click:connect(function() -- Line 761
+		--[[ Upvalues[2]:
+			[1]: arg1 (readonly)
+			[2]: module_3_upvr (copied, readonly)
+		]]
+		local Text = arg1.PetNameBox.Text
+		if string.len(Text) <= 20 then
+			module_3_upvr.PetName = Text
+			game.ReplicatedStorage.Remotes.Inventory.RenamePet:FireServer(Text)
+		else
+			arg1.PetNameBox.Text = "Name too long"
+		end
+	end)
+end
+return module_4_upvr

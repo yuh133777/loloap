@@ -1,0 +1,121 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:48
+-- Luau version 6, Types version 3
+-- Time taken: 0.002232 seconds
+
+local module = {}
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("ProfileData"))
+local GetPack_upvr = Remotes:WaitForChild("Shop"):WaitForChild("GetPack")
+local PurchaseWeaponPack_upvr = Remotes:WaitForChild("Shop"):WaitForChild("PurchaseWeaponPack")
+local any_GetCurrentEvent_result1 = require(game:GetService("ReplicatedStorage"):WaitForChild("SharedServices"):WaitForChild("EventInfoService")):GetCurrentEvent()
+local tbl_upvr = {}
+if any_GetCurrentEvent_result1 and any_GetCurrentEvent_result1.ItemPackItems then
+	tbl_upvr.Knife = any_GetCurrentEvent_result1.ItemPackItems.Knife
+	tbl_upvr.Gun = any_GetCurrentEvent_result1.ItemPackItems.Gun
+	tbl_upvr.Bundle = any_GetCurrentEvent_result1.ItemPackItems.Bundle
+end
+local function _(arg1) -- Line 28, Named "promptBuyItem"
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: PurchaseWeaponPack_upvr (readonly)
+		[4]: GetPack_upvr (readonly)
+	]]
+	local var8 = tbl_upvr[arg1]
+	local GamePassID_3 = var8.GamePassID
+	if module_upvr.ItemPacks[tostring(GamePassID_3)] ~= true then
+		GamePassID_3 = false
+	else
+		GamePassID_3 = true
+	end
+	if GamePassID_3 then
+		PurchaseWeaponPack_upvr:FireServer(var8.DevProductID)
+	else
+		GetPack_upvr:FireServer(var8.GamePassID)
+	end
+end
+local function _() -- Line 42, Named "promptBuyBundle"
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: PurchaseWeaponPack_upvr (readonly)
+		[4]: GetPack_upvr (readonly)
+	]]
+	local Bundle = tbl_upvr.Bundle
+	local GamePassID = Bundle.GamePassID
+	if module_upvr.ItemPacks[tostring(GamePassID)] ~= true then
+		GamePassID = false
+	else
+		GamePassID = true
+	end
+	if GamePassID then
+		PurchaseWeaponPack_upvr:FireServer(Bundle.DevProductID)
+	else
+		GetPack_upvr:FireServer(Bundle.GamePassID)
+	end
+end
+function module.PromptBuyKnife(arg1) -- Line 56
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: PurchaseWeaponPack_upvr (readonly)
+		[4]: GetPack_upvr (readonly)
+	]]
+	local Knife = tbl_upvr.Knife
+	local GamePassID_2 = Knife.GamePassID
+	if module_upvr.ItemPacks[tostring(GamePassID_2)] ~= true then
+		GamePassID_2 = false
+	else
+		GamePassID_2 = true
+	end
+	if GamePassID_2 then
+		PurchaseWeaponPack_upvr:FireServer(Knife.DevProductID)
+	else
+		GetPack_upvr:FireServer(Knife.GamePassID)
+	end
+end
+function module.PromptBuyGun(arg1) -- Line 60
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: PurchaseWeaponPack_upvr (readonly)
+		[4]: GetPack_upvr (readonly)
+	]]
+	local Gun = tbl_upvr.Gun
+	local GamePassID_4 = Gun.GamePassID
+	if module_upvr.ItemPacks[tostring(GamePassID_4)] ~= true then
+		GamePassID_4 = false
+	else
+		GamePassID_4 = true
+	end
+	if GamePassID_4 then
+		PurchaseWeaponPack_upvr:FireServer(Gun.DevProductID)
+	else
+		GetPack_upvr:FireServer(Gun.GamePassID)
+	end
+end
+function module.PromptBuyBundle(arg1) -- Line 64
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: PurchaseWeaponPack_upvr (readonly)
+		[4]: GetPack_upvr (readonly)
+	]]
+	local Bundle_2 = tbl_upvr.Bundle
+	local GamePassID_5 = Bundle_2.GamePassID
+	if module_upvr.ItemPacks[tostring(GamePassID_5)] ~= true then
+		GamePassID_5 = false
+	else
+		GamePassID_5 = true
+	end
+	if GamePassID_5 then
+		PurchaseWeaponPack_upvr:FireServer(Bundle_2.DevProductID)
+	else
+		GetPack_upvr:FireServer(Bundle_2.GamePassID)
+	end
+end
+return module
