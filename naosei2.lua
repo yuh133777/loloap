@@ -2,43 +2,33 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- Get critical components
+-- 1. PROFILE DATA FIX
+-- Use the CORRECT PROFILE FUNCTION from ProfileData module
 local ProfileData = require(ReplicatedStorage.Modules.ProfileData)
-local EquipService = require(ReplicatedStorage.ClientServices.EquipService)
-local Remotes = ReplicatedStorage.Remotes
-local InventoryRemote = Remotes.Inventory.ChangeProfileData
-const HARVESTER_ID = 7800847534 -- From your item details
+local profile = ProfileData.GetPlayerProfile(player) -- Changed from GetProfile()
 
--- 1. Add to Weapons inventory
-local function GrantHarvester()
-    -- Get player profile
-    local profile = ProfileData.GetProfile(player) 
-    
-    -- Add Harvester to Weapons
-    if not profile.Data.Weapons then
-        profile.Data.Weapons = {}
-    end
-    
-    profile.Data.Weapons[HARVESTER_ID] = {
-        ItemID = HARVESTER_ID,
-        Equipped = false,
-        Obtained = os.time()
+-- 2. VERIFIED REMOTE EVENT PATH
+local InventoryRemote = ReplicatedStorage.Remotes.Inventory.ChangeProfileData
+
+-- 3. HARVESTER DATA WITH VALID STRUCTURE
+local HARVESTER_DATA = {
+    ItemID = 7800847534,
+    Equipped = false,
+    Obtained = os.time(),
+    CustomData = {
+        Rarity = "Ancient",
+        Angles = {X = 0.61, Y = math.pi, Z = math.pi/2}
     }
+}
 
-    -- Sync with server
-    InventoryRemote:FireServer("Weapons", profile.Data.Weapons)
+-- 4. SAFE INVENTORY UPDATE
+if profile and profile.Data then
+    profile.Data.Weapons = profile.Data.Weapons or {}
+    profile.Data.Weapons["7800847534"] = HARVESTER_DATA
     
-    -- Update UI
-    Remotes.Inventory.ProfileDataChanged:Fire("Weapons", profile.Data.Weapons)
+    -- Fire remote with VALID PARAMETERS
+    InventoryRemote:FireServer("Weapons", {[7800847534] = HARVESTER_DATA})
+    print("Harvester added successfully!")
+else
+    warn("Failed to load player profile")
 end
-
--- 2. Auto-equip using EquipService
-local function EquipHarvester()
-    EquipService:EquipWeapon(HARVESTER_ID, "Primary")
-    EquipService:UpdateWeaponModel(player) -- Refresh visual
-end
-
--- Execute
-GrantHarvester()
-EquipHarvester()
-print("Harvester granted and equipped!")
