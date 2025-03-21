@@ -1,11 +1,14 @@
 -- Debugging: Print initial message to confirm the script is running
-print("Fruit Selector GUI script is running.")
+print("[CLIENT] Fruit Selector GUI script loaded.")
 
 -- Services
 local player = game.Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Get the RemoteEvent
 local itemSpawnerServiceData = ReplicatedStorage:WaitForChild("ItemSpawnerServiceData")
 local streamingRemote = itemSpawnerServiceData:WaitForChild("StreamingRemote")
+print("[CLIENT] Found StreamingRemote:", streamingRemote)
 
 -- GUI Setup
 local gui = Instance.new("ScreenGui", player.PlayerGui)
@@ -26,6 +29,7 @@ hideButton.Text = "X"
 hideButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
 hideButton.MouseButton1Click:Connect(function()
     frame.Visible = not frame.Visible
+    print("[CLIENT] Toggled GUI visibility.")
 end)
 
 -- Dropdown
@@ -44,14 +48,12 @@ getButton.Position = UDim2.new(0, 10, 1, -40)
 getButton.Text = "Get"
 getButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
 
--- Fruit list (USE EXACT NAMES FROM FRUITINFO SCRIPT)
+-- Fruit list (Replace with EXACT names from FruitInfo.txt)
 local fruits = {
     "Ice-Ice", 
     "Rocket-Rocket",
     "Spin-Spin",
-    "Flame-Flame",
-    "Dark-Dark"
-    -- Add all fruits in their EXACT FORMAT
+    -- Add all fruits in the EXACT format
 }
 
 local selectedFruit = nil
@@ -64,24 +66,39 @@ for _, fruitName in pairs(fruits) do
     button.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
     button.MouseButton1Click:Connect(function()
         selectedFruit = fruitName
-        print("Selected fruit: " .. selectedFruit)
+        print("[CLIENT] Selected fruit:", selectedFruit)
     end)
 end
 
--- Spawn logic (server handles randomization)
+-- Spawn logic
 getButton.MouseButton1Click:Connect(function()
-    if selectedFruit then
-        -- Send minimal request to server
+    if not selectedFruit then
+        warn("[CLIENT] No fruit selected!")
+        return
+    end
+
+    -- Validate the RemoteEvent
+    if not streamingRemote or not streamingRemote:IsA("RemoteEvent") then
+        warn("[CLIENT] StreamingRemote not found or invalid!")
+        return
+    end
+
+    -- Send the request to the server
+    print("[CLIENT] Attempting to spawn fruit:", selectedFruit)
+    local success, err = pcall(function()
+        -- Mimic the game's exact request format
         streamingRemote:FireServer({
             ItemId = selectedFruit,
             Player = player,
-            -- Server will handle position randomization
-            -- Add other required parameters from game scripts
+            -- Add other parameters from ClientItemSpawnerService.txt if needed
         })
-        print("Requested server to spawn: " .. selectedFruit)
+    end)
+
+    if success then
+        print("[CLIENT] Request sent to server.")
     else
-        warn("No fruit selected!")
+        warn("[CLIENT] Failed to send request:", err)
     end
 end)
 
-print("GUI setup complete.")
+print("[CLIENT] GUI setup complete.")
