@@ -1,0 +1,67 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:36:51
+-- Luau version 6, Types version 3
+-- Time taken: 0.001836 seconds
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Inventory = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Inventory")
+local var3_upvw
+repeat
+	var3_upvw = Inventory:WaitForChild("GetProfileData"):InvokeServer()
+	task.wait(0.1)
+until var3_upvw ~= nil
+local tbl_upvr = {
+	Weapons = true;
+	Pets = true;
+	Materials = true;
+}
+local function LegacyConvertToysToEmotes_upvr() -- Line 22, Named "LegacyConvertToysToEmotes"
+	--[[ Upvalues[1]:
+		[1]: var3_upvw (read and write)
+	]]
+	for _, v in var3_upvw.Toys.Owned do
+		if not table.find(var3_upvw.Emotes.Owned, v) then
+			table.insert(var3_upvw.Emotes.Owned, v)
+		end
+	end
+end
+local function _() -- Line 31, Named "LegacyUpdate"
+	--[[ Upvalues[1]:
+		[1]: LegacyConvertToysToEmotes_upvr (readonly)
+	]]
+	LegacyConvertToysToEmotes_upvr()
+end
+local ProfileDataChanged_upvr = Inventory:WaitForChild("ProfileDataChanged")
+local InventoryDataChanged_upvr = Inventory:WaitForChild("InventoryDataChanged")
+local UpdateDataClient_upvr = ReplicatedStorage:WaitForChild("UpdateDataClient")
+LegacyConvertToysToEmotes_upvr()
+Inventory:WaitForChild("ChangeProfileData").OnClientEvent:Connect(function(arg1, arg2) -- Line 35, Named "onProfileDataChanged"
+	--[[ Upvalues[2]:
+		[1]: var3_upvw (read and write)
+		[2]: ProfileDataChanged_upvr (readonly)
+	]]
+	var3_upvw[arg1] = arg2
+	ProfileDataChanged_upvr:Fire(arg1, arg2)
+end)
+Inventory:WaitForChild("ChangeInventoryItem").OnClientEvent:Connect(function(arg1, arg2, arg3) -- Line 40, Named "onInventoryItemChanged"
+	--[[ Upvalues[5]:
+		[1]: tbl_upvr (readonly)
+		[2]: var3_upvw (read and write)
+		[3]: LegacyConvertToysToEmotes_upvr (readonly)
+		[4]: InventoryDataChanged_upvr (readonly)
+		[5]: UpdateDataClient_upvr (readonly)
+	]]
+	if tbl_upvr[arg1] then
+		var3_upvw[arg1].Owned[arg2] = arg3
+	elseif arg3 ~= nil and 0 < arg3 then
+		table.insert(var3_upvw[arg1].Owned, arg2)
+	end
+	LegacyConvertToysToEmotes_upvr()
+	InventoryDataChanged_upvr:Fire(arg1, arg2, arg3)
+	UpdateDataClient_upvr:Fire(false, var3_upvw)
+end)
+_G.UpdateEmotes = LegacyConvertToysToEmotes_upvr
+return var3_upvw
