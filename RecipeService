@@ -1,0 +1,70 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:37:23
+-- Luau version 6, Types version 3
+-- Time taken: 0.002122 seconds
+
+local module = {}
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Database"):WaitForChild("Sync"))
+function module.IsItemSalvageable(arg1, arg2) -- Line 13
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	if arg2 == nil then
+		return false
+	end
+	local var5 = module_upvr.Weapons[arg2]
+	if not var5 then
+		return false
+	end
+	if module_upvr.Codes[arg2] then
+		return false
+	end
+	local Rarity = var5.Rarity
+	if module_upvr.SalvageRewards[arg2] then
+	end
+	if module_upvr.SalvageRewards[Rarity] then
+	end
+	if var5.Event == nil then
+	else
+	end
+	if true and not module_upvr.SalvageRewards[arg2].Rewards then
+		return false
+	end
+	if var5.Season ~= nil then
+		return false
+	end
+	if var5.ItemType == "Misc" then
+		return false
+	end
+	if not module_upvr.SalvageRewards[Rarity].Rewards then
+		-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+		if not module_upvr.SalvageRewards[arg2].Rewards then
+			return false
+		end
+	end
+	return true
+end
+function module.GetCraftingResult(arg1, arg2) -- Line 53
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	for i, v in module_upvr.Recipes do
+		local var31
+		for i_2, v_2 in v.Materials do
+			for _, v_3 in arg2 do
+				if v_3.itemID == i_2 and v_3.amount == v_2 then
+					var31 += 1
+				end
+			end
+		end
+		if var31 == 0 + 1 and #arg2 == var31 then
+			return i
+		end
+	end
+	return nil
+end
+return module
