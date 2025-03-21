@@ -60,6 +60,11 @@ local fruits = {
     "Leopard", "Yeti", "Kitsune", "Dragon"
 }
 
+-- Create a table to store the selected fruit
+local fruitData = {
+    selectedFruit = nil
+}
+
 -- Populate the dropdown with fruits
 for _, fruitName in pairs(fruits) do
     local button = Instance.new("TextButton", dropdown)
@@ -67,8 +72,8 @@ for _, fruitName in pairs(fruits) do
     button.Text = fruitName
     button.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
     button.MouseButton1Click:Connect(function()
-        selectedFruit = fruitName
-        print("Selected fruit: " .. selectedFruit) -- Debugging: Print selected fruit
+        fruitData.selectedFruit = fruitName
+        print("Selected fruit: " .. fruitData.selectedFruit) -- Debugging: Print selected fruit
     end)
     dropdown.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
 end
@@ -76,18 +81,16 @@ end
 -- Debugging: Print dropdown population
 print("Dropdown populated with fruits.")
 
-local selectedFruit = nil
-
 -- Function to spawn the selected fruit as a model in the game world
 getButton.MouseButton1Click:Connect(function()
-    if selectedFruit then
-        print("Attempting to spawn fruit: " .. selectedFruit) -- Debugging: Print attempt to spawn fruit
+    if fruitData.selectedFruit then
+        print("Attempting to spawn fruit: " .. fruitData.selectedFruit) -- Debugging: Print attempt to spawn fruit
 
         -- Use pcall to catch errors during fruit spawning
         local success, errorMessage = pcall(function()
             -- Create the fruit model
             local fruitModel = Instance.new("Model")
-            fruitModel.Name = selectedFruit .. "-" .. selectedFruit
+            fruitModel.Name = fruitData.selectedFruit .. "-" .. fruitData.selectedFruit
 
             -- Create a part to represent the fruit
             local fruitPart = Instance.new("Part", fruitModel)
@@ -124,7 +127,7 @@ getButton.MouseButton1Click:Connect(function()
                 end)
             ]]
 
-            print("Successfully spawned " .. selectedFruit .. " in the game world.") -- Debugging: Print success
+            print("Successfully spawned " .. fruitData.selectedFruit .. " in the game world.") -- Debugging: Print success
         end)
 
         -- If an error occurred, print it
