@@ -1,0 +1,211 @@
+local Option_upvr = require(game.ReplicatedStorage.Packages.Option)
+local DisplayInfo_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.DisplayInfo)
+local Product_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Product)
+local Offer_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Offer)
+local LegacyInfo_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.LegacyInfo)
+local tbl_2_upvr = {}
+tbl_2_upvr.__index = tbl_2_upvr
+local any_new_result1_upvr = require(game.ReplicatedStorage.Packages.SerdeJson).new(function(arg1, arg2) -- Line 55
+	--[[ Upvalues[5]:
+		[1]: Option_upvr (readonly)
+		[2]: DisplayInfo_upvr (readonly)
+		[3]: LegacyInfo_upvr (readonly)
+		[4]: Product_upvr (readonly)
+		[5]: Offer_upvr (readonly)
+	]]
+	return {
+		DisplayInfo = arg2.Option(arg1.DisplayInfo:match(function(arg1_2) -- Line 57
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: DisplayInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(DisplayInfo_upvr.Serde:encode(arg1_2):unwrap())
+		end, function() -- Line 59
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		LegacyInfo = arg2.Option(arg1.LegacyInfo:match(function(arg1_3) -- Line 62
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: LegacyInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(LegacyInfo_upvr.Serde:encode(arg1_3):unwrap())
+		end, function() -- Line 64
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		EconomyId = arg2.String(arg1.EconomyId);
+		Products = arg1.Products:match(function(arg1_4) -- Line 68
+			--[[ Upvalues[3]:
+				[1]: Product_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+				[3]: Option_upvr (copied, readonly)
+			]]
+			local module = {}
+			for _, v in ipairs(arg1_4) do
+				table.insert(module, Product_upvr.Serde:encode(v):unwrap())
+			end
+			return arg2.Option(Option_upvr.some(module))
+		end, function() -- Line 74
+			--[[ Upvalues[2]:
+				[1]: arg2 (readonly)
+				[2]: Option_upvr (copied, readonly)
+			]]
+			return arg2.Option(Option_upvr.none())
+		end);
+		Offers = arg1.Offers:match(function(arg1_5) -- Line 77
+			--[[ Upvalues[3]:
+				[1]: Offer_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+				[3]: Option_upvr (copied, readonly)
+			]]
+			local module_2 = {}
+			for _, v_2 in ipairs(arg1_5) do
+				table.insert(module_2, Offer_upvr.Serde:encode(v_2):unwrap())
+			end
+			return arg2.Option(Option_upvr.some(module_2))
+		end, function() -- Line 83
+			--[[ Upvalues[2]:
+				[1]: arg2 (readonly)
+				[2]: Option_upvr (copied, readonly)
+			]]
+			return arg2.Option(Option_upvr.none())
+		end);
+	}
+end, function(arg1, arg2) -- Line 87
+	--[[ Upvalues[6]:
+		[1]: Option_upvr (readonly)
+		[2]: LegacyInfo_upvr (readonly)
+		[3]: DisplayInfo_upvr (readonly)
+		[4]: Product_upvr (readonly)
+		[5]: Offer_upvr (readonly)
+		[6]: tbl_2_upvr (readonly)
+	]]
+	return setmetatable(table.freeze({
+		LegacyInfo = arg2.Option(arg1.LegacyInfo):match(function(arg1_6) -- Line 90
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: LegacyInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(LegacyInfo_upvr.Serde:decode(arg1_6):unwrap())
+		end, function() -- Line 92
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		DisplayInfo = arg2.Option(arg1.DisplayInfo):match(function(arg1_7) -- Line 95
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: DisplayInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(DisplayInfo_upvr.Serde:decode(arg1_7):unwrap())
+		end, function() -- Line 97
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		EconomyId = arg2.String(arg1.EconomyId);
+		Products = arg2.Option(arg1.Products):match(function(arg1_8) -- Line 101
+			--[[ Upvalues[2]:
+				[1]: Product_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+			]]
+			local module_4 = {}
+			for _, v_3 in ipairs(arg1_8) do
+				table.insert(module_4, Product_upvr.Serde:decode(v_3):unwrap())
+			end
+			return Option_upvr.some(module_4)
+		end, function() -- Line 107
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		Offers = arg2.Option(arg1.Offers):match(function(arg1_9) -- Line 110
+			--[[ Upvalues[2]:
+				[1]: Offer_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+			]]
+			local module_3 = {}
+			for _, v_4 in ipairs(arg1_9) do
+				table.insert(module_3, Offer_upvr.Serde:decode(v_4):unwrap())
+			end
+			return Option_upvr.some(module_3)
+		end, function() -- Line 116
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+	}), tbl_2_upvr)
+end)
+function tbl_2_upvr.ToString(arg1) -- Line 124
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:toString(arg1)
+end
+function tbl_2_upvr.fromString(arg1) -- Line 128
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:fromString(arg1)
+end
+local Result_upvr = require(game.ReplicatedStorage.Packages.Result)
+function tbl_2_upvr.fromLegacy(arg1, arg2) -- Line 132
+	--[[ Upvalues[5]:
+		[1]: DisplayInfo_upvr (readonly)
+		[2]: Product_upvr (readonly)
+		[3]: Option_upvr (readonly)
+		[4]: tbl_2_upvr (readonly)
+		[5]: Result_upvr (readonly)
+	]]
+	return DisplayInfo_upvr.Class.fromLegacy(arg1, arg2):match(function(arg1_10) -- Line 136
+		--[[ Upvalues[6]:
+			[1]: Product_upvr (copied, readonly)
+			[2]: arg1 (readonly)
+			[3]: arg2 (readonly)
+			[4]: Option_upvr (copied, readonly)
+			[5]: tbl_2_upvr (copied, readonly)
+			[6]: Result_upvr (copied, readonly)
+		]]
+		return Product_upvr.Class.fromLegacy(arg1, arg2):match(function(arg1_11) -- Line 137
+			--[[ Upvalues[5]:
+				[1]: arg1_10 (readonly)
+				[2]: arg2 (copied, readonly)
+				[3]: Option_upvr (copied, readonly)
+				[4]: tbl_2_upvr (copied, readonly)
+				[5]: Result_upvr (copied, readonly)
+			]]
+			local tbl = {}
+			tbl.DisplayInfo = arg1_10
+			tbl.EconomyId = `LEGACY/{arg2.Category:upper():gsub(' ', '_')}/{arg2.Key:upper():gsub(' ', '_')}`
+			tbl.LegacyInfo = Option_upvr.some(arg2)
+			tbl.Products = arg1_11
+			tbl.Offers = Option_upvr.none()
+			local setmetatable_result1 = setmetatable(tbl, tbl_2_upvr)
+			table.freeze(setmetatable_result1)
+			return Result_upvr.ok(Option_upvr.some(setmetatable_result1))
+		end, function(arg1_12) -- Line 150
+			--[[ Upvalues[1]:
+				[1]: Result_upvr (copied, readonly)
+			]]
+			return Result_upvr.err(arg1_12)
+		end)
+	end, function(arg1_13) -- Line 153
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err(arg1_13)
+	end)
+end
+return {
+	Class = tbl_2_upvr;
+	Serde = any_new_result1_upvr;
+}

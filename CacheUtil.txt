@@ -1,0 +1,50 @@
+return {
+	addCachedSale = function(arg1, arg2, arg3) -- Line 6, Named "addCachedSale"
+		if arg1 == "Bundle" then
+			local StorageName = arg2.StorageName
+			assert(StorageName)
+			if arg2.Gift == nil then
+				StorageName = false
+			else
+				StorageName = true
+			end
+			assert(StorageName)
+			local assert_result1_upvr = assert(arg3.Bundles[arg2.StorageName])
+			if not arg2.PurchaseLimits then
+				local tbl = {}
+			end
+			arg2.Name = arg2.Name
+			arg2.storageName = arg2.StorageName
+			arg2.assetId = arg2.AssetId
+			local Image = arg2.Image
+			arg2.texture = Image
+			if arg2.Gift ~= true then
+				Image = false
+			else
+				Image = true
+			end
+			arg2.gift = Image
+			arg2.maxAllowed = tbl.MaxAllowed or nil
+			arg2.maxPurchase = tbl.MaxPurchase or nil
+			arg2.maxGift = tbl.MaxGift or nil
+			arg2.subtype = "Bundle Product"
+			arg2.productType = "Product"
+			arg2.seaLevelGiftCheck = true
+			if game:GetService("RunService"):IsServer() then
+				function arg2.callback(...) -- Line 36
+					--[[ Upvalues[1]:
+						[1]: assert_result1_upvr (readonly)
+					]]
+					assert_result1_upvr:Award(...)
+				end
+			end
+			for i, v in pairs(arg2) do
+				assert_result1_upvr[i] = v
+				local _
+			end
+			return arg2
+		end
+		warn("Unknown index type", arg1)
+		return nil
+	end;
+}

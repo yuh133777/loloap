@@ -1,0 +1,614 @@
+local Option_upvr = require(game.ReplicatedStorage.Packages.Option)
+local DisplayInfo_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.DisplayInfo)
+local TradeInfo_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Product.TradeInfo)
+local StorageInfo_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Product.StorageInfo)
+local Redemption_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Product.Redemption)
+local tbl_4_upvr = {}
+tbl_4_upvr.__index = tbl_4_upvr
+local any_new_result1_upvr = require(game.ReplicatedStorage.Packages.SerdeJson).new(function(arg1, arg2) -- Line 51
+	--[[ Upvalues[5]:
+		[1]: Redemption_upvr (readonly)
+		[2]: Option_upvr (readonly)
+		[3]: DisplayInfo_upvr (readonly)
+		[4]: TradeInfo_upvr (readonly)
+		[5]: StorageInfo_upvr (readonly)
+	]]
+	local tbl_2 = {}
+	for _, v in ipairs(arg1.RedemptionTiers) do
+		table.insert(tbl_2, Redemption_upvr.Serde:encode(v):unwrap())
+	end
+	return {
+		RedemptionTiers = tbl_2;
+		DisplayInfo = arg2.Option(arg1.DisplayInfo:match(function(arg1_2) -- Line 59
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: DisplayInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(DisplayInfo_upvr.Serde:encode(arg1_2):unwrap())
+		end, function() -- Line 61
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		TradeInfo = arg2.Option(arg1.TradeInfo:match(function(arg1_3) -- Line 64
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: TradeInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(TradeInfo_upvr.Serde:encode(arg1_3):unwrap())
+		end, function() -- Line 66
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		StorageInfo = arg2.Option(arg1.StorageInfo:match(function(arg1_4) -- Line 69
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: StorageInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(StorageInfo_upvr.Serde:encode(arg1_4):unwrap())
+		end, function() -- Line 71
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+	}
+end, function(arg1, arg2) -- Line 75
+	--[[ Upvalues[6]:
+		[1]: Redemption_upvr (readonly)
+		[2]: Option_upvr (readonly)
+		[3]: DisplayInfo_upvr (readonly)
+		[4]: TradeInfo_upvr (readonly)
+		[5]: StorageInfo_upvr (readonly)
+		[6]: tbl_4_upvr (readonly)
+	]]
+	local setmetatable_result1 = setmetatable({
+		RedemptionTiers = (function() -- Line 77
+			--[[ Upvalues[2]:
+				[1]: arg1 (readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			local module_4 = {}
+			for _, v_2 in ipairs(arg1.RedemptionTiers) do
+				table.insert(module_4, Redemption_upvr.Serde:decode(v_2):unwrap())
+			end
+			table.freeze(module_4)
+			return module_4
+		end)();
+		DisplayInfo = arg2.Option(arg1.DisplayInfo):match(function(arg1_5) -- Line 85
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: DisplayInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(DisplayInfo_upvr.Serde:decode(arg1_5):unwrap())
+		end, function() -- Line 87
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		TradeInfo = arg2.Option(arg1.TradeInfo):match(function(arg1_6) -- Line 90
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: TradeInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(TradeInfo_upvr.Serde:decode(arg1_6):unwrap())
+		end, function() -- Line 92
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		StorageInfo = arg2.Option(arg1.StorageInfo):match(function(arg1_7) -- Line 95
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: StorageInfo_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(StorageInfo_upvr.Serde:decode(arg1_7):unwrap())
+		end, function() -- Line 97
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+	}, tbl_4_upvr)
+	table.freeze(setmetatable_result1)
+	return setmetatable_result1
+end)
+function tbl_4_upvr.ToString(arg1) -- Line 105
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:toString(arg1)
+end
+function tbl_4_upvr.fromString(arg1) -- Line 109
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:fromString(arg1)
+end
+function tbl_4_upvr.new(arg1, arg2, arg3, arg4) -- Line 113
+	--[[ Upvalues[1]:
+		[1]: tbl_4_upvr (readonly)
+	]]
+	local tbl_3 = {}
+	tbl_3.RedemptionTiers = arg1
+	tbl_3.DisplayInfo = arg2
+	tbl_3.TradeInfo = arg3
+	tbl_3.StorageInfo = arg4
+	local setmetatable_result1_2 = setmetatable(tbl_3, tbl_4_upvr)
+	table.freeze(setmetatable_result1_2)
+	return setmetatable_result1_2
+end
+local LegacyDataUtil_upvr = require(game.ReplicatedStorage.Economy.LegacyDataUtil)
+local RobuxItem_upvr = require(game.ReplicatedStorage.Economy.LegacyDataUtil.RobuxItem)
+local Result_upvr = require(game.ReplicatedStorage.Packages.Result)
+function tbl_4_upvr.fromLegacy(arg1, arg2) -- Line 129
+	--[[ Upvalues[9]:
+		[1]: LegacyDataUtil_upvr (readonly)
+		[2]: RobuxItem_upvr (readonly)
+		[3]: Result_upvr (readonly)
+		[4]: Option_upvr (readonly)
+		[5]: TradeInfo_upvr (readonly)
+		[6]: Redemption_upvr (readonly)
+		[7]: DisplayInfo_upvr (readonly)
+		[8]: tbl_4_upvr (readonly)
+		[9]: StorageInfo_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	local function tradeInfofromReducerData(arg1_28) -- Line 186
+		--[[ Upvalues[3]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: TradeInfo_upvr (copied, readonly)
+		]]
+		local var76 = Option_upvr
+		if arg1_28.reducer then
+			var76 = Option_upvr.some(arg1_28.reducer)
+		else
+			var76 = Option_upvr.none()
+		end
+		return Result_upvr.ok(Option_upvr.some(TradeInfo_upvr.Class.new(var76.none(), var76)))
+	end
+	local function storageInfofromNone(arg1_30) -- Line 202
+		--[[ Upvalues[2]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Option_upvr.none())
+	end
+	if LegacyDataUtil_upvr.match(arg1, arg2.Type, function(arg1_8) -- Line 136
+		return true
+	end, function(arg1_9) -- Line 139
+		return false
+	end, function(arg1_10) -- Line 142
+		return false
+	end, function(arg1_11) -- Line 145
+		return false
+	end, function(arg1_12) -- Line 148
+		--[[ Upvalues[1]:
+			[1]: RobuxItem_upvr (copied, readonly)
+		]]
+		return RobuxItem_upvr.match(arg1_12, function(arg1_13) -- Line 149
+			return false
+		end, function(arg1_14) -- Line 151
+			return false
+		end, function(arg1_15) -- Line 153
+			local var63
+			if arg1_15.bundleItems == nil then
+				var63 = false
+			else
+				var63 = true
+			end
+			return var63
+		end, function(arg1_16) -- Line 155
+			return false
+		end, function(arg1_17) -- Line 157
+			return true
+		end, function(arg1_18) -- Line 159
+			return false
+		end, function(arg1_19) -- Line 161
+			return false
+		end, function(arg1_20) -- Line 163
+			return false
+		end, function(arg1_21) -- Line 165
+			return false
+		end, function(arg1_22) -- Line 167
+			return false
+		end, function(arg1_23) -- Line 169
+			return false
+		end, function(arg1_24) -- Line 171
+			return false
+		end)
+	end, function(arg1_25) -- Line 175
+		return false
+	end, function(arg1_26) -- Line 178
+		return true
+	end, function(arg1_27) -- Line 181
+		return false
+	end) then
+		local function redemptionsFromBundle_upvr(arg1_31, arg2_2) -- Line 207, Named "redemptionsFromBundle"
+			--[[ Upvalues[1]:
+				[1]: Redemption_upvr (copied, readonly)
+			]]
+			-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+			local module_3 = {}
+			for _, v_3 in ipairs(arg1_31.Fruits) do
+				table.insert(module_3, {Redemption_upvr.Class.newItem(v_3, arg2_2)})
+			end
+			for i_4 = 1, math.max(#arg1_31.Fragments, #arg1_31.Cash) do
+				table.insert({}, Redemption_upvr.Class.newCurrency(arg1_31.Cash[i_4] or 0, arg1_31.Fragments[i_4] or 0))
+				local var95
+			end
+			table.insert(module_3, var95)
+			return module_3
+		end
+		if arg2.Type == "RobuxItemData" then
+			return RobuxItem_upvr.match(arg1, function(arg1_32) -- Line 232
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/AuraSkin implemented for solo-products only")
+			end, function(arg1_33) -- Line 235
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/FruitSkin implemented for solo-products only")
+			end, function(arg1_34) -- Line 238
+				--[[ Upvalues[6]:
+					[1]: DisplayInfo_upvr (copied, readonly)
+					[2]: Option_upvr (copied, readonly)
+					[3]: TradeInfo_upvr (copied, readonly)
+					[4]: Redemption_upvr (copied, readonly)
+					[5]: tbl_4_upvr (copied, readonly)
+					[6]: Result_upvr (copied, readonly)
+				]]
+				-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+				local bundleItems = arg1_34.bundleItems
+				if bundleItems then
+					local var109 = Option_upvr
+					if arg1_34.reducer then
+						var109 = Option_upvr.some(arg1_34.reducer)
+					else
+						var109 = Option_upvr.none()
+					end
+					for _, v_4 in ipairs(bundleItems) do
+						table.insert({}, tbl_4_upvr.new({Redemption_upvr.Class.newItem(v_4, true)}, Option_upvr.some(DisplayInfo_upvr.Class.new(Option_upvr.some(arg1_34.Name), Option_upvr.none(), Option_upvr.none(), false)), Option_upvr.some(TradeInfo_upvr.Class.new(var109.none(), var109)), Option_upvr.none()))
+						local var114
+					end
+					return Result_upvr.ok(Option_upvr.some(var114))
+				end
+				return Result_upvr.err("Product.fromLegacy/SkinBundle implemented for bundle-items only")
+			end, function(arg1_35) -- Line 266
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/FruitBox implemented for solo-products only")
+			end, function(arg1_36) -- Line 269
+				--[[ Upvalues[7]:
+					[1]: DisplayInfo_upvr (copied, readonly)
+					[2]: Option_upvr (copied, readonly)
+					[3]: TradeInfo_upvr (copied, readonly)
+					[4]: StorageInfo_upvr (copied, readonly)
+					[5]: redemptionsFromBundle_upvr (readonly)
+					[6]: tbl_4_upvr (copied, readonly)
+					[7]: Result_upvr (copied, readonly)
+				]]
+				-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+				local module_2 = {}
+				local any_new_result1 = DisplayInfo_upvr.Class.new(Option_upvr.some(arg1_36.Name), Option_upvr.none(), Option_upvr.none(), false)
+				local var127 = Option_upvr
+				local var128
+				if arg1_36.reducer then
+					var127 = Option_upvr.some(arg1_36.reducer)
+				else
+					var127 = Option_upvr.none()
+				end
+				if arg1_36.StoreAll == nil then
+					var128 = Option_upvr.none()
+				else
+					var128 = Option_upvr.some(StorageInfo_upvr.Class.new(arg1_36.StoreAll))
+				end
+				for _, v_5 in ipairs(redemptionsFromBundle_upvr(arg1_36, true)) do
+					table.insert(module_2, tbl_4_upvr.new(v_5, Option_upvr.some(any_new_result1), Option_upvr.some(TradeInfo_upvr.Class.new(var128, var127)), var128))
+					local _
+				end
+				return Result_upvr.ok(Option_upvr.some(module_2))
+			end, function(arg1_37) -- Line 293
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/PhysicalRocketFruit implemented for solo-products only")
+			end, function(arg1_38) -- Line 298
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/CurrencyItem implemented for solo-products only")
+			end, function(arg1_39) -- Line 301
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/GamepassItem implemented for solo-products only")
+			end, function(arg1_40) -- Line 304
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/StoredProductItem implemented for solo-products only")
+			end, function(arg1_41) -- Line 309
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/FruitItem implemented for solo-products only")
+			end, function(arg1_42) -- Line 312
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/ExpItem implemented for solo-products only")
+			end, function(arg1_43) -- Line 315
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err("Product.fromLegacy/NamedProductItem implemented for solo-products only")
+			end)
+		end
+		local var140
+		if arg2.Type == "ClientBundleData" or arg2.Type == "ServerBundleData" then
+			var140 = DisplayInfo_upvr
+			var140 = Option_upvr
+			var140 = arg1.Name
+			var140 = Option_upvr.none()
+			var140 = TradeInfo_upvr.Class
+			var140 = Option_upvr.none()
+			if arg1.StoreAll == nil then
+				var140 = Option_upvr.none()
+			else
+				var140 = Option_upvr.some(StorageInfo_upvr.Class.new(arg1.StoreAll))
+			end
+			for _, v_6 in ipairs(redemptionsFromBundle_upvr(arg1, true)) do
+				table.insert({}, tbl_4_upvr.new(v_6, Option_upvr.some(var140.Class.new(var140.some(var140), var140, Option_upvr.none(), false)), Option_upvr.some(var140.new(var140, Option_upvr.none())), var140))
+				local var145
+			end
+			return Result_upvr.ok(Option_upvr.some(var145))
+		end
+		return Result_upvr.err(`Product.fromLegacy not implemented for "{arg2.Type}"`)
+	end
+	redemptionsFromBundle_upvr = LegacyDataUtil_upvr.match
+	redemptionsFromBundle_upvr = redemptionsFromBundle_upvr(arg1, arg2.Type, function(arg1_44) -- Line 347
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption implemented for multi-products only")
+	end, function(arg1_45) -- Line 350
+		--[[ Upvalues[3]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Redemption_upvr (copied, readonly)
+			[3]: Option_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Redemption_upvr.Class.newBox(arg1_45.storageName, Option_upvr.some(arg1_45.Rarity.Name)))
+	end, function(arg1_46) -- Line 358
+		--[[ Upvalues[2]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Redemption_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_46.Name, false))
+	end, function(arg1_47) -- Line 361
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacyOutlineData")
+	end, function(arg1_48) -- Line 364
+		--[[ Upvalues[3]:
+			[1]: RobuxItem_upvr (copied, readonly)
+			[2]: Result_upvr (copied, readonly)
+			[3]: Redemption_upvr (copied, readonly)
+		]]
+		return RobuxItem_upvr.match(arg1_48, function(arg1_49) -- Line 365
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_49.storageName, true))
+		end, function(arg1_50) -- Line 367
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_50.storageName, true))
+		end, function(arg1_51) -- Line 369
+			--[[ Upvalues[1]:
+				[1]: Result_upvr (copied, readonly)
+			]]
+			return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacyRobuxItemData / SkinBundle")
+		end, function(arg1_52) -- Line 373
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_52.storageName, true))
+		end, function(arg1_53) -- Line 375
+			--[[ Upvalues[1]:
+				[1]: Result_upvr (copied, readonly)
+			]]
+			return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacyRobuxItemData / BundleItem")
+		end, function(arg1_54) -- Line 379
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_54.storageName, true))
+		end, function(arg1_55) -- Line 381
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newCurrency(arg1_55.modifiers.Beli or 0, arg1_55.modifiers.Fragments or 0))
+		end, function(arg1_56) -- Line 388
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newGamepass(arg1_56.storageName))
+		end, function(arg1_57) -- Line 390
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newDeveloperProduct(arg1_57.storageName))
+		end, function(arg1_58) -- Line 392
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newItem(arg1_58.storageName, true))
+		end, function(arg1_59) -- Line 394
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newDeveloperProduct(arg1_59.storageName))
+		end, function(arg1_60) -- Line 396
+			--[[ Upvalues[2]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Redemption_upvr (copied, readonly)
+			]]
+			return Result_upvr.ok(Redemption_upvr.Class.newDeveloperProduct(arg1_60.storageName))
+		end)
+	end, function(arg1_61) -- Line 400
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacySaleData")
+	end, function(arg1_62) -- Line 403
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption implemented for multi-products only")
+	end, function(arg1_63) -- Line 406
+		--[[ Upvalues[3]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Redemption_upvr (copied, readonly)
+			[3]: Option_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Redemption_upvr.Class.newBox(arg1_63.storageName, Option_upvr.some(arg1_63.Rarity.Name)))
+	end)
+	local any_match_result1_upvr_2 = LegacyDataUtil_upvr.match(arg1, arg2.Type, function(arg1_68) -- Line 441
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/tradeInfo implemented for multi-products only")
+	end, tradeInfofromReducerData, function(arg1_29) -- Line 198, Named "tradeInfofromNone"
+		--[[ Upvalues[2]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Option_upvr.none())
+	end, function(arg1_69) -- Line 446
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/tradeInfo not implemented for LegacyOutlineData")
+	end, tradeInfofromReducerData, function(arg1_70) -- Line 450
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacySaleData")
+	end, function(arg1_71) -- Line 453
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/tradeInfo implemented for multi-products only")
+	end, tradeInfofromReducerData)
+	local any_match_result1_upvr = LegacyDataUtil_upvr.match(arg1, arg2.Type, function(arg1_64) -- Line 420
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/storageInfo implemented for multi-products only")
+	end, storageInfofromNone, storageInfofromNone, function(arg1_65) -- Line 425
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/storageInfo not implemented for LegacyOutlineData")
+	end, storageInfofromNone, function(arg1_66) -- Line 429
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/redemption not implemented for LegacySaleData")
+	end, function(arg1_67) -- Line 432
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Product.fromLegacy/storageInfo implemented for multi-products only")
+	end, storageInfofromNone)
+	return DisplayInfo_upvr.Class.fromLegacy(arg1, arg2):match(function(arg1_72) -- Line 458
+		--[[ Upvalues[6]:
+			[1]: any_match_result1_upvr_2 (readonly)
+			[2]: any_match_result1_upvr (readonly)
+			[3]: redemptionsFromBundle_upvr (readonly)
+			[4]: Result_upvr (copied, readonly)
+			[5]: Option_upvr (copied, readonly)
+			[6]: tbl_4_upvr (copied, readonly)
+		]]
+		return any_match_result1_upvr_2:match(function(arg1_73) -- Line 459
+			--[[ Upvalues[6]:
+				[1]: any_match_result1_upvr (copied, readonly)
+				[2]: redemptionsFromBundle_upvr (copied, readonly)
+				[3]: Result_upvr (copied, readonly)
+				[4]: Option_upvr (copied, readonly)
+				[5]: tbl_4_upvr (copied, readonly)
+				[6]: arg1_72 (readonly)
+			]]
+			return any_match_result1_upvr:match(function(arg1_74) -- Line 460
+				--[[ Upvalues[6]:
+					[1]: redemptionsFromBundle_upvr (copied, readonly)
+					[2]: Result_upvr (copied, readonly)
+					[3]: Option_upvr (copied, readonly)
+					[4]: tbl_4_upvr (copied, readonly)
+					[5]: arg1_72 (copied, readonly)
+					[6]: arg1_73 (readonly)
+				]]
+				return redemptionsFromBundle_upvr:match(function(arg1_75) -- Line 461
+					--[[ Upvalues[6]:
+						[1]: Result_upvr (copied, readonly)
+						[2]: Option_upvr (copied, readonly)
+						[3]: tbl_4_upvr (copied, readonly)
+						[4]: arg1_72 (copied, readonly)
+						[5]: arg1_73 (copied, readonly)
+						[6]: arg1_74 (readonly)
+					]]
+					local module = {}
+					local tbl = {}
+					tbl[1] = arg1_75
+					module[1] = tbl_4_upvr.new(tbl, arg1_72, arg1_73, arg1_74)
+					return Result_upvr.ok(Option_upvr.some(module))
+				end, function(arg1_76) -- Line 465
+					--[[ Upvalues[1]:
+						[1]: Result_upvr (copied, readonly)
+					]]
+					return Result_upvr.err(arg1_76)
+				end)
+			end, function(arg1_77) -- Line 468
+				--[[ Upvalues[1]:
+					[1]: Result_upvr (copied, readonly)
+				]]
+				return Result_upvr.err(arg1_77)
+			end)
+		end, function(arg1_78) -- Line 471
+			--[[ Upvalues[1]:
+				[1]: Result_upvr (copied, readonly)
+			]]
+			return Result_upvr.err(arg1_78)
+		end)
+	end, function(arg1_79) -- Line 474
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err(arg1_79)
+	end)
+end
+return {
+	Class = tbl_4_upvr;
+	Serde = any_new_result1_upvr;
+}

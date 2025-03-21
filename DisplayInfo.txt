@@ -1,0 +1,403 @@
+local Option_upvr = require(game.ReplicatedStorage.Packages.Option)
+local Sprite_upvr = require(game.ReplicatedStorage.Economy.EconomyItem.Sprite)
+local tbl_upvr = {}
+tbl_upvr.__index = tbl_upvr
+local any_new_result1_upvr = require(game.ReplicatedStorage.Packages.SerdeJson).new(function(arg1, arg2) -- Line 43
+	--[[ Upvalues[2]:
+		[1]: Option_upvr (readonly)
+		[2]: Sprite_upvr (readonly)
+	]]
+	return {
+		DisplayName = arg2.Option(arg1.DisplayName:match(function(arg1_2) -- Line 45
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+			]]
+			return Option_upvr.some(arg2.String(arg1_2))
+		end, function() -- Line 47
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		Description = arg2.Option(arg1.Description:match(function(arg1_3) -- Line 50
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+			]]
+			return Option_upvr.some(arg2.String(arg1_3))
+		end, function() -- Line 52
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		Icon = arg2.Option(arg1.Icon:match(function(arg1_4) -- Line 55
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: Sprite_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(Sprite_upvr.Serde:encode(arg1_4):unwrap())
+		end, function() -- Line 57
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end));
+		IsDescriptionHidden = arg2.Bool(arg1.IsDescriptionHidden);
+	}
+end, function(arg1, arg2) -- Line 62
+	--[[ Upvalues[3]:
+		[1]: Option_upvr (readonly)
+		[2]: Sprite_upvr (readonly)
+		[3]: tbl_upvr (readonly)
+	]]
+	local setmetatable_result1_2 = setmetatable({
+		DisplayName = arg2.Option(arg1.DisplayName):match(function(arg1_5) -- Line 66
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+			]]
+			return Option_upvr.some(arg2.String(arg1_5))
+		end, function() -- Line 68
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		Description = arg2.Option(arg1.Description):match(function(arg1_6) -- Line 73
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: arg2 (readonly)
+			]]
+			return Option_upvr.some(arg2.String(arg1_6))
+		end, function() -- Line 75
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		Icon = arg2.Option(arg1.Icon):match(function(arg1_7) -- Line 78
+			--[[ Upvalues[2]:
+				[1]: Option_upvr (copied, readonly)
+				[2]: Sprite_upvr (copied, readonly)
+			]]
+			return Option_upvr.some(Sprite_upvr.Serde:decode(arg1_7):unwrap())
+		end, function() -- Line 80
+			--[[ Upvalues[1]:
+				[1]: Option_upvr (copied, readonly)
+			]]
+			return Option_upvr.none()
+		end);
+		IsDescriptionHidden = arg2.Bool(arg1.IsDescriptionHidden);
+	}, tbl_upvr)
+	table.freeze(setmetatable_result1_2)
+	return setmetatable_result1_2
+end)
+function tbl_upvr.ToString(arg1) -- Line 89
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:toString(arg1)
+end
+function tbl_upvr.fromString(arg1) -- Line 93
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:fromString(arg1)
+end
+function tbl_upvr.new(arg1, arg2, arg3, arg4) -- Line 97
+	--[[ Upvalues[1]:
+		[1]: tbl_upvr (readonly)
+	]]
+	local tbl = {}
+	tbl.DisplayName = arg1
+	tbl.Description = arg2
+	tbl.Icon = arg3
+	tbl.IsDescriptionHidden = arg4
+	local setmetatable_result1 = setmetatable(tbl, tbl_upvr)
+	table.freeze(setmetatable_result1)
+	return setmetatable_result1
+end
+local LegacyDataUtil_upvr = require(game.ReplicatedStorage.Economy.LegacyDataUtil)
+local Result_upvr = require(game.ReplicatedStorage.Packages.Result)
+local RobuxItem_upvr = require(game.ReplicatedStorage.Economy.LegacyDataUtil.RobuxItem)
+function tbl_upvr.fromLegacy(arg1, arg2) -- Line 113
+	--[[ Upvalues[6]:
+		[1]: LegacyDataUtil_upvr (readonly)
+		[2]: Result_upvr (readonly)
+		[3]: Option_upvr (readonly)
+		[4]: tbl_upvr (readonly)
+		[5]: Sprite_upvr (readonly)
+		[6]: RobuxItem_upvr (readonly)
+	]]
+	return LegacyDataUtil_upvr.match(arg1, arg2.Type, function(arg1_8) -- Line 120
+		--[[ Upvalues[4]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+			[4]: Sprite_upvr (copied, readonly)
+		]]
+		if arg1_8.texture ~= arg1_8.Image then
+			Result_upvr.err("image and texture are not the same")
+		end
+		local var28 = Option_upvr
+		if arg1_8.Image then
+			var28 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_8.Image))
+		else
+			var28 = Option_upvr.none()
+		end
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_8.Name), var28.none(), var28, true)))
+	end, function(arg1_9) -- Line 137
+		--[[ Upvalues[4]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+			[4]: Sprite_upvr (copied, readonly)
+		]]
+		local var30 = Option_upvr
+		if arg1_9.texture then
+			var30 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_9.texture))
+		else
+			var30 = Option_upvr.none()
+		end
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_9.Name), var30.none(), var30, true)))
+	end, function(arg1_10) -- Line 151
+		--[[ Upvalues[3]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+		]]
+		local Name = arg1_10.Name
+		if arg1_10.Description then
+			Name = Option_upvr.some(arg1_10.Description)
+		else
+			Name = Option_upvr.none()
+		end
+		local var33 = Option_upvr
+		if arg1_10.Description ~= nil then
+			var33 = false
+		else
+			var33 = true
+		end
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(Name), Name, var33.none(), var33)))
+	end, function(arg1_11) -- Line 163
+		--[[ Upvalues[1]:
+			[1]: Result_upvr (copied, readonly)
+		]]
+		return Result_upvr.err("Outline data can't be converted into DisplayInfo")
+	end, function(arg1_12) -- Line 166
+		--[[ Upvalues[5]:
+			[1]: RobuxItem_upvr (copied, readonly)
+			[2]: Result_upvr (copied, readonly)
+			[3]: Option_upvr (copied, readonly)
+			[4]: tbl_upvr (copied, readonly)
+			[5]: Sprite_upvr (copied, readonly)
+		]]
+		return RobuxItem_upvr.match(arg1_12, function(arg1_13) -- Line 167
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var37 = Option_upvr
+			if arg1_13.texture then
+				var37 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_13.texture))
+			else
+				var37 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_13.Name), var37.none(), var37, true)))
+		end, function(arg1_14) -- Line 180
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var39 = Option_upvr
+			if arg1_14.texture then
+				var39 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_14.texture))
+			else
+				var39 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_14.Name), var39.none(), var39, true)))
+		end, function(arg1_15) -- Line 193
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var41 = Option_upvr
+			if arg1_15.texture then
+				var41 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_15.texture))
+			else
+				var41 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_15.Name), var41.none(), var41, true)))
+		end, function(arg1_16) -- Line 206
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var43 = Option_upvr
+			if arg1_16.texture then
+				var43 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_16.texture))
+			else
+				var43 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_16.Name), var43.none(), var43, true)))
+		end, function(arg1_17) -- Line 219
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var45 = Option_upvr
+			if arg1_17.texture then
+				var45 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_17.texture))
+			else
+				var45 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_17.Name), var45.none(), var45, true)))
+		end, function(arg1_18) -- Line 232
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var47 = Option_upvr
+			if arg1_18.texture then
+				var47 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_18.texture))
+			else
+				var47 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_18.Name), var47.none(), var47, true)))
+		end, function(arg1_19) -- Line 245
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var49 = Option_upvr
+			if arg1_19.texture then
+				var49 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_19.texture))
+			else
+				var49 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_19.Name), var49.none(), var49, true)))
+		end, function(arg1_20) -- Line 258
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var51 = Option_upvr
+			if arg1_20.texture then
+				var51 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_20.texture))
+			else
+				var51 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_20.Name), var51.none(), var51, true)))
+		end, function(arg1_21) -- Line 271
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var53 = Option_upvr
+			if arg1_21.texture then
+				var53 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_21.texture))
+			else
+				var53 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_21.Name), var53.none(), var53, true)))
+		end, function(arg1_22) -- Line 284
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var55 = Option_upvr
+			if arg1_22.texture then
+				var55 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_22.texture))
+			else
+				var55 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_22.Name), var55.none(), var55, true)))
+		end, function(arg1_23) -- Line 297
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var57 = Option_upvr
+			if arg1_23.texture then
+				var57 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_23.texture))
+			else
+				var57 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_23.Name), var57.none(), var57, true)))
+		end, function(arg1_24) -- Line 310
+			--[[ Upvalues[4]:
+				[1]: Result_upvr (copied, readonly)
+				[2]: Option_upvr (copied, readonly)
+				[3]: tbl_upvr (copied, readonly)
+				[4]: Sprite_upvr (copied, readonly)
+			]]
+			local var59 = Option_upvr
+			if arg1_24.texture then
+				var59 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_24.texture))
+			else
+				var59 = Option_upvr.none()
+			end
+			return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_24.Name), var59.none(), var59, true)))
+		end)
+	end, function(arg1_25) -- Line 325
+		--[[ Upvalues[3]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+		]]
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_25.Name), Option_upvr.none(), Option_upvr.none(), true)))
+	end, function(arg1_26) -- Line 330
+		--[[ Upvalues[4]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+			[4]: Sprite_upvr (copied, readonly)
+		]]
+		if arg1_26.texture ~= arg1_26.Image then
+			Result_upvr.err("image and texture are not the same")
+		end
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_26.Name), Option_upvr.none(), Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_26.Image)), true)))
+	end, function(arg1_27) -- Line 345
+		--[[ Upvalues[4]:
+			[1]: Result_upvr (copied, readonly)
+			[2]: Option_upvr (copied, readonly)
+			[3]: tbl_upvr (copied, readonly)
+			[4]: Sprite_upvr (copied, readonly)
+		]]
+		local var63 = Option_upvr
+		if arg1_27.texture then
+			var63 = Option_upvr.some(Sprite_upvr.Class.fromUrl(arg1_27.texture))
+		else
+			var63 = Option_upvr.none()
+		end
+		return Result_upvr.ok(Option_upvr.some(tbl_upvr.new(Option_upvr.some(arg1_27.Name), var63.none(), var63, true)))
+	end)
+end
+return {
+	Class = tbl_upvr;
+	Serde = any_new_result1_upvr;
+}

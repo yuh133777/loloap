@@ -1,0 +1,49 @@
+local function _(arg1) -- Line 12, Named "fruitName"
+	local string_match_result1 = string.match(arg1, "(((%u)%-?)([^-.]+))$")
+	if string_match_result1 then
+		return string_match_result1
+	end
+	return arg1
+end
+local MobileUIController_upvr = require(game.ReplicatedStorage.Controllers.UI.MobileUIController)
+local ContextActionService_upvr = game:GetService("ContextActionService")
+local UserInputService_upvr = game:GetService("UserInputService")
+local GuiService_upvr = game:GetService("GuiService")
+return function(arg1, arg2) -- Line 21
+	--[[ Upvalues[4]:
+		[1]: MobileUIController_upvr (readonly)
+		[2]: ContextActionService_upvr (readonly)
+		[3]: UserInputService_upvr (readonly)
+		[4]: GuiService_upvr (readonly)
+	]]
+	-- KONSTANTERROR: [0] 1. Error Block 59 start (CF ANALYSIS FAILED)
+	local Parent = arg1.Parent
+	if not Parent.Parent then return end
+	if not Parent.Parent:IsA("Model") then
+		repeat
+			Parent.AncestryChanged:wait()
+		until Parent.Parent:IsA("Model")
+	end
+	if not Parent:FindFirstChild("RemoteEvent") then
+		repeat
+			task.wait()
+		until Parent:FindFirstChild("RemoteEvent")
+	end
+	local var9_upvw
+	Parent.ChildAdded:Connect(function(arg1_2) -- Line 42
+		--[[ Upvalues[1]:
+			[1]: var9_upvw (read and write)
+		]]
+		if arg1_2:GetAttribute("Legacy") and arg1_2:IsA("RemoteEvent") then
+			var9_upvw = arg1_2
+			var9_upvw.Name = "LegacyRemoteEvent"
+		end
+	end)
+	local children, NONE_2, NONE = Parent:GetChildren()
+	-- KONSTANTERROR: [0] 1. Error Block 59 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [111] 80. Error Block 17 start (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [111] 80. Error Block 17 end (CF ANALYSIS FAILED)
+	-- KONSTANTERROR: [96] 68. Error Block 14 start (CF ANALYSIS FAILED)
+	-- KONSTANTWARNING: Failed to evaluate expression, replaced with nil [111.15]
+	-- KONSTANTERROR: [96] 68. Error Block 14 end (CF ANALYSIS FAILED)
+end

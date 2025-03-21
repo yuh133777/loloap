@@ -1,0 +1,51 @@
+local tbl_2_upvr = {}
+tbl_2_upvr.__index = tbl_2_upvr
+local any_new_result1_upvr = require(game.ReplicatedStorage.Packages.SerdeJson).new(function(arg1, arg2) -- Line 51
+	return {
+		Category = arg2.String(arg1.Category);
+		Key = arg2.String(arg1.Key);
+		Type = arg2.String(arg1.Type);
+		IsDeprecated = arg2.Bool(arg1.IsDeprecated);
+	}
+end, function(arg1, arg2) -- Line 58
+	--[[ Upvalues[1]:
+		[1]: tbl_2_upvr (readonly)
+	]]
+	local setmetatable_result1 = setmetatable({
+		Category = arg2.String(arg1.Category);
+		Key = arg2.String(arg1.Key);
+		Type = arg2.String(arg1.Type);
+		IsDeprecated = arg2.Bool(arg1.IsDeprecated);
+	}, tbl_2_upvr)
+	table.freeze(setmetatable_result1)
+	return setmetatable_result1
+end)
+function tbl_2_upvr.ToString(arg1) -- Line 69
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:toString(arg1)
+end
+function tbl_2_upvr.fromString(arg1) -- Line 73
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:fromString(arg1)
+end
+function tbl_2_upvr.new(arg1, arg2, arg3, arg4) -- Line 77
+	--[[ Upvalues[1]:
+		[1]: tbl_2_upvr (readonly)
+	]]
+	local tbl = {}
+	tbl.Category = arg1
+	tbl.Key = arg2
+	tbl.Type = arg3
+	tbl.IsDeprecated = arg4
+	local setmetatable_result1_2 = setmetatable(tbl, tbl_2_upvr)
+	table.freeze(setmetatable_result1_2)
+	return setmetatable_result1_2
+end
+return {
+	Class = tbl_2_upvr;
+	Serde = any_new_result1_upvr;
+}

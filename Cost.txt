@@ -1,0 +1,108 @@
+local tbl_upvr = {}
+tbl_upvr.__index = tbl_upvr
+local any_new_result1_upvr = require(game.ReplicatedStorage.Packages.SerdeJson).new(function(arg1, arg2) -- Line 59
+	if arg1.Type == "Currency" then
+		return {
+			Type = arg2.String("Currency");
+			BeliAmount = arg2.Int32(arg1.BeliAmount);
+			FragmentAmount = arg2.Int32(arg1.FragmentAmount);
+		}
+	end
+	if arg1.Type == "DeveloperProduct" then
+		return {
+			Type = arg2.String("DeveloperProduct");
+			ProductId = arg2.Int64(arg1.ProductId);
+		}
+	end
+	if arg1.Type == "Gamepass" then
+		return {
+			Type = arg2.String("Gamepass");
+			GamepassId = arg2.Int64(arg1.GamepassId);
+		}
+	end
+	error(`Invalid Cost type: "{arg1.Type}"`)
+end, function(arg1, arg2) -- Line 78
+	--[[ Upvalues[1]:
+		[1]: tbl_upvr (readonly)
+	]]
+	local any_String_result1 = arg2.String(arg1.Type)
+	if any_String_result1 == "Currency" then
+		local setmetatable_result1_6 = setmetatable({
+			Type = "Currency";
+			BeliAmount = arg2.Int32(arg1.BeliAmount);
+			FragmentAmount = arg2.Int32(arg1.FragmentAmount);
+		}, tbl_upvr)
+		table.freeze(setmetatable_result1_6)
+		return setmetatable_result1_6
+	end
+	if any_String_result1 == "DeveloperProduct" then
+		local setmetatable_result1 = setmetatable({
+			Type = "DeveloperProduct";
+			ProductId = arg2.Int64(arg1.ProductId);
+		}, tbl_upvr)
+		table.freeze(setmetatable_result1)
+		return setmetatable_result1
+	end
+	if any_String_result1 == "Gamepass" then
+		local setmetatable_result1_2 = setmetatable({
+			Type = "Gamepass";
+			GamepassId = arg2.Int64(arg1.GamepassId);
+		}, tbl_upvr)
+		table.freeze(setmetatable_result1_2)
+		return setmetatable_result1_2
+	end
+	error(`Invalid CostType type: "{any_String_result1}"`)
+end)
+function tbl_upvr.ToString(arg1) -- Line 120
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:toString(arg1)
+end
+function tbl_upvr.fromString(arg1) -- Line 124
+	--[[ Upvalues[1]:
+		[1]: any_new_result1_upvr (readonly)
+	]]
+	return any_new_result1_upvr:fromString(arg1)
+end
+function tbl_upvr.newCurrency(arg1, arg2) -- Line 128
+	--[[ Upvalues[1]:
+		[1]: tbl_upvr (readonly)
+	]]
+	local tbl_2 = {
+		Type = "Currency";
+	}
+	tbl_2.BeliAmount = arg1
+	tbl_2.FragmentAmount = arg2
+	local setmetatable_result1_5 = setmetatable(tbl_2, tbl_upvr)
+	table.freeze(setmetatable_result1_5)
+	return setmetatable_result1_5
+end
+function tbl_upvr.newDeveloperProduct(arg1) -- Line 141
+	--[[ Upvalues[1]:
+		[1]: tbl_upvr (readonly)
+	]]
+	local tbl_3 = {
+		Type = "DeveloperProduct";
+	}
+	tbl_3.ProductId = arg1
+	local setmetatable_result1_3 = setmetatable(tbl_3, tbl_upvr)
+	table.freeze(setmetatable_result1_3)
+	return setmetatable_result1_3
+end
+function tbl_upvr.newGamepass(arg1) -- Line 153
+	--[[ Upvalues[1]:
+		[1]: tbl_upvr (readonly)
+	]]
+	local tbl = {
+		Type = "Gamepass";
+	}
+	tbl.GamepassId = arg1
+	local setmetatable_result1_4 = setmetatable(tbl, tbl_upvr)
+	table.freeze(setmetatable_result1_4)
+	return setmetatable_result1_4
+end
+return {
+	Class = tbl_upvr;
+	Serde = any_new_result1_upvr;
+}

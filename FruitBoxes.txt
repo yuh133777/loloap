@@ -1,0 +1,72 @@
+local Rarities = require(script.Parent.Rarities)
+local module = {
+	MysteryBoxS2 = {
+		reducer = 0.5;
+		Name = "Mystery Fruit Box";
+		Rarity = Rarities.Common;
+	};
+	UncommonBoxS2 = {
+		reducer = 0.5;
+		Name = "Season 2 Fruit Box";
+		Rarity = Rarities.Uncommon;
+	};
+	RareBoxS2 = {
+		reducer = 0.5;
+		Name = "Season 2 Fruit Box";
+		Rarity = Rarities.Rare;
+	};
+	LegendaryBoxS2 = {
+		reducer = 0.5;
+		Name = "Season 2 Fruit Box";
+		Rarity = Rarities.Legendary;
+	};
+	MythicalBoxS2 = {
+		reducer = 0.5;
+		Name = "Season 2 Fruit Box";
+		Rarity = Rarities.Mythical;
+	};
+	PremiumBoxS2 = {
+		reducer = 0.5;
+		Name = "Season 2 Premium Box";
+		Rarity = Rarities.Premium;
+	};
+	["Fruit Box"] = {
+		texture = "rbxassetid://14901373883";
+		reducer = 0.5;
+		Name = "Fruit Box";
+		Rarity = Rarities.Premium;
+	};
+	["Super Fruit Box"] = {
+		texture = "rbxassetid://14901374971";
+		reducer = 0.5;
+		Name = "Super Fruit Box";
+		Rarity = Rarities.Premium;
+	};
+}
+for i_upvr, v in pairs(module) do
+	if v.gift == nil then
+		v.gift = false
+	end
+	v.storageName = i_upvr
+	v.assetId = v.assetId
+	v.redeemedFor = v.redeemedFor or "Random"
+	v.reducer = v.reducer
+	v.subtype = v.subtype or "Stored Product"
+	v.productType = v.productType or "Product"
+	local callback = v.callback
+	if not callback then
+		function callback(arg1) -- Line 58
+			--[[ Upvalues[1]:
+				[1]: i_upvr (readonly)
+			]]
+			require(game.ServerStorage.DLC).PullReward(arg1, i_upvr)
+		end
+	end
+	v.callback = callback
+	if not game:GetService("RunService"):IsServer() then
+		v.IsForSale = true
+	end
+	table.freeze(v)
+end
+table.freeze(module)
+return module
