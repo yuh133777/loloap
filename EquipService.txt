@@ -1,0 +1,138 @@
+-- Saved by UniversalSynSaveInstance (Join to Copy Games) https://discord.gg/wx4ThpAsmw
+
+-- Decompiler will be improved soon!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-18 20:37:21
+-- Luau version 6, Types version 3
+-- Time taken: 0.003843 seconds
+
+local module_upvr_3 = {}
+local module_upvr_2 = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("ProfileData"))
+local Remotes_upvr = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("ClientServices"):WaitForChild("ItemService"))
+local tbl_upvr = {
+	Perks = true;
+	Knife = true;
+	Gun = true;
+}
+local tbl_2_upvr = {}
+module_upvr_3.EquippedChanged = script:WaitForChild("EquippedChanged")
+function module_upvr_3.EquipItem(arg1, arg2, arg3) -- Line 23
+	--[[ Upvalues[4]:
+		[1]: module_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+		[3]: module_upvr_3 (readonly)
+		[4]: Remotes_upvr (readonly)
+	]]
+	if arg2 == "Weapons" then
+		local ItemType = module_upvr:GetItemInfo(arg2, arg3).ItemType
+		module_upvr_2.Weapons.Equipped[ItemType] = arg3
+		module_upvr_3.EquippedChanged:Fire(ItemType, arg3)
+	else
+		local tbl = {}
+		tbl[1] = arg3
+		module_upvr_2[arg2].Equipped = tbl
+		module_upvr_3.EquippedChanged:Fire(arg2, arg3)
+	end
+	Remotes_upvr.Inventory.Equip:FireServer(arg3, arg2)
+end
+function module_upvr_3.UnequipItem(arg1, arg2) -- Line 39
+	--[[ Upvalues[3]:
+		[1]: module_upvr_2 (readonly)
+		[2]: Remotes_upvr (readonly)
+		[3]: module_upvr_3 (readonly)
+	]]
+	if arg2 == "Knife" then
+		module_upvr_2.Weapons.Equipped.Knife = "DefaultKnife"
+	elseif arg2 == "Gun" then
+		module_upvr_2.Weapons.Equipped.Gun = "DefaultGun"
+	else
+		module_upvr_2[arg2].Equipped = {}
+		Remotes_upvr.Inventory.Unequip:FireServer(1, arg2)
+	end
+	module_upvr_3.EquippedChanged:Fire(arg2, nil)
+end
+function module_upvr_3.GetEquipped(arg1, arg2) -- Line 52
+	--[[ Upvalues[1]:
+		[1]: module_upvr_2 (readonly)
+	]]
+	if arg2 == "Knife" then
+		return module_upvr_2.Weapons.Equipped.Knife
+	end
+	if arg2 == "Gun" then
+		return module_upvr_2.Weapons.Equipped.Gun
+	end
+	return module_upvr_2[arg2].Equipped[1]
+end
+local EquipContainer_upvr = script:WaitForChild("EquipContainer")
+function module_upvr_3.CreateEquipContainer(arg1, arg2) -- Line 63
+	--[[ Upvalues[4]:
+		[1]: EquipContainer_upvr (readonly)
+		[2]: module_upvr (readonly)
+		[3]: tbl_upvr (readonly)
+		[4]: tbl_2_upvr (readonly)
+	]]
+	local clone_2 = EquipContainer_upvr:Clone()
+	clone_2.ItemFrame:Destroy()
+	local clone = module_upvr.BaseItemFrame:Clone()
+	clone.Parent = clone_2
+	if tbl_upvr[arg2] then
+		clone.UIPadding:Destroy()
+	end
+	tbl_2_upvr[arg2] = clone_2
+	return clone_2
+end
+local function onEquippedChanged_upvr(arg1, arg2) -- Line 75, Named "onEquippedChanged"
+	--[[ Upvalues[2]:
+		[1]: tbl_2_upvr (readonly)
+		[2]: module_upvr (readonly)
+	]]
+	-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+	-- KONSTANTERROR: [0] 1. Error Block 30 start (CF ANALYSIS FAILED)
+	local var18 = tbl_2_upvr[arg1]
+	local var19
+	if not var18 then
+	else
+		if arg1 == "Knife" then
+			var19 = "Weapons"
+			-- KONSTANTWARNING: GOTO [13] #12
+		end
+		-- KONSTANTERROR: [0] 1. Error Block 30 end (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: [8] 8. Error Block 36 start (CF ANALYSIS FAILED)
+		if arg1 == "Gun" then
+			var19 = "Weapons"
+		else
+			var19 = arg1
+		end
+		if arg2 then
+			local any_GetItemInfo_result1 = module_upvr:GetItemInfo(var19, arg2)
+		end
+		local ItemFrame = var18:WaitForChild("ItemFrame")
+		if arg2 == nil then
+		else
+		end
+		ItemFrame.Visible = true
+		if arg2 ~= nil then
+			if var19 ~= "Perks" then
+				if var19 == "Weapons" then
+				else
+				end
+			end
+		end
+		var18.Unequip.Visible = true
+		module_upvr:ApplyItemToFrame(ItemFrame, any_GetItemInfo_result1)
+		module_upvr:UpdateTags(ItemFrame, any_GetItemInfo_result1)
+		-- KONSTANTERROR: [8] 8. Error Block 36 end (CF ANALYSIS FAILED)
+	end
+end
+function module_upvr_3.BindEquipContainer(arg1, arg2, arg3) -- Line 93
+	--[[ Upvalues[3]:
+		[1]: tbl_2_upvr (readonly)
+		[2]: onEquippedChanged_upvr (readonly)
+		[3]: module_upvr_3 (readonly)
+	]]
+	tbl_2_upvr[arg2] = arg3
+	onEquippedChanged_upvr(arg2, module_upvr_3:GetEquipped(arg2))
+end
+module_upvr_3.EquippedChanged.Event:Connect(onEquippedChanged_upvr)
+return module_upvr_3
