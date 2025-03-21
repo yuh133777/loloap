@@ -44,11 +44,14 @@ getButton.Position = UDim2.new(0, 10, 1, -40)
 getButton.Text = "Get"
 getButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
 
--- Fruit list (use EXACT names from FruitInfo)
+-- Fruit list (USE EXACT NAMES FROM FRUITINFO SCRIPT)
 local fruits = {
-    "Rocket-Rocket", 
     "Ice-Ice", 
-    "Spin-Spin" -- Add all fruits
+    "Rocket-Rocket",
+    "Spin-Spin",
+    "Flame-Flame",
+    "Dark-Dark"
+    -- Add all fruits in their EXACT FORMAT
 }
 
 local selectedFruit = nil
@@ -65,21 +68,15 @@ for _, fruitName in pairs(fruits) do
     end)
 end
 
--- Spawn logic
+-- Spawn logic (server handles randomization)
 getButton.MouseButton1Click:Connect(function()
     if selectedFruit then
-        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        if not rootPart then 
-            warn("Player root part not found!")
-            return 
-        end
-
-        -- Mimic a legitimate request
+        -- Send minimal request to server
         streamingRemote:FireServer({
             ItemId = selectedFruit,
             Player = player,
-            Position = rootPart.Position + Vector3.new(0, 5, 0), -- Spawn above player
-            Timestamp = os.time() -- Optional anti-exploit measure
+            -- Server will handle position randomization
+            -- Add other required parameters from game scripts
         })
         print("Requested server to spawn: " .. selectedFruit)
     else
