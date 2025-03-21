@@ -81,39 +81,19 @@ end
 -- Debugging: Print dropdown population
 print("Dropdown populated with fruits.")
 
--- Function to spawn the selected fruit as a model in the game world
+-- Function to spawn the selected fruit using the game's systems
 getButton.MouseButton1Click:Connect(function()
     if fruitData.selectedFruit then
         print("Attempting to spawn fruit: " .. fruitData.selectedFruit) -- Debugging: Print attempt to spawn fruit
 
         -- Use pcall to catch errors during fruit spawning
         local success, errorMessage = pcall(function()
-            -- Create the fruit model
-            local fruitModel = Instance.new("Model")
-            fruitModel.Name = fruitData.selectedFruit .. "-" .. fruitData.selectedFruit
-
-            -- Create a part to represent the fruit
-            local fruitPart = Instance.new("Part", fruitModel)
-            fruitPart.Name = "Handle"
-            fruitPart.Size = Vector3.new(2, 2, 2)
-            fruitPart.Position = player.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0) -- Spawn near the player
-            fruitPart.Anchored = true
-            fruitPart.CanCollide = true
-            fruitPart.BrickColor = BrickColor.new("Bright red") -- Customize the color as needed
-
-            -- Add a Touched event to allow players to collect the fruit
-            fruitPart.Touched:Connect(function(hit)
-                local player = game.Players:GetPlayerFromCharacter(hit.Parent)
-                if player then
-                    -- Add the fruit to the player's backpack
-                    local toolClone = fruitModel:Clone()
-                    toolClone.Parent = player.Backpack
-                    fruitModel:Destroy() -- Remove the fruit from the world
-                end
-            end)
-
-            -- Parent the fruit model to the workspace
-            fruitModel.Parent = workspace
+            -- Get the ClientItemSpawnerService
+            local ClientItemSpawnerService = game:GetService("ReplicatedStorage"):WaitForChild("ClientItemSpawnerService")
+            
+            -- Call the appropriate method to spawn the fruit
+            -- Note: Replace "SpawnFruit" with the actual method name used in the game
+            ClientItemSpawnerService:InvokeServer("SpawnFruit", fruitData.selectedFruit)
 
             print("Successfully spawned " .. fruitData.selectedFruit .. " in the game world.") -- Debugging: Print success
         end)
