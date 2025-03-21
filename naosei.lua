@@ -50,9 +50,7 @@ getButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
 
 -- Fruit list (Replace with EXACT names from FruitInfo.txt)
 local fruits = {
-    "Ice-Ice", 
-    "Rocket-Rocket",
-    "Spin-Spin",
+    "Fruit"
     -- Add all fruits in the EXACT format
 }
 
