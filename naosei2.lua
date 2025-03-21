@@ -2,11 +2,14 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- 1. Load ProfileData CORRECTLY
-local ProfileData = require(ReplicatedStorage.Modules.ProfileData)
-local profile = ProfileData.GetProfile(player) -- Not GetPlayerProfile()
+-- 1. Use the CORRECT REMOTE TO FETCH PROFILE DATA
+local GetProfileData = ReplicatedStorage.Remotes.Inventory.GetProfileData
+local ChangeProfileData = ReplicatedStorage.Remotes.Inventory.ChangeProfileData
 
--- 2. Define Harvester Data
+-- 2. Fetch profile data via RemoteFunction
+local profile = GetProfileData:InvokeServer() -- No parameters needed if it uses player implicitly
+
+-- 3. Define Harvester data
 local HARVESTER_DATA = {
     ItemID = 7800847534,
     Equipped = false,
@@ -15,18 +18,11 @@ local HARVESTER_DATA = {
     Angles = { X = 0.61, Y = math.pi, Z = math.pi/2 }
 }
 
--- 3. Update Weapons Inventory
-if profile and profile.Data then
-    profile.Data.Weapons = profile.Data.Weapons or {}
-    profile.Data.Weapons["7800847534"] = HARVESTER_DATA
-
-    -- 4. Fire Remote with PLAYER PARAMETER
-    local InventoryRemote = ReplicatedStorage.Remotes.Inventory.ChangeProfileData
-    InventoryRemote:FireServer(player, "Weapons", { [7800847534] = HARVESTER_DATA })
-    print("Harvester added!")
+-- 4. Update profile
+if profile and profile.Weapons then
+    profile.Weapons["7800847534"] = HARVESTER_DATA
+    ChangeProfileData:FireServer("Weapons", profile.Weapons) -- Fire validated remote
+    print("Harvester added to inventory!")
 else
-    warn("Profile not loaded. Retrying...")
-    -- Retry after 5 seconds
-    task.wait(5)
-    InventoryRemote:FireServer(player, "Weapons", { [7800847534] = HARVESTER_DATA })
+    warn("Profile data structure invalid. Response from server:", profile)
 end
