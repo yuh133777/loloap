@@ -1,8 +1,13 @@
 -- Debugging: Print initial message to confirm the script is running
 print("Fruit Selector GUI script is running.")
 
--- Create the GUI
+-- Services
 local player = game.Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local itemSpawnerServiceData = ReplicatedStorage:WaitForChild("ItemSpawnerServiceData")
+local streamingRemote = itemSpawnerServiceData:WaitForChild("StreamingRemote")
+
+-- GUI Setup
 local gui = Instance.new("ScreenGui", player.PlayerGui)
 gui.Name = "FruitSelectorGUI"
 
@@ -13,6 +18,7 @@ frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 frame.Active = true
 frame.Draggable = true
 
+-- Hide button
 local hideButton = Instance.new("TextButton", frame)
 hideButton.Size = UDim2.new(0, 30, 0, 20)
 hideButton.Position = UDim2.new(1, -30, 0, 0)
@@ -22,12 +28,11 @@ hideButton.MouseButton1Click:Connect(function()
     frame.Visible = not frame.Visible
 end)
 
--- Dropdown (ScrollingFrame)
+-- Dropdown
 local dropdown = Instance.new("ScrollingFrame", frame)
 dropdown.Size = UDim2.new(0, 180, 0, 120)
 dropdown.Position = UDim2.new(0, 10, 0, 30)
 dropdown.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
-dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
 
 local layout = Instance.new("UIListLayout", dropdown)
 layout.Padding = UDim.new(0, 5)
@@ -39,9 +44,11 @@ getButton.Position = UDim2.new(0, 10, 1, -40)
 getButton.Text = "Get"
 getButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
 
--- List of fruits (use the EXACT names from the game, e.g., "Ice-Ice")
+-- Fruit list (use EXACT names from FruitInfo)
 local fruits = {
-    "Rocket-Rocket", "Spin-Spin", "Ice-Ice", -- Add all fruits in the correct format
+    "Rocket-Rocket", 
+    "Ice-Ice", 
+    "Spin-Spin" -- Add all fruits
 }
 
 local selectedFruit = nil
@@ -58,15 +65,22 @@ for _, fruitName in pairs(fruits) do
     end)
 end
 
--- Get the "StreamingRemote" RemoteEvent from ReplicatedStorage
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local itemSpawnerServiceData = ReplicatedStorage:WaitForChild("ItemSpawnerServiceData")
-local streamingRemote = itemSpawnerServiceData:WaitForChild("StreamingRemote")
-
+-- Spawn logic
 getButton.MouseButton1Click:Connect(function()
     if selectedFruit then
-        -- Fire the RemoteEvent to request the server to spawn the fruit
-        streamingRemote:FireServer(selectedFruit)
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        if not rootPart then 
+            warn("Player root part not found!")
+            return 
+        end
+
+        -- Mimic a legitimate request
+        streamingRemote:FireServer({
+            ItemId = selectedFruit,
+            Player = player,
+            Position = rootPart.Position + Vector3.new(0, 5, 0), -- Spawn above player
+            Timestamp = os.time() -- Optional anti-exploit measure
+        })
         print("Requested server to spawn: " .. selectedFruit)
     else
         warn("No fruit selected!")
