@@ -101,31 +101,19 @@ getButton.MouseButton1Click:Connect(function()
             fruitPart.CanCollide = true
             fruitPart.BrickColor = BrickColor.new("Bright red") -- Customize the color as needed
 
-            -- Add a TouchInterest to allow players to collect the fruit
-            local touchInterest = Instance.new("TouchTransmitter", fruitPart)
-            touchInterest.Name = "TouchInterest"
+            -- Add a Touched event to allow players to collect the fruit
+            fruitPart.Touched:Connect(function(hit)
+                local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+                if player then
+                    -- Add the fruit to the player's backpack
+                    local toolClone = fruitModel:Clone()
+                    toolClone.Parent = player.Backpack
+                    fruitModel:Destroy() -- Remove the fruit from the world
+                end
+            end)
 
             -- Parent the fruit model to the workspace
             fruitModel.Parent = workspace
-
-            -- Optional: Add a script to handle collection logic (if needed)
-            local collectionScript = Instance.new("Script", fruitModel)
-            collectionScript.Name = "FruitCollectionScript"
-            collectionScript.Source = [[
-                local tool = script.Parent
-                local handle = tool:WaitForChild("Handle")
-                local touchInterest = handle:WaitForChild("TouchInterest")
-
-                touchInterest.Touched:Connect(function(hit)
-                    local player = game.Players:GetPlayerFromCharacter(hit.Parent)
-                    if player then
-                        -- Add the fruit to the player's backpack
-                        local toolClone = tool:Clone()
-                        toolClone.Parent = player.Backpack
-                        tool:Destroy() -- Remove the fruit from the world
-                    end
-                end)
-            ]]
 
             print("Successfully spawned " .. fruitData.selectedFruit .. " in the game world.") -- Debugging: Print success
         end)
