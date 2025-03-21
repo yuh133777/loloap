@@ -6,18 +6,12 @@ local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui", player.PlayerGui)
 gui.Name = "FruitSelectorGUI"
 
--- Debugging: Print GUI creation
-print("GUI created and parented to PlayerGui.")
-
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 200, 0, 200) -- Increased height to accommodate the "Get" button below the dropdown
+frame.Size = UDim2.new(0, 200, 0, 200)
 frame.Position = UDim2.new(0.5, -100, 0.5, -100)
 frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
 frame.Active = true
 frame.Draggable = true
-
--- Debugging: Print frame creation
-print("Frame created and added to GUI.")
 
 local hideButton = Instance.new("TextButton", frame)
 hideButton.Size = UDim2.new(0, 30, 0, 20)
@@ -26,12 +20,11 @@ hideButton.Text = "X"
 hideButton.BackgroundColor3 = Color3.new(0.8, 0.2, 0.2)
 hideButton.MouseButton1Click:Connect(function()
     frame.Visible = not frame.Visible
-    print("Hide button clicked. Frame visibility toggled.") -- Debugging: Print hide button click
 end)
 
 -- Dropdown (ScrollingFrame)
 local dropdown = Instance.new("ScrollingFrame", frame)
-dropdown.Size = UDim2.new(0, 180, 0, 120) -- Adjusted size to fit within the frame
+dropdown.Size = UDim2.new(0, 180, 0, 120)
 dropdown.Position = UDim2.new(0, 10, 0, 30)
 dropdown.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
 dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -39,73 +32,45 @@ dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
 local layout = Instance.new("UIListLayout", dropdown)
 layout.Padding = UDim.new(0, 5)
 
--- Debugging: Print dropdown creation
-print("Dropdown created and added to frame.")
-
--- "Get" button (placed below the dropdown)
+-- "Get" button
 local getButton = Instance.new("TextButton", frame)
 getButton.Size = UDim2.new(0, 180, 0, 30)
-getButton.Position = UDim2.new(0, 10, 1, -40) -- Positioned below the dropdown
+getButton.Position = UDim2.new(0, 10, 1, -40)
 getButton.Text = "Get"
 getButton.BackgroundColor3 = Color3.new(0.2, 0.6, 0.2)
 
--- Debugging: Print get button creation
-print("Get button created and added to frame.")
-
--- List of fruits
+-- List of fruits (use the EXACT names from the game, e.g., "Ice-Ice")
 local fruits = {
-    "Rocket", "Spin", "Blade", "Spring", "Bomb", "Smoke", "Spike", "Flame", "Falcon", "Ice", "Sand", "Dark", "Diamond", 
-    "Light", "Rubber", "Barrier", "Ghost", "Magma", "Quake", "Buddha", "Love", "Spider", "Sound", "Phoenix", "Portal", 
-    "Rumble", "Pain", "Blizzard", "Gravity", "Mammoth", "T-Rex", "Dough", "Shadow", "Venom", "Control", "Gas", "Spirit", 
-    "Leopard", "Yeti", "Kitsune", "Dragon"
+    "Rocket-Rocket", "Spin-Spin", "Ice-Ice", -- Add all fruits in the correct format
 }
 
--- Create a table to store the selected fruit
-local fruitData = {
-    selectedFruit = nil
-}
+local selectedFruit = nil
 
--- Populate the dropdown with fruits
+-- Populate dropdown
 for _, fruitName in pairs(fruits) do
     local button = Instance.new("TextButton", dropdown)
     button.Size = UDim2.new(0, 160, 0, 20)
     button.Text = fruitName
     button.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
     button.MouseButton1Click:Connect(function()
-        fruitData.selectedFruit = fruitName
-        print("Selected fruit: " .. fruitData.selectedFruit) -- Debugging: Print selected fruit
+        selectedFruit = fruitName
+        print("Selected fruit: " .. selectedFruit)
     end)
-    dropdown.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
 end
 
--- Debugging: Print dropdown population
-print("Dropdown populated with fruits.")
+-- Get the "StreamingRemote" RemoteEvent from ReplicatedStorage
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local itemSpawnerServiceData = ReplicatedStorage:WaitForChild("ItemSpawnerServiceData")
+local streamingRemote = itemSpawnerServiceData:WaitForChild("StreamingRemote")
 
--- Function to spawn the selected fruit using the game's systems
 getButton.MouseButton1Click:Connect(function()
-    if fruitData.selectedFruit then
-        print("Attempting to spawn fruit: " .. fruitData.selectedFruit) -- Debugging: Print attempt to spawn fruit
-
-        -- Use pcall to catch errors during fruit spawning
-        local success, errorMessage = pcall(function()
-            -- Get the ClientItemSpawnerService
-            local ClientItemSpawnerService = game:GetService("ReplicatedStorage"):WaitForChild("ClientItemSpawnerService")
-            
-            -- Call the appropriate method to spawn the fruit
-            -- Note: Replace "SpawnFruit" with the actual method name used in the game
-            ClientItemSpawnerService:InvokeServer("SpawnFruit", fruitData.selectedFruit)
-
-            print("Successfully spawned " .. fruitData.selectedFruit .. " in the game world.") -- Debugging: Print success
-        end)
-
-        -- If an error occurred, print it
-        if not success then
-            print("Error spawning fruit: " .. tostring(errorMessage)) -- Debugging: Print error
-        end
+    if selectedFruit then
+        -- Fire the RemoteEvent to request the server to spawn the fruit
+        streamingRemote:FireServer(selectedFruit)
+        print("Requested server to spawn: " .. selectedFruit)
     else
-        print("No fruit selected.") -- Debugging: Print if no fruit is selected
+        warn("No fruit selected!")
     end
 end)
 
--- Debugging: Print final message to confirm script setup is complete
-print("Fruit Selector GUI setup complete. Ready to use.")
+print("GUI setup complete.")
