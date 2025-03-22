@@ -1,0 +1,139 @@
+-- Decompiler will be improved VERY SOON!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-21 17:58:06
+-- Luau version 6, Types version 3
+-- Time taken: 0.004649 seconds
+
+local Game_upvr = script.Parent.Parent:WaitForChild("Game")
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local Inventory_upvr = Game_upvr:WaitForChild("Inventory")
+local module_upvr = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("WindowService"))
+local module_upvr_2 = require(game.ReplicatedStorage:WaitForChild("Modules"):WaitForChild("InventoryModule"))
+module_upvr_2.GUI.MyInventory = {}
+module_upvr_2.GUI.MyInventory.Main = Inventory_upvr.Main
+module_upvr_2.GUI.MyInventory.Nav = Inventory_upvr.Nav
+module_upvr_2.GUI.NewItem = Game_upvr.NewItem
+module_upvr_2.GUI.EvoMenu = Inventory_upvr.Main.Weapons.EvoMenu
+for _, v in pairs({"Weapons", "Effects", "Perks", "Emotes", "Radios", "Pets"}) do
+	for i_2, _ in pairs(module_upvr_2.CreateBlankInventoryTable()[v]) do
+		local SOME = Inventory_upvr.Main:FindFirstChild(v).Items.Container:FindFirstChild(i_2)
+		if not SOME then
+			SOME = Inventory_upvr.Main:FindFirstChild(v).Items.Container:FindFirstChild("Holiday").Container:FindFirstChild(i_2)
+		end
+		SOME.Container:ClearAllChildren()
+	end
+end
+module_upvr_2.MyInventory = module_upvr_2.GenerateInventory(Inventory_upvr, require(game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("ProfileData")))
+local Container_upvr = Inventory_upvr.Main.Weapons.Items.Container
+Container_upvr.Holiday.Container.EventLayout:GetPropertyChangedSignal("AbsoluteContentSize"):connect(function() -- Line 37
+	--[[ Upvalues[1]:
+		[1]: Container_upvr (readonly)
+	]]
+	Container_upvr.Holiday.Container.Size = UDim2.new(1, 0, 0, Container_upvr.Holiday.Container.EventLayout.AbsoluteContentSize.Y + 3)
+	Container_upvr.Holiday.CanvasSize = UDim2.new(1, 0, 0, Container_upvr.Holiday.Container.EventLayout.AbsoluteContentSize.Y + 6)
+end)
+module_upvr_2.ConnectNavButtons(Inventory_upvr.Nav, Inventory_upvr.Main)
+module_upvr_2.ConnectTabButtons(Inventory_upvr, "Weapons")
+module_upvr_2.UpdateMyEquip()
+module_upvr_2.ConnectEquipButtons()
+module_upvr_2.ConnectPetNaming(Inventory_upvr.Main.Pets.Equipped.Container.NameYourPet.Container2)
+module_upvr_2.ConnectCodeFrame(Inventory_upvr.Main.Weapons.Equipped.Container.Codes)
+module_upvr_2.ConnectEvoMenu()
+module_upvr:RegisterFrame(Game_upvr:WaitForChild("Inventory"), "Inventory")
+Game_upvr:WaitForChild("Dock").Inventory.Activated:Connect(function() -- Line 57
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	module_upvr:ToggleFrame("Inventory")
+end)
+local SearchText_upvr = Inventory_upvr.Main.Weapons.Items.Tabs.Search.Container.SearchText
+SearchText_upvr:GetPropertyChangedSignal("Text"):Connect(function() -- Line 65
+	--[[ Upvalues[2]:
+		[1]: SearchText_upvr (readonly)
+		[2]: module_upvr_2 (readonly)
+	]]
+	local var38
+	for _, v_3 in pairs(module_upvr_2.MyInventory.Data.Weapons) do
+		for _, v_4 in v_3 do
+			v_4.Frame.Visible = string.find(string.lower(v_4.Name), string.lower(string.gsub(SearchText_upvr.Text, 'S', "")))
+			if not var38 then
+				if v_4.Frame.Parent.Parent:IsA("ScrollingFrame") then
+					var38 = v_4.Frame.Parent.Parent
+				else
+					var38 = v_4.Frame.Parent.Parent.Parent.Parent
+				end
+			end
+		end
+	end
+	if var38 then
+		var38.CanvasPosition = Vector2.new(0, 0)
+	end
+end)
+local Processing_upvr = Game_upvr.Processing
+function _G.Process(arg1) -- Line 97
+	--[[ Upvalues[1]:
+		[1]: Processing_upvr (readonly)
+	]]
+	if arg1 then
+		Processing_upvr.Title.Text = arg1
+		spawn(function() -- Line 100
+			--[[ Upvalues[1]:
+				[1]: Processing_upvr (copied, readonly)
+			]]
+			while Processing_upvr.Visible == true do
+				Processing_upvr.Spinner.Rotation = Processing_upvr.Spinner.Rotation + 5
+				game:GetService("RunService").RenderStepped:wait()
+			end
+		end)
+		spawn(function() -- Line 101
+			--[[ Upvalues[1]:
+				[1]: Processing_upvr (copied, readonly)
+			]]
+			while Processing_upvr.Visible == true do
+				wait(0.2)
+				Processing_upvr.Title.Text = Processing_upvr.Title.Text..'.'
+			end
+		end)
+		Processing_upvr.Visible = true
+	else
+		Processing_upvr.Visible = false
+	end
+end
+Remotes:WaitForChild("Inventory"):WaitForChild("ProfileDataChanged").Event:Connect(function(arg1, arg2) -- Line 116
+	--[[ Upvalues[2]:
+		[1]: module_upvr_2 (readonly)
+		[2]: Inventory_upvr (readonly)
+	]]
+	if arg1 == "Uniques" then
+		module_upvr_2.UpdateInventory(Inventory_upvr, module_upvr_2.MyInventory)
+	end
+end)
+Remotes:WaitForChild("Inventory"):WaitForChild("InventoryDataChanged").Event:Connect(function() -- Line 121
+	--[[ Upvalues[2]:
+		[1]: module_upvr_2 (readonly)
+		[2]: Inventory_upvr (readonly)
+	]]
+	module_upvr_2.UpdateInventory(Inventory_upvr, module_upvr_2.MyInventory)
+end)
+Inventory_upvr.Main.Weapons.Equipped.Container.Crafting.ActionButton.Activated:Connect(function() -- Line 126
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	module_upvr:AddToStack("Crafting")
+end)
+Inventory_upvr.Main.Radios.Equipped.Container.ViewSongs.ActionButton.Activated:Connect(function() -- Line 131
+	--[[ Upvalues[1]:
+		[1]: module_upvr (readonly)
+	]]
+	module_upvr:AddToStack("Radio")
+end)
+Game_upvr.Inventory.Main.Radios.NoRadioCover.Visible = not game.Players.LocalPlayer:GetAttribute("Radio")
+game.ReplicatedStorage.Remotes.Shop.GetRadio.OnClientEvent:connect(function() -- Line 139
+	--[[ Upvalues[1]:
+		[1]: Game_upvr (readonly)
+	]]
+	Game_upvr.Inventory.Main.Radios.NoRadioCover.Visible = false
+end)
+Game_upvr.Inventory.Main.Radios.NoRadioCover.Buy.MouseButton1Click:connect(function() -- Line 142
+	game.ReplicatedStorage.Remotes.Shop.GetRadio:FireServer()
+end)
