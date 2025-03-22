@@ -1,0 +1,181 @@
+-- Decompiler will be improved VERY SOON!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-21 19:29:27
+-- Luau version 6, Types version 3
+-- Time taken: 0.003256 seconds
+
+local CorePackages = game:GetService("CorePackages")
+local Dependencies = require(script.Dependencies)
+local Constants_upvr = require(script.Resources.Constants)
+local GlobalConfig_upvr = require(script.GlobalConfig)
+local BeginReportFlow_upvr = require(script.Actions.BeginReportFlow)
+local SetVoiceReportingFlow_upvr = require(script.Actions.SetVoiceReportingFlow)
+local IdentifyAvatars_upvr = require(script.Thunks.IdentifyAvatars)
+local SessionUtility_upvr = require(script.Utility.SessionUtility)
+local ScreenshotHookManager_upvr = require(script.Utility.ScreenshotHookManager)
+local GetFFlagEnableNewVoiceReportFlows_upvr = require(script.Flags.GetFFlagEnableNewVoiceReportFlows)
+local GetFFlagReportAnythingScreenshot_upvr = require(script.Flags.GetFFlagReportAnythingScreenshot)
+local tbl_upvr = {
+	getInstance = function(arg1) -- Line 37, Named "getInstance"
+		if not arg1._initialized then
+			arg1:initialize()
+			arg1._initialized = true
+		end
+		return arg1
+	end;
+}
+local Roact_upvr = require(CorePackages.Packages.Roact)
+local FetchPlaceInfo_upvr = require(script.Thunks.FetchPlaceInfo)
+local RoactRodux_upvr = require(CorePackages.Packages.RoactRodux)
+local TrustAndSafetyAppPolicy_upvr = require(script.TrustAndSafetyAppPolicy)
+local LocalizationProvider_upvr = require(Dependencies.LocalizationProvider)
+local TrustAndSafetyApp_upvr = require(script.Components.TrustAndSafetyApp)
+local CoreGui_upvr = game:GetService("CoreGui")
+function tbl_upvr.initialize(arg1) -- Line 46
+	--[[ Upvalues[8]:
+		[1]: GlobalConfig_upvr (readonly)
+		[2]: Roact_upvr (readonly)
+		[3]: FetchPlaceInfo_upvr (readonly)
+		[4]: RoactRodux_upvr (readonly)
+		[5]: TrustAndSafetyAppPolicy_upvr (readonly)
+		[6]: LocalizationProvider_upvr (readonly)
+		[7]: TrustAndSafetyApp_upvr (readonly)
+		[8]: CoreGui_upvr (readonly)
+	]]
+	if GlobalConfig_upvr.propValidation then
+		Roact_upvr.setGlobalConfig({
+			propValidation = true;
+		})
+	end
+	if GlobalConfig_upvr.elementTracing then
+		Roact_upvr.setGlobalConfig({
+			elementTracing = true;
+		})
+	end
+	arg1.store = arg1:createStore()
+	arg1.store:dispatch(FetchPlaceInfo_upvr(game.GameId))
+	arg1.localization = arg1:createLocalization()
+	arg1.root = Roact_upvr.createElement(RoactRodux_upvr.StoreProvider, {
+		store = arg1.store;
+	}, {
+		PolicyProvider = Roact_upvr.createElement(TrustAndSafetyAppPolicy_upvr.Provider, {
+			policy = {TrustAndSafetyAppPolicy_upvr.Mapper};
+		}, {
+			LocalizationProvider = Roact_upvr.createElement(LocalizationProvider_upvr, {
+				localization = arg1.localization;
+			}, {
+				TrustAndSafety = Roact_upvr.createElement(TrustAndSafetyApp_upvr);
+			});
+		});
+	})
+	arg1.element = Roact_upvr.mount(arg1.root, CoreGui_upvr, "TrustAndSafety")
+end
+local Reducers_upvr = require(script.Reducers)
+local Rodux_upvr = require(CorePackages.Packages.Rodux)
+function tbl_upvr.createStore(arg1) -- Line 80
+	--[[ Upvalues[3]:
+		[1]: Reducers_upvr (readonly)
+		[2]: Rodux_upvr (readonly)
+		[3]: GlobalConfig_upvr (readonly)
+	]]
+	local module_2 = {Rodux_upvr.thunkMiddleware}
+	if GlobalConfig_upvr.logStore then
+		table.insert(module_2, Rodux_upvr.loggerMiddleware)
+	end
+	return Rodux_upvr.Store.new(Reducers_upvr, nil, module_2)
+end
+local LocalizationService_upvr = game:GetService("LocalizationService")
+local Localization_upvr = Dependencies.Localization
+function tbl_upvr.createLocalization(arg1) -- Line 91
+	--[[ Upvalues[2]:
+		[1]: LocalizationService_upvr (readonly)
+		[2]: Localization_upvr (readonly)
+	]]
+	local any_new_result1_upvr = Localization_upvr.new(LocalizationService_upvr.RobloxLocaleId)
+	LocalizationService_upvr:GetPropertyChangedSignal("RobloxLocaleId"):Connect(function() -- Line 95
+		--[[ Upvalues[2]:
+			[1]: LocalizationService_upvr (copied, readonly)
+			[2]: any_new_result1_upvr (readonly)
+		]]
+		any_new_result1_upvr:SetLocale(LocalizationService_upvr.RobloxLocaleId)
+	end)
+	return any_new_result1_upvr
+end
+function tbl_upvr.openReportDialog(arg1, arg2, arg3) -- Line 103
+	--[[ Upvalues[5]:
+		[1]: SetVoiceReportingFlow_upvr (readonly)
+		[2]: GetFFlagEnableNewVoiceReportFlows_upvr (readonly)
+		[3]: GetFFlagReportAnythingScreenshot_upvr (readonly)
+		[4]: IdentifyAvatars_upvr (readonly)
+		[5]: BeginReportFlow_upvr (readonly)
+	]]
+	arg1.store:dispatch(SetVoiceReportingFlow_upvr(GetFFlagEnableNewVoiceReportFlows_upvr()))
+	if GetFFlagReportAnythingScreenshot_upvr() then
+		arg1.store:dispatch(IdentifyAvatars_upvr())
+	end
+	arg1.store:dispatch(BeginReportFlow_upvr(arg2, arg3))
+end
+local function openReportMenu(arg1) -- Line 111
+	--[[ Upvalues[5]:
+		[1]: SetVoiceReportingFlow_upvr (readonly)
+		[2]: GetFFlagEnableNewVoiceReportFlows_upvr (readonly)
+		[3]: GetFFlagReportAnythingScreenshot_upvr (readonly)
+		[4]: IdentifyAvatars_upvr (readonly)
+		[5]: BeginReportFlow_upvr (readonly)
+	]]
+	arg1.store:dispatch(SetVoiceReportingFlow_upvr(GetFFlagEnableNewVoiceReportFlows_upvr()))
+	if GetFFlagReportAnythingScreenshot_upvr() then
+		arg1.store:dispatch(IdentifyAvatars_upvr())
+	end
+	arg1.store:dispatch(BeginReportFlow_upvr())
+end
+tbl_upvr.openReportMenu = openReportMenu
+local module = {}
+local playerInterface_upvr = require(Dependencies.playerInterface)
+local t_upvr = require(CorePackages.Packages.t)
+function module.openReportDialogForPlayer(arg1, arg2) -- Line 120
+	--[[ Upvalues[5]:
+		[1]: playerInterface_upvr (readonly)
+		[2]: t_upvr (readonly)
+		[3]: SessionUtility_upvr (readonly)
+		[4]: tbl_upvr (readonly)
+		[5]: Constants_upvr (readonly)
+	]]
+	local playerInterface_upvr_result1 = playerInterface_upvr(arg1)
+	if playerInterface_upvr_result1 then
+		playerInterface_upvr_result1 = t_upvr.instanceIsA("Player")(arg1)
+	end
+	assert(playerInterface_upvr_result1)
+	SessionUtility_upvr.startAbuseReportSession(arg2)
+	tbl_upvr:getInstance():openReportDialog(Constants_upvr.ReportType.Player, arg1)
+end
+function module.openReportDialogForPlace(arg1) -- Line 125
+	--[[ Upvalues[3]:
+		[1]: SessionUtility_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+		[3]: Constants_upvr (readonly)
+	]]
+	SessionUtility_upvr.startAbuseReportSession(arg1)
+	tbl_upvr:getInstance():openReportDialog(Constants_upvr.ReportType.Place)
+end
+function module.openReportMenu(arg1) -- Line 129
+	--[[ Upvalues[2]:
+		[1]: SessionUtility_upvr (readonly)
+		[2]: tbl_upvr (readonly)
+	]]
+	SessionUtility_upvr.startAbuseReportSession(arg1)
+	tbl_upvr:getInstance():openReportMenu()
+end
+function module.setPreReportScreenshotHook(arg1) -- Line 133
+	--[[ Upvalues[1]:
+		[1]: ScreenshotHookManager_upvr (readonly)
+	]]
+	ScreenshotHookManager_upvr.setPreScreenshotHook(arg1)
+end
+function module.setPostReportScreenshotHook(arg1) -- Line 136
+	--[[ Upvalues[1]:
+		[1]: ScreenshotHookManager_upvr (readonly)
+	]]
+	ScreenshotHookManager_upvr.setPostScreenshotHook(arg1)
+end
+return module
