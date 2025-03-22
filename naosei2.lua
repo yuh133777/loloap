@@ -1,4 +1,3 @@
--- Alternative: Spam TimedReward DailyDiamonds1
 local Reward = ReplicatedStorage.__DIRECTORY.TimedRewards["TimedReward | DailyDiamonds1"]
 
 for _ = 1, 1000 do  -- Adjust loop count as needed
