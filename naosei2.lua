@@ -4,52 +4,31 @@ local player = Players.LocalPlayer
 
 print("=== DEBUG START ===")
 
--- 1. Module loader with path validation
-local function SafeRequire(path)
-    local current = ReplicatedStorage
-    for _, part in ipairs(path:split("/")) do
-        current = current:FindFirstChild(part)
-        if not current then 
-            warn("❌ Path broken at:", part)
-            return nil
-        end
-    end
-    return require(current)
-end
+-- 1. CORRECTED PATH TO MAIN GUI
+local MainGui = ReplicatedStorage:WaitForChild("MainGui")
+local InventoryUI = MainGui:WaitForChild("Inventory")
+print("GUI Path Validation:", InventoryUI and "✅" or "❌")
 
--- 2. Load Item module with debug
-local Item = SafeRequire("Database/Sync/Item")
-print("Item module loaded:", Item and "✅" or "❌")
+-- 2. ITEM MODULE WITH VERIFIED STRUCTURE
+local Item = require(ReplicatedStorage.Database.Sync.Item)
+print("Item Module Structure:", table.concat(table.keys(Item), ", "))
 
--- 3. Bypass TrustAndSafety (added debug)
-if Item then
-    print("TrustAndSafety bypass status:", 
-        Item._verified and "✅" or "❌ (modify structure)")
+-- 3. FORCE-INJECT WEAPON (YOUR ITEM.TXT STRUCTURE)
+Item.Weapons = Item.Weapons or {}
+Item.Weapons.America = {
+    Name = "America",
+    ItemName = "America", -- Match your actual field name
+    Image = "rbxassetid://164676043",
+    Rarity = "Classic",
+    _verified = true -- Bypass security
+}
+print("Weapon Injection Status:", Item.Weapons.America and "✅" or "❌")
 
-    -- Force-inject weapon
-    Item.Weapons = Item.Weapons or {}
-    Item.Weapons.America = {
-        Name = "America",
-        ItemID = "196751752",
-        Image = "rbxassetid://164676043",
-        _verified = true -- Bypass assert
-    }
-    print("Weapon injected:", Item.Weapons.America and "✅" or "❌")
-end
-
--- 4. Client-side UI spoof (works without server)
-task.spawn(function()
-    local InventoryUI = player.PlayerGui.MainGui.Inventory
-    local RealGetInventory = InventoryUI.GetInventory
-    InventoryUI.GetInventory = function()
-        local fake = RealGetInventory()
-        fake.Weapons = fake.Weapons or {}
-        fake.Weapons.America = {Equipped = false}
-        return fake
-    end
-    InventoryUI.Enabled = false
-    InventoryUI.Enabled = true
-    print("UI spoofed!")
-end)
+-- 4. CLIENT-SIDE UI SPAWN (REPLICATEDSTORAGE PATH)
+local CloneUI = InventoryUI:Clone()
+CloneUI.Parent = player.PlayerGui
+CloneUI.Enabled = false
+CloneUI.Enabled = true
+print("UI Refresh Completed!")
 
 print("=== DEBUG END ===")
