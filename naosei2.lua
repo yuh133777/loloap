@@ -1,70 +1,88 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
-local CorePackages = game:GetService("CorePackages")
 local player = Players.LocalPlayer
 
--- 1. Load ApolloClient from CorePackages
-local ApolloClient = require(CorePackages.Packages.ApolloClient)
-local InGameServices = require(CorePackages.InGameServices)
+print("=== SCRIPT START ===")
 
--- 2. Initialize game services
-local InventoryService = InGameServices.InventoryService
-local ProfileService = InGameServices.ProfileService
+-- 1. Database initialization with timeout
+print("\n[1/5] Initializing database...")
+local GetSyncData = ReplicatedStorage:FindFirstChild("GetSyncData")
+local Database
+local startTime = os.clock()
 
--- 3. ApolloClient query template for inventory updates
-local HARVESTER_MUTATION = ApolloClient.gql[[
-  mutation AddHarvester($playerId: ID!, $itemId: ID!) {
-    addInventoryItem(playerId: $playerId, itemId: $itemId) {
-      success
-      item {
-        id
-        name
-        equipped
-      }
-    }
-  }
-]]
-
--- 4. Function to grant Harvester
-local function GrantHarvester()
-    -- Get player profile via official service
-    local profile = ProfileService:GetPlayerProfile(player)
-    if not profile then
-        warn("Profile not loaded!")
-        return
-    end
-
-    -- Execute ApolloClient mutation
-    local result = ApolloClient:mutate({
-        mutation = HARVESTER_MUTATION,
-        variables = {
-            playerId = tostring(player.UserId),
-            itemId = "7800847534"
-        }
-    })
-
-    -- Handle response
-    if result.data.addInventoryItem.success then
-        print("Harvester added via ApolloClient!")
-        -- Trigger UI update
-        ReplicatedStorage.ClientTweenStorage.PlayClientTween:FireServer("InventoryRefresh")
+if GetSyncData then
+    print("Found GetSyncData RemoteFunction")
+    local success, err = pcall(function()
+        Database = GetSyncData:InvokeServer()
+    end)
+    
+    if success then
+        print("Database received in", os.clock() - startTime, "seconds")
+        print("Database structure keys:", table.concat(Database and table.keys(Database) or "nil", ", "))
     else
-        warn("Mutation failed:", result.errors)
+        warn("Database init failed:", err)
     end
+else
+    warn("GetSyncData not found in ReplicatedStorage!")
 end
 
--- 5. Error handling wrapper
-local success, err = pcall(GrantHarvester)
-if not success then
-    warn("Critical error:", err)
-    -- Fallback to direct remote
-    ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(
-        player,
-        "Weapons",
-        {["7800847534"] = {
-            ItemID = 7800847534,
-            Equipped = false,
-            Obtained = os.time()
-        }}
-    )
+-- 2. Weapon registration debug
+print("\n[2/5] Registering Harvester...")
+if Database and Database.Weapons then
+    Database.Weapons["Harvester"] = {
+        ItemID = 7800847534,
+        Rarity = "Ancient",
+        -- ... (rest of your item data)
+    }
+    print("Weapons after injection:", table.concat(table.keys(Database.Weapons), ", "))
+else
+    warn("Database.Weapons not available!")
 end
+
+-- 3. Profile system debug
+print("\n[3/5] Accessing profile system...")
+local InventoryRemote = ReplicatedStorage:FindFirstChild("Remotes")
+    and ReplicatedStorage.Remotes:FindFirstChild("Inventory")
+    and ReplicatedStorage.Remotes.Inventory:FindFirstChild("ChangeProfileData")
+
+if InventoryRemote then
+    print("Found ChangeProfileData remote")
+else
+    warn("Missing critical remote: ReplicatedStorage.Remotes.Inventory.ChangeProfileData")
+end
+
+-- 4. Inventory modification attempt
+print("\n[4/5] Attempting inventory modification...")
+local harvesterEntry = {
+    ItemID = 7800847534,
+    Equipped = false,
+    Obtained = os.time(),
+    CustomData = {
+        Rarity = "Ancient",
+        Angles = {
+            X = 0.6108652381980153,
+            Y = math.pi,
+            Z = math.pi/2
+        }
+    }
+}
+
+local success, err = pcall(function()
+    InventoryRemote:FireServer(player, "Weapons", {[7800847534] = harvesterEntry})
+end)
+
+print("FireServer result:", success and "Success" or "Failed", "| Error:", err)
+
+-- 5. Final verification
+print("\n[5/5] Verifying through UI systems...")
+task.wait(2) -- Allow time for replication
+
+local ClientTween = ReplicatedStorage:FindFirstChild("ClientTweenStorage")
+if ClientTween then
+    print("Attempting UI feedback...")
+    pcall(function()
+        ClientTween.PlayClientTween:FireServer("InventoryNotification")
+    end)
+end
+
+print("=== SCRIPT COMPLETE ===")
