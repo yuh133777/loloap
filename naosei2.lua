@@ -2,14 +2,30 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- 1. PROVEN MODULE PATHS
-local Item = require(ReplicatedStorage:WaitForChild("Database"):WaitForChild("Sync"):WaitForChild("Item"))
-local InventoryService = require(ReplicatedStorage:WaitForChild("ClientServices"):WaitForChild("InventoryService"))
+-- 1. Validate critical modules
+local Item
+local InventoryService
+local success, err = pcall(function()
+    Item = require(ReplicatedStorage.Database.Sync.Item)
+    InventoryService = require(ReplicatedStorage.ClientServices.InventoryService)
+end)
 
--- 2. WEAPON STRUCTURE (FROM YOUR ITEM.TXT)
+if not success then
+    warn("MODULE LOAD FAILED:", err)
+    return
+end
+
+-- 2. Verify Weapons table exists
+if not Item.Weapons then
+    warn("CRITICAL ERROR: Weapons table not found in Item module")
+    warn("Item module keys:", table.concat(table.keys(Item), ", "))
+    return
+end
+
+-- 3. Define AmericaGun with VALIDATED STRUCTURE
 local AmericaGun = {
-    Name = "America", -- Must match EXACTLY
-    Image = "rbxassetid://164676043", 
+    Name = "America", -- Must match your Item.Weapons format
+    Image = "rbxassetid://164676043",
     Rarity = "Classic",
     ItemType = "Gun",
     Angles = {
@@ -19,14 +35,14 @@ local AmericaGun = {
     }
 }
 
--- 3. SAFE DATABASE INJECTION
+-- 4. Safe database injection
 print("Weapons before:", table.concat(table.keys(Item.Weapons), ", "))
-Item.Weapons["America"] = AmericaGun -- Use table.insert if needed
+Item.Weapons["America"] = AmericaGun
 print("Weapons after:", table.concat(table.keys(Item.Weapons), ", "))
 
--- 4. INVENTORY UPDATE (YOUR INVENTORYSERVICE.TXT METHOD)
-local success, err = pcall(function()
-    InventoryService:AddItem(player, "Weapons", "America", {
+-- 5. Inventory update with error handling
+local inventorySuccess, inventoryErr = pcall(function()
+    return InventoryService:AddItem(player, "Weapons", "America", {
         Obtained = os.date("%Y-%m-%d"),
         Equipped = false,
         CustomData = {
@@ -35,20 +51,32 @@ local success, err = pcall(function()
     })
 end)
 
--- 5. FAILSAFE WITH DIRECT REMOTE
-if not success then
-    ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Inventory"):WaitForChild("ChangeProfileData"):FireServer(
-        player,
-        "Weapons",
-        {
-            ["America"] = { -- Match database key
-                ItemID = "America",
-                Obtained = os.time(),
-                Equipped = false
+-- 6. Fallback system
+if not inventorySuccess then
+    print("InventoryService failed. Attempting direct remote...")
+    local ChangeProfileData = ReplicatedStorage.Remotes.Inventory.ChangeProfileData
+    if ChangeProfileData then
+        ChangeProfileData:FireServer(
+            player,
+            "Weapons",
+            {
+                ["America"] = { -- Match the injected key
+                    ItemID = "America",
+                    Obtained = os.time(),
+                    Equipped = false
+                }
             }
-        }
-    )
+        )
+    else
+        warn("ChangeProfileData remote not found!")
+    end
 end
 
--- 6. UI REFRESH (YOUR INVENTORY.TXT METHOD)
-require(player:WaitForChild("PlayerGui"):WaitForChild("MainGui"):WaitForChild("Inventory"):WaitForChild("Inventory")):RefreshInventory("Weapons")
+-- 7. Force UI refresh
+local InventoryGUI = player.PlayerGui.MainGui.Inventory:FindFirstChild("Inventory")
+if InventoryGUI then
+    require(InventoryGUI):RefreshInventory("Weapons")
+    print("UI refresh triggered!")
+else
+    warn("InventoryGUI LocalScript not found!")
+end
