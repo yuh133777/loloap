@@ -1,14 +1,9 @@
--- Exploit the Guilds_DepositDiamonds RemoteFunction
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Remote = ReplicatedStorage.Network.Guilds_DepositDiamonds
+-- Alternative: Spam TimedReward DailyDiamonds1
+local Reward = ReplicatedStorage.__DIRECTORY.TimedRewards["TimedReward | DailyDiamonds1"]
 
--- Call the RemoteFunction with 1,000,000,000 gems
-local success, errorMsg = pcall(function()
-    Remote:InvokeServer(1000000000)
-end)
-
-if success then
-    print("Successfully added 1B gems!")
-else
-    warn("Error:", errorMsg)
+for _ = 1, 1000 do  -- Adjust loop count as needed
+    pcall(function()
+        Reward:FindFirstChild("Claim"):FireServer()
+    end)
+    task.wait(0.1)  -- Avoid client crashes
 end
