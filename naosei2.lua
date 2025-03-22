@@ -2,54 +2,89 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-print("=== DEBUG START ===")
-print("1. Basic environment check...")
-print("Player:", player.Name)
-print("PlaceId:", game.PlaceId)
+print("=== AMERICAGUN INJECTION START ===")
 
-print("\n2. Module pre-check...")
-local safeRequire = function(module)
-    local success, result = pcall(require, module)
-    print("Require attempt:", module:GetFullName(), success)
-    return success and result
+-- 1. Database initialization
+print("\n[1/4] Initializing database...")
+local GetSyncData = ReplicatedStorage:FindFirstChild("GetSyncData")
+local Database
+
+if GetSyncData then
+    local success, result = pcall(function()
+        return GetSyncData:InvokeServer()
+    end)
+    
+    if success then
+        Database = result
+        print("✅ Database loaded with", #Database.Weapons, "existing weapons")
+    else
+        warn("❌ Database init failed:", result)
+    end
+else
+    warn("❌ Critical missing: GetSyncData RemoteFunction")
 end
 
-print("\n3. Critical dependencies:")
-local ProfileData = safeRequire(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("ProfileData"))
-local InventoryModule = safeRequire(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("InventoryModule"))
+-- 2. Weapon registration
+print("\n[2/4] Registering AmericaGun...")
+if Database and Database.Weapons then
+    Database.Weapons["AmericaGun"] = {
+        ItemName = "America",
+        Image = "http://www.roblox.com/asset/?id=164676043",
+        ItemType = "Gun",
+        Rarity = "Classic",
+        ItemID = 196751752,
+        Angles = {
+            X = 0,
+            Y = 0,
+            Z = 0
+        }
+    }
+    print("✅ Registered AmericaGun in database")
+    print("New weapons count:", #Database.Weapons)
+else
+    warn("❌ Failed to access weapons database")
+end
 
-print("\n4. Remote verification:")
-local ChangeProfileData = ReplicatedStorage:FindFirstChild("Remotes")
+-- 3. Inventory update
+print("\n[3/4] Updating inventory...")
+local InventoryRemote = ReplicatedStorage:FindFirstChild("Remotes")
     and ReplicatedStorage.Remotes:FindFirstChild("Inventory")
     and ReplicatedStorage.Remotes.Inventory:FindFirstChild("ChangeProfileData")
 
-if ChangeProfileData then
-    print("ChangeProfileData exists")
-else
-    warn("Missing ChangeProfileData remote!")
-end
-
-print("\n5. Inventory modification attempt...")
-local harvesterData = {
-    ItemID = 7800847534,
-    Equipped = false,
-    Obtained = os.time(),
-    CustomData = {
-        Rarity = "Ancient",
-        Angles = {
-            X = 0.6108652381980153,
-            Y = math.pi,
-            Z = math.pi/2
+if InventoryRemote then
+    local gunData = {
+        ItemID = 196751752,
+        Equipped = false,
+        Obtained = os.time(),
+        CustomData = {
+            Rarity = "Classic",
+            Paint = "Patriotic" -- Custom property example
         }
     }
-}
+    
+    local success, err = pcall(function()
+        InventoryRemote:FireServer(player, "Weapons", {[196751752] = gunData})
+    end)
+    
+    print(success and "✅ Inventory update sent" or "❌ Inventory update failed:", err)
+else
+    warn("❌ Missing critical remote: ChangeProfileData")
+end
 
-local success, err = pcall(function()
-    ChangeProfileData:FireServer(player, "Weapons", {[7800847534] = harvesterData})
-    print("FireServer completed without errors")
-end)
+-- 4. UI feedback
+print("\n[4/4] Triggering UI effects...")
+local ClientTween = ReplicatedStorage:FindFirstChild("ClientTweenStorage")
+if ClientTween then
+    pcall(function()
+        ClientTween.CreateClientTween:FireServer("NewItemPopup", {
+            Type = "Fade",
+            Goal = Vector3.new(1, 0, 0),
+            Time = 0.5
+        })
+        print("✅ UI animation triggered")
+    end)
+else
+    print("⚠️ ClientTweenStorage not found - skipping UI feedback")
+end
 
-print("\n6. Final status:")
-print("Success:", success)
-print("Error:", err)
-print("=== DEBUG END ===")
+print("=== INJECTION COMPLETE ===")
