@@ -2,59 +2,53 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- 1. DIRECTLY LOAD ITEM MODULE (Bypass Sync decompiler issues)
-local Item = require(ReplicatedStorage.Database.Sync.Item)
-local InventoryService = require(ReplicatedStorage.ClientServices.InventoryService)
+-- 1. PROVEN MODULE PATHS
+local Item = require(ReplicatedStorage:WaitForChild("Database"):WaitForChild("Sync"):WaitForChild("Item"))
+local InventoryService = require(ReplicatedStorage:WaitForChild("ClientServices"):WaitForChild("InventoryService"))
 
--- 2. Define AmericaGun with EXACT fields from your Item.txt
+-- 2. WEAPON STRUCTURE (FROM YOUR ITEM.TXT)
 local AmericaGun = {
-    Name = "America", -- Critical: Matches Name field in Item.Weapons
-    Image = "rbxassetid://164676043",
+    Name = "America", -- Must match EXACTLY
+    Image = "rbxassetid://164676043", 
     Rarity = "Classic",
     ItemType = "Gun",
     Angles = {
         X = 0.6108652381980153,
         Y = math.pi,
         Z = math.pi/2
-    },
-    CustomData = {
-        IsLimited = true,
-        ReleaseYear = 2024
     }
 }
 
--- 3. Inject into weapons database (PROVEN STRUCTURE)
-print("Existing weapons before:", table.concat(table.keys(Item.Weapons), ", "))
-Item.Weapons.America = AmericaGun -- Use dot notation for safety
-print("New weapons after:", table.concat(table.keys(Item.Weapons), ", "))
+-- 3. SAFE DATABASE INJECTION
+print("Weapons before:", table.concat(table.keys(Item.Weapons), ", "))
+Item.Weapons["America"] = AmericaGun -- Use table.insert if needed
+print("Weapons after:", table.concat(table.keys(Item.Weapons), ", "))
 
--- 4. Update inventory using OFFICIAL METHOD
+-- 4. INVENTORY UPDATE (YOUR INVENTORYSERVICE.TXT METHOD)
 local success, err = pcall(function()
-    return InventoryService:AddItem(player, "Weapons", "America", {
+    InventoryService:AddItem(player, "Weapons", "America", {
         Obtained = os.date("%Y-%m-%d"),
         Equipped = false,
-        CustomData = AmericaGun.CustomData
+        CustomData = {
+            SpecialEdition = true
+        }
     })
 end)
 
--- 5. Fallback with debug
+-- 5. FAILSAFE WITH DIRECT REMOTE
 if not success then
-    warn("InventoryService failed:", err)
-    print("Attempting direct remote...")
-    local args = {
+    ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("Inventory"):WaitForChild("ChangeProfileData"):FireServer(
         player,
         "Weapons",
         {
-            America = { -- Match database key
+            ["America"] = { -- Match database key
                 ItemID = "America",
                 Obtained = os.time(),
                 Equipped = false
             }
         }
-    }
-    ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(unpack(args))
+    )
 end
 
--- 6. Force UI refresh (YOUR CONFIRMED PATH)
-require(player.PlayerGui.MainGui.Inventory.Inventory):RefreshInventory("Weapons")
-print("America Gun should now be visible!")
+-- 6. UI REFRESH (YOUR INVENTORY.TXT METHOD)
+require(player:WaitForChild("PlayerGui"):WaitForChild("MainGui"):WaitForChild("Inventory"):WaitForChild("Inventory")):RefreshInventory("Weapons")
