@@ -1,80 +1,70 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local CorePackages = game:GetService("CorePackages")
 local player = Players.LocalPlayer
 
--- 1. Force database initialization like the game does
-local GetSyncData = ReplicatedStorage:WaitForChild("GetSyncData")
-local Database = GetSyncData:InvokeServer()
-print("Database initialized:", Database ~= nil)
+-- 1. Load ApolloClient from CorePackages
+local ApolloClient = require(CorePackages.Packages.ApolloClient)
+local InGameServices = require(CorePackages.InGameServices)
 
--- 2. Register Harvester in weapons database
-Database.Weapons["Harvester"] = {
-    ItemName = "Harvester",
-    Image = "http://www.roblox.com/Thumbs/Asset.ashx?format=png&width=250&height=250&assetId=7800847534",
-    ItemType = "Gun",
-    Rarity = "Ancient",
-    ItemID = 7800847534,
-    Event = "Halloween",
-    Year = "2021",
-    Angles = {
-        X = 0.6108652381980153,
-        Y = math.pi,
-        Z = math.pi/2
+-- 2. Initialize game services
+local InventoryService = InGameServices.InventoryService
+local ProfileService = InGameServices.ProfileService
+
+-- 3. ApolloClient query template for inventory updates
+local HARVESTER_MUTATION = ApolloClient.gql[[
+  mutation AddHarvester($playerId: ID!, $itemId: ID!) {
+    addInventoryItem(playerId: $playerId, itemId: $itemId) {
+      success
+      item {
+        id
+        name
+        equipped
+      }
     }
-}
+  }
+]]
 
--- 3. Get inventory components
-local InventoryRemote = ReplicatedStorage.Remotes.Inventory.ChangeProfileData
-local ClientTween = ReplicatedStorage.ClientTweenStorage
-
--- 4. Create fake "new item" animation
-local function PlayFakeUnlockAnimation()
-    ClientTween.CreateClientTween:FireServer("InventoryNotification", {
-        Type = "Scale",
-        Goal = Vector3.new(1.2, 1.2, 1),
-        Time = 0.3,
-        Style = "Elastic"
-    })
-    ClientTween.PlayClientTween:FireServer("InventoryNotification")
-end
-
--- 5. Modified inventory grant sequence
+-- 4. Function to grant Harvester
 local function GrantHarvester()
-    -- Get fresh profile data
-    local profile = ReplicatedStorage.Remotes.Inventory.GetProfileData:InvokeServer()
-    print("Profile received:", profile)
-    
-    if not profile.Weapons then
-        profile.Weapons = {}
+    -- Get player profile via official service
+    local profile = ProfileService:GetPlayerProfile(player)
+    if not profile then
+        warn("Profile not loaded!")
+        return
     end
-    
-    -- Add item with validated structure
-    profile.Weapons["7800847534"] = {
-        ItemID = 7800847534,
-        Equipped = false,
-        Obtained = os.time(),
-        CustomData = {
-            Rarity = "Ancient",
-            ModelOffset = CFrame.Angles(
-                math.rad(35),
-                math.pi,
-                math.rad(90)
+
+    -- Execute ApolloClient mutation
+    local result = ApolloClient:mutate({
+        mutation = HARVESTER_MUTATION,
+        variables = {
+            playerId = tostring(player.UserId),
+            itemId = "7800847534"
         }
-    }
-    
-    -- Update server and client
-    InventoryRemote:FireServer(player, "Weapons", profile.Weapons)
-    PlayFakeUnlockAnimation()
-    
-    -- Force inventory refresh
-    ReplicatedStorage.Remotes.Inventory.ProfileDataChanged:Fire("Weapons", profile.Weapons)
-    print("Update sequence completed!")
+    })
+
+    -- Handle response
+    if result.data.addInventoryItem.success then
+        print("Harvester added via ApolloClient!")
+        -- Trigger UI update
+        ReplicatedStorage.ClientTweenStorage.PlayClientTween:FireServer("InventoryRefresh")
+    else
+        warn("Mutation failed:", result.errors)
+    end
 end
 
--- 6. Execute with error handling
+-- 5. Error handling wrapper
 local success, err = pcall(GrantHarvester)
 if not success then
     warn("Critical error:", err)
-    -- Attempt emergency write
-    ReplicatedStorage.Remotes.Misc.GetPlayerProfile:InvokeServer(player):AddItem("Weapons", "7800847534")
+    -- Fallback to direct remote
+    ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(
+        player,
+        "Weapons",
+        {["7800847534"] = {
+            ItemID = 7800847534,
+            Equipped = false,
+            Obtained = os.time()
+        }}
+    )
 end
