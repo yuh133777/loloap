@@ -1,8 +1,10 @@
-local Reward = ReplicatedStorage.__DIRECTORY.TimedRewards["TimedReward | DailyDiamonds1"]
+-- Spam DailyDiamonds1 reward
+local DailyReward = ReplicatedStorage.__DIRECTORY.TimedRewards["TimedReward | DailyDiamonds1"]
 
-for _ = 1, 1000 do  -- Adjust loop count as needed
+for i = 1, 1000 do  -- Spam claim 1000 times
     pcall(function()
-        Reward:FindFirstChild("Claim"):FireServer()
+        DailyReward.Claim:FireServer()
     end)
-    task.wait(0.1)  -- Avoid client crashes
+    task.wait(0.05)  -- Short delay to prevent crashes
 end
+print("Daily rewards claimed 1000 times!")
