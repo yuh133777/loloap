@@ -1,9 +1,15 @@
-local DailyReward = ReplicatedStorage.__DIRECTORY.TimedRewards["TimedReward | DailyDiamonds1"]
+-- Exploit Guilds_DepositDiamonds RemoteFunction
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remote = ReplicatedStorage.Network.Guilds_DepositDiamonds
 
-for i = 1, 1000 do  -- Spam claim 1000 times
-    pcall(function()
-        DailyReward.Claim:FireServer()
-    end)
-    task.wait(0.05)  -- Short delay to prevent crashes
+-- Directly add 1B diamonds
+local success, errorMsg = pcall(function()
+    Remote:InvokeServer(1000000000) -- 1,000,000,000 diamonds
+end)
+
+if success then
+    print("Success! 1 BILLION DIAMONDS ADDED!")
+else
+    warn("Failed:", errorMsg)
+    print("Trying backup methods...")
 end
-print("Daily rewards claimed 1000 times!")
