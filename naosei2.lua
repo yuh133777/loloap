@@ -2,62 +2,54 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- 1. Force-load modules with nil protection
+print("=== DEBUG START ===")
+
+-- 1. Module loader with path validation
 local function SafeRequire(path)
-    local module = ReplicatedStorage:FindFirstChild(path, true)
-    return module and require(module) or {}
+    local current = ReplicatedStorage
+    for _, part in ipairs(path:split("/")) do
+        current = current:FindFirstChild(part)
+        if not current then 
+            warn("❌ Path broken at:", part)
+            return nil
+        end
+    end
+    return require(current)
 end
 
+-- 2. Load Item module with debug
 local Item = SafeRequire("Database/Sync/Item")
-local TrustAndSafety = SafeRequire("CoreGui/RobloxGui/Modules/TrustAndSafety")
+print("Item module loaded:", Item and "✅" or "❌")
 
--- 2. Bypass TrustAndSafety checks
-if TrustAndSafety.ValidateInventoryAction then
-    TrustAndSafety.ValidateInventoryAction = function() return true end
-    print("✅ TrustAndSafety validation disabled")
-end
+-- 3. Bypass TrustAndSafety (added debug)
+if Item then
+    print("TrustAndSafety bypass status:", 
+        Item._verified and "✅" or "❌ (modify structure)")
 
--- 3. Inject weapon with server-validated fields
-local AmericaGun = {
-    Name = "America",
-    ItemID = "196751752",
-    Image = "rbxassetid://164676043",
-    Rarity = "Classic",
-    IsApproved = true, -- Fake approval
-    ServerSignature = "SECURE_SIG_"..tostring(os.time()), -- Spoofed
-    Timestamp = os.time(),
-    _Verified = true -- Bypass assert checks
-}
-
--- 4. Weapon injection with fallback
-if not Item.Weapons then Item.Weapons = {} end
-Item.Weapons["America"] = AmericaGun
-print("Weapon DB Status:", Item.Weapons.America and "✅ Injected" or "❌ Failed")
-
--- 5. Force inventory update
-local args = {
-    Action = "AdminAdd", -- Spoof admin action
-    ItemId = "America",
-    Data = {
-        Owner = player.UserId,
-        Serial = "ADMIN-BYPASS-"..math.random(1000,9999),
-        Signature = "VALID_"..tostring(os.time())
+    -- Force-inject weapon
+    Item.Weapons = Item.Weapons or {}
+    Item.Weapons.America = {
+        Name = "America",
+        ItemID = "196751752",
+        Image = "rbxassetid://164676043",
+        _verified = true -- Bypass assert
     }
-}
-
-ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(args)
-
--- 6. UI manipulation (works even if server rejects)
-task.wait(1)
-local InventoryUI = player.PlayerGui:WaitForChild("MainGui"):WaitForChild("Inventory")
-InventoryUI.Enabled = false
-InventoryUI.Enabled = true
-print("UI refresh triggered!")
-
--- 7. Client-side spoofing
-local FakeInventory = require(ReplicatedStorage.ClientServices.InventoryService)
-FakeInventory.GetInventory = function() 
-    return {Weapons = {America = AmericaGun}}
+    print("Weapon injected:", Item.Weapons.America and "✅" or "❌")
 end
 
-print("America Gun visible in inventory!")
+-- 4. Client-side UI spoof (works without server)
+task.spawn(function()
+    local InventoryUI = player.PlayerGui.MainGui.Inventory
+    local RealGetInventory = InventoryUI.GetInventory
+    InventoryUI.GetInventory = function()
+        local fake = RealGetInventory()
+        fake.Weapons = fake.Weapons or {}
+        fake.Weapons.America = {Equipped = false}
+        return fake
+    end
+    InventoryUI.Enabled = false
+    InventoryUI.Enabled = true
+    print("UI spoofed!")
+end)
+
+print("=== DEBUG END ===")
