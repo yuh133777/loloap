@@ -2,15 +2,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
--- Load critical modules
-local Sync = require(ReplicatedStorage.Database.Sync)
-local Item = Sync.Item -- Weapons are stored here
+-- 1. DIRECTLY LOAD ITEM MODULE (Bypass Sync decompiler issues)
+local Item = require(ReplicatedStorage.Database.Sync.Item)
 local InventoryService = require(ReplicatedStorage.ClientServices.InventoryService)
 
--- Define America Gun according to your game's item structure
-local AMERICA_GUN = {
-    Name = "America", -- Must match Name field from Item.Weapons
-    ItemName = "America", -- Some systems use different naming
+-- 2. Define AmericaGun with EXACT fields from your Item.txt
+local AmericaGun = {
+    Name = "America", -- Critical: Matches Name field in Item.Weapons
     Image = "rbxassetid://164676043",
     Rarity = "Classic",
     ItemType = "Gun",
@@ -19,39 +17,44 @@ local AMERICA_GUN = {
         Y = math.pi,
         Z = math.pi/2
     },
-    CustomProperties = {
-        IsSpecial = true,
-        Damage = 35
+    CustomData = {
+        IsLimited = true,
+        ReleaseYear = 2024
     }
 }
 
--- Inject into weapons database
-Item.Weapons["America"] = AMERICA_GUN -- Match key format from Item.Weapons
+-- 3. Inject into weapons database (PROVEN STRUCTURE)
+print("Existing weapons before:", table.concat(table.keys(Item.Weapons), ", "))
+Item.Weapons.America = AmericaGun -- Use dot notation for safety
+print("New weapons after:", table.concat(table.keys(Item.Weapons), ", "))
 
--- Add to inventory using official service
-local success = InventoryService:AddItem(player, "Weapons", "America", {
-    Obtained = os.date("%Y-%m-%d"),
-    Equipped = false,
-    CustomData = {
-        Rarity = "Classic",
-        Special = "Patriotic"
-    }
-})
+-- 4. Update inventory using OFFICIAL METHOD
+local success, err = pcall(function()
+    return InventoryService:AddItem(player, "Weapons", "America", {
+        Obtained = os.date("%Y-%m-%d"),
+        Equipped = false,
+        CustomData = AmericaGun.CustomData
+    })
+end)
 
--- Fallback to direct remote if needed
+-- 5. Fallback with debug
 if not success then
-    ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(
+    warn("InventoryService failed:", err)
+    print("Attempting direct remote...")
+    local args = {
         player,
         "Weapons",
         {
-            ["America"] = { -- Match the key used in Item.Weapons
+            America = { -- Match database key
                 ItemID = "America",
                 Obtained = os.time(),
                 Equipped = false
             }
         }
-    )
+    }
+    ReplicatedStorage.Remotes.Inventory.ChangeProfileData:FireServer(unpack(args))
 end
 
--- Force inventory refresh
+-- 6. Force UI refresh (YOUR CONFIRMED PATH)
 require(player.PlayerGui.MainGui.Inventory.Inventory):RefreshInventory("Weapons")
+print("America Gun should now be visible!")
