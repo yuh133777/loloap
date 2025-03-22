@@ -1,0 +1,52 @@
+-- Decompiler will be improved VERY SOON!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-21 17:14:52
+-- Luau version 6, Types version 3
+-- Time taken: 0.001377 seconds
+
+local tbl_upvw = {}
+local TweenService_upvr = game:GetService("TweenService")
+local function CreateTweenFromTable_upvr(arg1, arg2, arg3) -- Line 6, Named "CreateTweenFromTable"
+	--[[ Upvalues[2]:
+		[1]: tbl_upvw (read and write)
+		[2]: TweenService_upvr (readonly)
+	]]
+	local var3 = tbl_upvw[arg1]
+	if not var3 then
+		var3 = {}
+	end
+	tbl_upvw[arg1] = var3
+	tbl_upvw[arg1][arg2] = TweenService_upvr:Create(arg1, TweenInfo.new(arg3.Time, Enum.EasingStyle[arg3.EasingStyle], Enum.EasingDirection[arg3.EasingDirection], 0, false, arg3.DelayTime), arg3.Properties)
+end
+game.ReplicatedStorage.ClientTweenEvents.CreateClientTween.OnClientEvent:Connect(function(arg1, arg2, arg3) -- Line 13
+	--[[ Upvalues[1]:
+		[1]: CreateTweenFromTable_upvr (readonly)
+	]]
+	CreateTweenFromTable_upvr(arg1, arg2, arg3)
+end)
+game.ReplicatedStorage.ClientTweenEvents.PlayClientTween.OnClientEvent:Connect(function(arg1, arg2) -- Line 17
+	--[[ Upvalues[2]:
+		[1]: tbl_upvw (read and write)
+		[2]: CreateTweenFromTable_upvr (readonly)
+	]]
+	if tbl_upvw[arg1] == nil then
+		CreateTweenFromTable_upvr(arg1, arg2, game.ReplicatedStorage.ClientTweenEvents.GetClientTween:InvokeServer(arg1, arg2))
+	elseif tbl_upvw[arg1][arg2] == nil then
+		CreateTweenFromTable_upvr(arg1, arg2, game.ReplicatedStorage.ClientTweenEvents.GetClientTween:InvokeServer(arg1, arg2))
+	end
+	tbl_upvw[arg1][arg2]:Play()
+end)
+game.ReplicatedStorage.ClientTweenEvents.StopClientTween.OnClientEvent:Connect(function(arg1, arg2) -- Line 29
+	--[[ Upvalues[1]:
+		[1]: tbl_upvw (read and write)
+	]]
+	if tbl_upvw[arg1] ~= nil and tbl_upvw[arg1][arg2] ~= nil then
+		tbl_upvw[arg1][arg2]:Cancel()
+	end
+end)
+game.ReplicatedStorage.ClientTweenEvents.ClearTweens.OnClientEvent:Connect(function() -- Line 35
+	--[[ Upvalues[1]:
+		[1]: tbl_upvw (read and write)
+	]]
+	tbl_upvw = {}
+end)
