@@ -1,0 +1,1547 @@
+-- Decompiler will be improved VERY SOON!
+-- Decompiled with Konstant V2.1, a fast Luau decompiler made in Luau by plusgiant5 (https://discord.gg/wyButjTMhM)
+-- Decompiled on 2025-03-29 13:57:30
+-- Luau version 6, Types version 3
+-- Time taken: 0.059588 seconds
+
+if require(game.ReplicatedStorage.Library.Modules.PlaceFile).IsTradingPlaza then
+else
+	local Assets_upvr = game.ReplicatedStorage:WaitForChild("Assets")
+	local RunService_upvr = game:GetService("RunService")
+	local Network_upvr = require(game.ReplicatedStorage.Library.Client.Network)
+	local Save_upvr = require(game.ReplicatedStorage.Library.Client.Save)
+	local Message_upvr = require(game.ReplicatedStorage.Library.Client.Message)
+	local TabController_upvr = require(game.ReplicatedStorage.Library.Client.TabController)
+	local Interact_upvr = require(game.ReplicatedStorage.Library.Client.Interact)
+	local Player_upvr = require(game.ReplicatedStorage.Library.Player)
+	local Directory_upvr = require(game.ReplicatedStorage.Library.Directory)
+	local InstancingCmds = require(game.ReplicatedStorage.Library.Client.InstancingCmds)
+	local WorldFX_upvr = require(game.ReplicatedStorage.Library.Client.WorldFX)
+	local FFlags_upvr = require(game.ReplicatedStorage.Library.Client.FFlags)
+	local Functions_upvr = require(game.ReplicatedStorage.Library.Functions)
+	local EggsUtil_upvr = require(game.ReplicatedStorage.Library.Util.EggsUtil)
+	local CurrencyUtil_upvr = require(game.ReplicatedStorage.Library.Util.CurrencyUtil)
+	local HatchingCmds_upvr = require(game.ReplicatedStorage.Library.Client.HatchingCmds)
+	local EggCmds_upvr = require(game.ReplicatedStorage.Library.Client.EggCmds)
+	local NotificationCmds_upvr = require(game.ReplicatedStorage.Library.Client.NotificationCmds)
+	local CurrencyCmds_upvr = require(game.ReplicatedStorage.Library.Client.CurrencyCmds)
+	local CalcEggPricePlayer_upvr = require(game.ReplicatedStorage.Library.Balancing.CalcEggPricePlayer)
+	local Signal = require(game.ReplicatedStorage.Library.Signal)
+	local Hatching_upvr = require(game.ReplicatedStorage.Library.Types.Hatching)
+	local LocalPlayer_upvr = game.Players.LocalPlayer
+	local var24_upvw
+	local LuckModifiers_upvr = require(game.ReplicatedStorage.Library.Client.LuckModifiers)
+	local Eggs_upvr = game.Workspace:WaitForChild("__THINGS"):WaitForChild("Eggs")
+	local var27_upvw
+	local tbl_21_upvr = {}
+	local tbl_6_upvw = {}
+	local tbl_7_upvw = {}
+	local tbl_3_upvr = {}
+	local tbl_15_upvr = {}
+	local tbl_2_upvw = {}
+	local zero_vector3_upvw = Vector3.new()
+	function DisableQuerying(arg1) -- Line 97
+		if arg1:IsA("BasePart") then
+			arg1.CanQuery = false
+		end
+		for _, v in ipairs(arg1:GetDescendants()) do
+			if v:IsA("BasePart") then
+				v.CanQuery = false
+			end
+		end
+	end
+	function StoreAllEggs() -- Line 108
+		--[[ Upvalues[2]:
+			[1]: Eggs_upvr (readonly)
+			[2]: tbl_15_upvr (readonly)
+		]]
+		for _, v_2 in pairs(Eggs_upvr:GetChildren()) do
+			if v_2:IsA("Model") then
+				tbl_15_upvr[v_2.Name] = v_2:Clone()
+				DisableQuerying(tbl_15_upvr[v_2.Name])
+				v_2:Destroy()
+			end
+		end
+	end
+	function ClearEggFolder() -- Line 120
+		--[[ Upvalues[1]:
+			[1]: Eggs_upvr (readonly)
+		]]
+		for _, v_3 in pairs(Eggs_upvr:GetChildren()) do
+			if v_3:IsA("Model") then
+				v_3:Destroy()
+			end
+		end
+	end
+	function SetupEggs(arg1) -- Line 130
+		--[[ Upvalues[2]:
+			[1]: tbl_15_upvr (readonly)
+			[2]: Eggs_upvr (readonly)
+		]]
+		local var50 = tbl_15_upvr[arg1]
+		if not var50 then
+			return false
+		end
+		var50:Clone().Parent = Eggs_upvr
+		CalculateCenterPosition(arg1)
+		return true
+	end
+	StoreAllEggs()
+	function CalculateCenterPosition(arg1) -- Line 143
+		--[[ Upvalues[3]:
+			[1]: Eggs_upvr (readonly)
+			[2]: Functions_upvr (readonly)
+			[3]: zero_vector3_upvw (read and write)
+		]]
+		-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+		local SOME = Eggs_upvr:FindFirstChild(arg1)
+		if not SOME then
+		else
+			local any_Filter_result1 = Functions_upvr.Filter(SOME:GetChildren(), function(arg1_2) -- Line 149
+				return arg1_2:IsA("Model")
+			end)
+			zero_vector3_upvw = Vector3.new(0, 0, 0)
+			for _, v_19 in pairs(any_Filter_result1) do
+				zero_vector3_upvw += v_19.PrimaryPart.Position / #any_Filter_result1
+				local _
+			end
+		end
+	end
+	local any_Debounce_result1_upvr_2 = Functions_upvr.Debounce()
+	local var67_upvw = false
+	function MakeAvailableEgg(arg1) -- Line 159
+		--[[ Upvalues[13]:
+			[1]: WorldFX_upvr (readonly)
+			[2]: Assets_upvr (readonly)
+			[3]: Interact_upvr (readonly)
+			[4]: tbl_3_upvr (readonly)
+			[5]: Save_upvr (readonly)
+			[6]: EggCmds_upvr (readonly)
+			[7]: Message_upvr (readonly)
+			[8]: any_Debounce_result1_upvr_2 (readonly)
+			[9]: var67_upvw (read and write)
+			[10]: Network_upvr (readonly)
+			[11]: EggsUtil_upvr (readonly)
+			[12]: tbl_2_upvw (read and write)
+			[13]: tbl_21_upvr (readonly)
+		]]
+		local Stand_9_upvr = arg1.Stand
+		local name_upvr = arg1.Dir.name
+		local EggLock = Stand_9_upvr:FindFirstChild("EggLock")
+		if EggLock then
+			WorldFX_upvr.ModelFlash(Stand_9_upvr, 0.5)
+			EggLock.Transparency = 0.5
+		end
+		if arg1.HUD then
+			arg1.HUD:Destroy()
+		end
+		arg1.HUD = Assets_upvr.UI.Eggs.PriceHUDAvailable:Clone()
+		assert(arg1.HUD)
+		arg1.HUD.Parent = Stand_9_upvr:FindFirstChild("PriceHUD")
+		local PrimaryPart = Stand_9_upvr.PrimaryPart
+		assert(PrimaryPart)
+		;(function() -- Line 181, Named "CreateParticles"
+			--[[ Upvalues[2]:
+				[1]: Assets_upvr (copied, readonly)
+				[2]: Stand_9_upvr (readonly)
+			]]
+			local Egg_Unlockable = Assets_upvr.Particles:FindFirstChild("Egg Unlockable")
+			local Attachment = Instance.new("Attachment")
+			Attachment.Name = "__UNLOCKPARTICLES"
+			Attachment.CFrame = CFrame.new() * CFrame.Angles(0, 0, (math.pi/2))
+			Attachment.Parent = Stand_9_upvr:FindFirstChild("BottomLight")
+			Egg_Unlockable.beam:Clone().Parent = Attachment
+			local Attachment_2 = Instance.new("Attachment")
+			Attachment_2.Name = "__UNLOCKPARTICLES"
+			Attachment_2.Parent = Stand_9_upvr:FindFirstChild("Egg")
+			Egg_Unlockable.Egg.boom:Clone().Parent = Attachment_2
+			local clone_8 = Egg_Unlockable.Egg.whitebeams:Clone()
+			clone_8.Name = "__UNLOCKPARTICLES"
+			clone_8.Parent = Stand_9_upvr:FindFirstChild("Egg")
+		end)()
+		local any_Add_result1_2, any_Add_result2 = Interact_upvr.Add(PrimaryPart)
+		tbl_3_upvr[name_upvr] = any_Add_result2
+		any_Add_result1_2:Connect(function() -- Line 206
+			--[[ Upvalues[10]:
+				[1]: Save_upvr (copied, readonly)
+				[2]: EggCmds_upvr (copied, readonly)
+				[3]: name_upvr (readonly)
+				[4]: Message_upvr (copied, readonly)
+				[5]: any_Debounce_result1_upvr_2 (copied, readonly)
+				[6]: var67_upvw (copied, read and write)
+				[7]: Network_upvr (copied, readonly)
+				[8]: EggsUtil_upvr (copied, readonly)
+				[9]: tbl_2_upvw (copied, read and write)
+				[10]: tbl_21_upvr (copied, readonly)
+			]]
+			if not Save_upvr.Get() then
+			else
+				if not EggCmds_upvr.IsEggAvailable(name_upvr) then
+					Message_upvr.New("This egg isn't available yet!", {
+						err = true;
+					})
+					return
+				end
+				any_Debounce_result1_upvr_2(0.35, function() -- Line 219
+					--[[ Upvalues[7]:
+						[1]: var67_upvw (copied, read and write)
+						[2]: Network_upvr (copied, readonly)
+						[3]: name_upvr (copied, readonly)
+						[4]: Message_upvr (copied, readonly)
+						[5]: EggsUtil_upvr (copied, readonly)
+						[6]: tbl_2_upvw (copied, read and write)
+						[7]: tbl_21_upvr (copied, readonly)
+					]]
+					if var67_upvw then
+					else
+						local any_Invoke_result1_2, any_Invoke_result2_upvr = Network_upvr.Invoke("Eggs_RequestUnlock", name_upvr)
+						if not any_Invoke_result1_2 then
+							Message_upvr.New("You don't have access to this egg yet!", {
+								err = true;
+							})
+							return
+						end
+						task.spawn(function() -- Line 234
+							--[[ Upvalues[5]:
+								[1]: var67_upvw (copied, read and write)
+								[2]: any_Invoke_result2_upvr (readonly)
+								[3]: EggsUtil_upvr (copied, readonly)
+								[4]: tbl_2_upvw (copied, read and write)
+								[5]: tbl_21_upvr (copied, readonly)
+							]]
+							var67_upvw = true
+							table.sort(any_Invoke_result2_upvr, function(arg1_3, arg2) -- Line 236
+								if arg2 >= arg1_3 then
+								else
+								end
+								return true
+							end)
+							for _, v_29 in any_Invoke_result2_upvr do
+								local any_GetIdByNumber_result1 = EggsUtil_upvr.GetIdByNumber(v_29)
+								if any_GetIdByNumber_result1 then
+									assert(any_GetIdByNumber_result1)
+									tbl_2_upvw[any_GetIdByNumber_result1] = true
+								end
+							end
+							for _, v_30 in any_Invoke_result2_upvr do
+								local any_GetIdByNumber_result1_2 = EggsUtil_upvr.GetIdByNumber(v_30)
+								if any_GetIdByNumber_result1_2 then
+									assert(any_GetIdByNumber_result1_2)
+									local var92 = tbl_21_upvr[any_GetIdByNumber_result1_2]
+									if var92 then
+										UnlockEgg(var92)
+										UpdateApperance(var92, true)
+									end
+									tbl_2_upvw[any_GetIdByNumber_result1_2] = nil
+									task.wait(0.05)
+								end
+							end
+							tbl_2_upvw = {}
+							var67_upvw = false
+						end)
+					end
+				end)
+			end
+		end)
+	end
+	function SetLockStatus(arg1, arg2) -- Line 269
+		if arg1.IsLocked == arg2 then
+		else
+			arg1.IsLocked = arg2
+			if arg2 then return end
+		end
+	end
+	local any_Debounce_result1_upvr_3 = Functions_upvr.Debounce()
+	local Audio_upvr = require(game.ReplicatedStorage.Library.Audio)
+	local BuyMultiple_upvr = require(game.ReplicatedStorage.Library.Client.UI.BuyMultiple)
+	local Shared_upvr = require(game.ReplicatedStorage.Library.Shared)
+	local any_Debounce_result1_upvr = Functions_upvr.Debounce()
+	function UnlockEgg(arg1) -- Line 285
+		--[[ Upvalues[20]:
+			[1]: WorldFX_upvr (readonly)
+			[2]: Assets_upvr (readonly)
+			[3]: CurrencyUtil_upvr (readonly)
+			[4]: CalcEggPricePlayer_upvr (readonly)
+			[5]: any_Debounce_result1_upvr_3 (readonly)
+			[6]: Audio_upvr (readonly)
+			[7]: tbl_3_upvr (readonly)
+			[8]: Interact_upvr (readonly)
+			[9]: TabController_upvr (readonly)
+			[10]: Save_upvr (readonly)
+			[11]: CurrencyCmds_upvr (readonly)
+			[12]: Message_upvr (readonly)
+			[13]: HatchingCmds_upvr (readonly)
+			[14]: Hatching_upvr (readonly)
+			[15]: EggCmds_upvr (readonly)
+			[16]: BuyMultiple_upvr (readonly)
+			[17]: Shared_upvr (readonly)
+			[18]: any_Debounce_result1_upvr (readonly)
+			[19]: Network_upvr (readonly)
+			[20]: Directory_upvr (readonly)
+		]]
+		local Dir_upvr = arg1.Dir
+		local currency = Dir_upvr.currency
+		if not currency then
+		else
+			local Stand = arg1.Stand
+			local name_3_upvr = Dir_upvr.name
+			local EggLock_2 = Stand:FindFirstChild("EggLock")
+			if Stand:GetAttribute("Unlocked") then return end
+			Stand:SetAttribute("Unlocked", true)
+			if EggLock_2 then
+				WorldFX_upvr.ModelFlash(Stand, 0.5, nil, 1.5)
+				EggLock_2:Destroy()
+			end
+			if arg1.HUD then
+				arg1.HUD:Destroy()
+			end
+			arg1.HUD = Assets_upvr.UI.Eggs.PriceHUD:Clone()
+			assert(arg1.HUD)
+			CurrencyUtil_upvr.SetupPriceFrame(arg1.HUD, currency, CalcEggPricePlayer_upvr(arg1.Dir), 2)
+			arg1.HUD.Parent = Stand:FindFirstChild("PriceHUD")
+			for _, v_20 in ipairs(Stand:GetDescendants()) do
+				if v_20.Name == "__UNLOCKPARTICLES" then
+					v_20:Destroy()
+				end
+			end
+			local PrimaryPart_3_upvr = Stand.PrimaryPart
+			assert(PrimaryPart_3_upvr)
+			any_Debounce_result1_upvr_3(0.25, function() -- Line 325
+				--[[ Upvalues[2]:
+					[1]: Audio_upvr (copied, readonly)
+					[2]: PrimaryPart_3_upvr (readonly)
+				]]
+				Audio_upvr.Play("rbxassetid://14579975530", PrimaryPart_3_upvr)
+			end)
+			if tbl_3_upvr[name_3_upvr] then
+				tbl_3_upvr[name_3_upvr]()
+				tbl_3_upvr[name_3_upvr] = nil
+			end
+			local any_Add_result1, _ = Interact_upvr.Add(PrimaryPart_3_upvr, {
+				customEnableCheck = function() -- Line 336, Named "customEnableCheck"
+					--[[ Upvalues[1]:
+						[1]: TabController_upvr (copied, readonly)
+					]]
+					local var111
+					if TabController_upvr.Get() == "BuyMultiple" then
+						var111 = false
+					else
+						var111 = true
+					end
+					return var111
+				end;
+			})
+			any_Add_result1:Connect(function() -- Line 341
+				--[[ Upvalues[15]:
+					[1]: Save_upvr (copied, readonly)
+					[2]: Dir_upvr (readonly)
+					[3]: CurrencyCmds_upvr (copied, readonly)
+					[4]: CalcEggPricePlayer_upvr (copied, readonly)
+					[5]: Message_upvr (copied, readonly)
+					[6]: HatchingCmds_upvr (copied, readonly)
+					[7]: Hatching_upvr (copied, readonly)
+					[8]: arg1 (readonly)
+					[9]: EggCmds_upvr (copied, readonly)
+					[10]: BuyMultiple_upvr (copied, readonly)
+					[11]: Shared_upvr (copied, readonly)
+					[12]: any_Debounce_result1_upvr (copied, readonly)
+					[13]: Network_upvr (copied, readonly)
+					[14]: name_3_upvr (readonly)
+					[15]: Directory_upvr (copied, readonly)
+				]]
+				-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+				local var130
+				if not Save_upvr.Get() then
+				else
+					local currency_4_upvr = Dir_upvr.currency
+					if not currency_4_upvr then return end
+					if CurrencyCmds_upvr.Get(currency_4_upvr) < CalcEggPricePlayer_upvr(Dir_upvr) then
+						Message_upvr.New("You cannot afford that egg!", {
+							err = true;
+						})
+						return
+					end
+					local any_IsEnabled_result1_4 = HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.CHARGED)
+					local any_IsEnabled_result1 = HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN)
+					if HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN) or HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.CHARGED) then
+						var130 = Hatching_upvr
+						ApplyModifier(arg1, HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN), HatchingCmds_upvr.IsEnabled(var130.Options.CHARGED))
+					end
+					var130 = CurrencyCmds_upvr.Get(currency_4_upvr)
+					local var135 = var130 / CalcEggPricePlayer_upvr(Dir_upvr)
+					if any_IsEnabled_result1_4 then
+						var135 = "charged"
+					else
+						var135 = ""
+					end
+					if any_IsEnabled_result1 and any_IsEnabled_result1_4 then
+						var130 = " golden"
+						-- KONSTANTWARNING: GOTO [129] #99
+					end
+					if any_IsEnabled_result1 then
+						var130 = "golden"
+					else
+						var130 = ""
+					end
+					if not (any_IsEnabled_result1 or any_IsEnabled_result1_4) or not ' '..Dir_upvr.name then
+					end
+					local var136_upvw = false
+					var130 = HatchingCmds_upvr
+					var130 = Hatching_upvr.Options.AUTO
+					if var130.IsEnabled(var130) then
+						var130 = BuyMultiple_upvr
+						var130 = "Would you like to Auto Hatch a "..string.format("%s%s%s", var135, var130, Dir_upvr.name)..'?'
+						local any_New_result1 = var130.New(var130, Shared_upvr.SharedAssets.EggMessageAutoIcon, currency_4_upvr, math.floor(math.min(EggCmds_upvr.GetMaxHatch(), var135)), CalcEggPricePlayer_upvr(Dir_upvr))
+						if any_New_result1 then
+							var130 = HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.AUTO)
+							if var130 then
+								var130 = HatchingCmds_upvr.SetupEgg
+								var130(arg1.Dir, any_New_result1)
+								var130 = HatchingCmds_upvr.AttemptHatch
+								var130()
+								var136_upvw = true
+								-- KONSTANTWARNING: GOTO [224] #177
+							end
+							-- KONSTANTWARNING: GOTO [224] #177
+						end
+					else
+						var130 = BuyMultiple_upvr
+						-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+						var130 = "Would you like to buy a "..string.format("%s%s%s", var135, var130, Dir_upvr.name)..'?'
+						-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+						local any_New_result1_3_upvr = var130.New(var130, Shared_upvr.SharedAssets.EggMessageIcon, currency_4_upvr, math.floor(math.min(EggCmds_upvr.GetMaxHatch(), var135)), CalcEggPricePlayer_upvr(Dir_upvr))
+						if any_New_result1_3_upvr then
+							var130 = any_Debounce_result1_upvr
+							var130(0.35, function() -- Line 396
+								--[[ Upvalues[7]:
+									[1]: Network_upvr (copied, readonly)
+									[2]: name_3_upvr (copied, readonly)
+									[3]: any_New_result1_3_upvr (readonly)
+									[4]: Message_upvr (copied, readonly)
+									[5]: Directory_upvr (copied, readonly)
+									[6]: currency_4_upvr (readonly)
+									[7]: var136_upvw (read and write)
+								]]
+								local any_Invoke_result1_3, any_Invoke_result2_upvr_2 = Network_upvr.Invoke("Eggs_RequestPurchase", name_3_upvr, tonumber(any_New_result1_3_upvr))
+								if not any_Invoke_result1_3 then
+									task.delay(0.5, function() -- Line 399
+										--[[ Upvalues[4]:
+											[1]: any_Invoke_result2_upvr_2 (readonly)
+											[2]: Message_upvr (copied, readonly)
+											[3]: Directory_upvr (copied, readonly)
+											[4]: currency_4_upvr (copied, readonly)
+										]]
+										if not any_Invoke_result2_upvr_2 then
+											Message_upvr.New("You need more "..Directory_upvr.Currency[currency_4_upvr].DisplayName.." to buy this egg!", {
+												title = "Not Enough!";
+												err = true;
+											})
+										elseif any_Invoke_result2_upvr_2 ~= "You are doing this too fast!" then
+											Message_upvr.New(any_Invoke_result2_upvr_2, {
+												title = "Oops!";
+												err = true;
+											})
+										end
+									end)
+								else
+									var136_upvw = true
+								end
+							end)
+						end
+					end
+					local function INLINED_3() -- Internal function, doesn't exist in bytecode
+						any_New_result1_3_upvr = any_New_result1_3_upvr(var130)
+						var130 = Hatching_upvr.Options.GOLDEN
+						any_New_result1_3_upvr = var130.IsEnabled
+						var130 = HatchingCmds_upvr
+						return any_New_result1_3_upvr
+					end
+					local function INLINED_4() -- Internal function, doesn't exist in bytecode
+						any_New_result1_3_upvr = any_New_result1_3_upvr(var130)
+						var130 = Hatching_upvr.Options.CHARGED
+						any_New_result1_3_upvr = var130.IsEnabled
+						var130 = HatchingCmds_upvr
+						return any_New_result1_3_upvr
+					end
+					if var136_upvw and (INLINED_3() or INLINED_4()) then
+						any_New_result1_3_upvr = ApplyModifier
+						var130 = arg1
+						any_New_result1_3_upvr(var130, HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN), HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.CHARGED))
+					end
+				end
+			end)
+		end
+	end
+	local EggCharge_upvr = Assets_upvr.Other.EggCharge
+	function SetModifier(arg1, arg2, arg3) -- Line 429
+		--[[ Upvalues[3]:
+			[1]: WorldFX_upvr (readonly)
+			[2]: EggCharge_upvr (readonly)
+			[3]: Functions_upvr (readonly)
+		]]
+		-- KONSTANTERROR: [0] 1. Error Block 1 start (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: [0] 1. Error Block 1 end (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: [32] 21. Error Block 27 start (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: [32] 21. Error Block 27 end (CF ANALYSIS FAILED)
+	end
+	function ApplyModifier(arg1, arg2, arg3) -- Line 489
+		--[[ Upvalues[1]:
+			[1]: var24_upvw (read and write)
+		]]
+		if var24_upvw and var24_upvw.Entry.Dir._id ~= arg1.Dir._id then
+			SetModifier(var24_upvw.Entry, false, false)
+			var24_upvw = nil
+		end
+		SetModifier(arg1, arg2, arg3)
+		local tbl_17 = {}
+		tbl_17.Entry = arg1
+		tbl_17.Charged = arg3
+		tbl_17.Golden = arg2
+		tbl_17.Clear = workspace:GetServerTimeNow() + 5
+		var24_upvw = tbl_17
+	end
+	function UpdateApperance(arg1, arg2) -- Line 504
+		-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+		local Part_3 = arg1.Part
+		local IsLocked_2 = arg1.IsLocked
+		if IsLocked_2 then
+			if arg2 == true then
+				IsLocked_2 = false
+			else
+				IsLocked_2 = true
+			end
+		end
+		local IsAvailable = arg1.IsAvailable
+		if not IsAvailable then
+			if arg2 ~= true then
+			else
+			end
+		end
+		local Stand_4 = arg1.Stand
+		assert(Stand_4)
+		if IsLocked_2 or not CachedProperty(Part_3, "TextureID") then
+		end
+		Part_3.TextureID = ""
+		if IsLocked_2 ~= false or not CachedProperty(Part_3, "Color") then
+		end
+		if IsLocked_2 and true then
+		end
+		Part_3.Color = Color3.fromRGB(255, 255, 255)
+		for i_4, v_4 in pairs(Part_3:GetChildren()) do
+			local var179
+			if v_4:IsA("MeshPart") then
+				var179 = "Material"
+				var179 = v_4
+				local function INLINED_5() -- Internal function, doesn't exist in bytecode
+					var179 = CachedProperty(v_4, "Color")
+					return var179
+				end
+				if IsLocked_2 ~= false or not INLINED_5() then
+					var179 = Color3.new(0, 0, 0)
+				end
+				if IsLocked_2 then
+					-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+					if true then
+						var179 = Color3.fromRGB(255, 255, 255)
+					end
+				end
+				v_4.Color = var179
+				if IsLocked_2 or not CachedProperty(v_4, "TextureID") then
+				end
+				v_4.TextureID = ""
+				if IsLocked_2 or not CachedProperty(v_4, var179) then
+				end
+				v_4.Material = Enum.Material.Plastic
+				if IsLocked_2 or not CachedProperty(var179, "Reflectance") then
+				end
+				v_4.Reflectance = 0
+			end
+		end
+		if Stand_4:FindFirstChild("Tier") then
+			local SurfaceGui_2 = Stand_4:FindFirstChild("Tier"):FindFirstChild("SurfaceGui")
+			SurfaceGui_2.Enabled = true
+			i_4 = "TierNum"
+			v_4 = arg1.Dir
+			i_4 = v_4.eggNumber
+			SurfaceGui_2:FindFirstChild(i_4).Text = tostring(i_4)
+		end
+	end
+	function UpdatePrice(arg1) -- Line 551
+		--[[ Upvalues[4]:
+			[1]: tbl_2_upvw (read and write)
+			[2]: CalcEggPricePlayer_upvr (readonly)
+			[3]: Functions_upvr (readonly)
+			[4]: CurrencyCmds_upvr (readonly)
+		]]
+		-- KONSTANTERROR: [0] 1. Error Block 40 start (CF ANALYSIS FAILED)
+		if tbl_2_upvw[arg1.Dir._id] then return end
+		local function _(arg1_4) -- Line 564
+			local var182
+			if arg1_4.Name ~= "Color" then
+				var182 = false
+			else
+				var182 = true
+			end
+			return var182
+		end
+		if arg1.IsAvailable and arg1.IsLocked then
+			-- KONSTANTWARNING: GOTO [80] #63
+		end
+		-- KONSTANTERROR: [0] 1. Error Block 40 end (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: [54] 41. Error Block 37 start (CF ANALYSIS FAILED)
+		-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+		if arg1.IsLocked then
+			-- KONSTANTWARNING: GOTO [80] #63
+		end
+		-- KONSTANTERROR: [54] 41. Error Block 37 end (CF ANALYSIS FAILED)
+	end
+	function CreateEgg(arg1, arg2) -- Line 601
+		--[[ Upvalues[7]:
+			[1]: EggsUtil_upvr (readonly)
+			[2]: Assets_upvr (readonly)
+			[3]: tbl_7_upvw (read and write)
+			[4]: tbl_6_upvw (read and write)
+			[5]: Functions_upvr (readonly)
+			[6]: EggCmds_upvr (readonly)
+			[7]: tbl_21_upvr (readonly)
+		]]
+		local tonumber_result1 = tonumber(arg1.Name:match("%d+"))
+		if not tonumber_result1 then
+		else
+			local any_GetByNumber_result1 = EggsUtil_upvr.GetByNumber(tonumber_result1)
+			if not any_GetByNumber_result1 then
+				local Display_Egg = arg1:FindFirstChild("Display Egg")
+				assert(Display_Egg)
+				if Display_Egg:GetAttribute("SetupLocked") then
+				else
+					Display_Egg:SetAttribute("SetupLocked", true)
+					Display_Egg.Anchored = true
+					Display_Egg.CanCollide = true
+					Display_Egg.CastShadow = true
+					DisableQuerying(Display_Egg)
+					local clone_4 = Assets_upvr.Models.Eggs.EggLock:Clone()
+					clone_4.CFrame = arg1:FindFirstChild("Center").CFrame * CFrame.Angles(0, math.pi, (math.pi/2)) + Vector3.new(0, 0.25, 0)
+					clone_4.CanCollide = false
+					clone_4.Parent = arg1
+					DisableQuerying(clone_4)
+				end
+			end
+			local name_2 = any_GetByNumber_result1.name
+			local var192
+			if arg2 then
+				var192 = tbl_7_upvw[name_2]
+			else
+				var192 = tbl_6_upvw[name_2]
+			end
+			if var192 then
+				warn(`Duplicate egg entry {arg1.Name}`)
+				return
+			end
+			if arg1:FindFirstChild("Display Egg") then
+				arg1:FindFirstChild("Display Egg"):Destroy()
+			end
+			if arg1:FindFirstChild("PriceHUD") then
+				for _, v_21 in arg1:FindFirstChild("PriceHUD"):GetChildren() do
+					if v_21:IsA("SurfaceGui") then
+						v_21:Destroy()
+					end
+				end
+			end
+			local Egg = any_GetByNumber_result1._script:FindFirstChild("Egg")
+			assert(Egg)
+			local clone_3 = Egg:Clone()
+			Functions_upvr.SetIgnoreCamera(clone_3, true)
+			local any_IsEggLocked_result1 = EggCmds_upvr.IsEggLocked(name_2)
+			local any_IsEggAvailable_result1_3 = EggCmds_upvr.IsEggAvailable(name_2)
+			clone_3.Anchored = true
+			clone_3.CanCollide = false
+			clone_3.CastShadow = true
+			clone_3.Name = "Egg"
+			DisableQuerying(clone_3)
+			clone_3.Parent = arg1
+			if any_IsEggLocked_result1 then
+				local clone_9 = Assets_upvr.Models.Eggs.EggLock:Clone()
+				clone_9.CFrame = arg1:FindFirstChild("Center").CFrame * CFrame.Angles(0, math.pi, (math.pi/2)) + Vector3.new(0, 0.25, 0)
+				clone_9.CanCollide = false
+				clone_9.Parent = arg1
+			end
+			if any_IsEggLocked_result1 and any_IsEggAvailable_result1_3 then
+				clone_9.Transparency = 0.5
+			end
+			local tbl_20 = {}
+			tbl_20.InstanceId = arg2
+			tbl_20.Dir = any_GetByNumber_result1
+			tbl_20.IsLocked = any_IsEggLocked_result1
+			tbl_20.IsAvailable = any_IsEggAvailable_result1_3
+			tbl_20.Part = clone_3
+			tbl_20.Lock = clone_9
+			tbl_20.Stand = arg1
+			if any_IsEggLocked_result1 then
+				if not any_IsEggAvailable_result1_3 then
+					tbl_20.HUD = Assets_upvr.UI.Eggs.PriceHUDLocked:Clone()
+					tbl_20.HUD.Parent = arg1:FindFirstChild("PriceHUD")
+				else
+					MakeAvailableEgg(tbl_20)
+				end
+			else
+				UnlockEgg(tbl_20)
+			end
+			UpdateApperance(tbl_20)
+			tbl_21_upvr[name_2] = tbl_20
+			if arg2 then
+				tbl_7_upvw[name_2] = tbl_20
+				return
+			end
+			tbl_6_upvw[name_2] = tbl_20
+		end
+	end
+	function UpdateEgg(arg1) -- Line 716
+		--[[ Upvalues[3]:
+			[1]: EggCmds_upvr (readonly)
+			[2]: RunService_upvr (readonly)
+			[3]: NotificationCmds_upvr (readonly)
+		]]
+		local name_4 = arg1.Dir.name
+		local any_IsEggAvailable_result1_2 = EggCmds_upvr.IsEggAvailable(name_4)
+		local var210 = false
+		if arg1 ~= nil then
+			if arg1.IsLocked == EggCmds_upvr.IsEggLocked(name_4) then
+				var210 = false
+			else
+				var210 = true
+			end
+		end
+		local var211 = false
+		if arg1 ~= nil then
+			var211 = false
+			if arg1.IsAvailable ~= any_IsEggAvailable_result1_2 then
+				var211 = any_IsEggAvailable_result1_2
+			end
+		end
+		-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+		arg1.IsLocked = EggCmds_upvr.IsEggLocked(name_4)
+		arg1.IsAvailable = any_IsEggAvailable_result1_2
+		if var211 then
+			if not RunService_upvr:IsStudio() then
+				task.delay(5, function() -- Line 729
+					--[[ Upvalues[1]:
+						[1]: NotificationCmds_upvr (copied, readonly)
+					]]
+					NotificationCmds_upvr.Message.Bottom({
+						Message = "You've unlocked an egg!";
+						Color = Color3.fromRGB(255, 255, 0);
+					})
+				end)
+			end
+			MakeAvailableEgg(arg1)
+		end
+		if not var210 then
+			UpdateApperance(arg1)
+		end
+	end
+	function UpdateAllEggs() -- Line 745
+		--[[ Upvalues[1]:
+			[1]: tbl_21_upvr (readonly)
+		]]
+		for _, v_5 in pairs(tbl_21_upvr) do
+			UpdateEgg(v_5)
+		end
+	end
+	function RenderInstance(arg1) -- Line 751
+		--[[ Upvalues[1]:
+			[1]: Eggs_upvr (readonly)
+		]]
+		if not SetupEggs(arg1) then
+		else
+			for _, v_22 in pairs(Eggs_upvr:FindFirstChild(arg1):GetChildren()) do
+				CreateEgg(v_22, arg1)
+			end
+		end
+	end
+	local WorldsUtil_upvr = require(game.ReplicatedStorage.Library.Util.WorldsUtil)
+	function RenderMain() -- Line 762
+		--[[ Upvalues[2]:
+			[1]: WorldsUtil_upvr (readonly)
+			[2]: Eggs_upvr (readonly)
+		]]
+		local any_GetEggsModelName_result1 = WorldsUtil_upvr.GetEggsModelName()
+		if not any_GetEggsModelName_result1 then
+		else
+			SetupEggs(any_GetEggsModelName_result1)
+			for _, v_23 in pairs(Eggs_upvr:FindFirstChild(any_GetEggsModelName_result1):GetChildren()) do
+				CreateEgg(v_23)
+			end
+		end
+	end
+	function CleanupInstance(arg1) -- Line 775
+		--[[ Upvalues[1]:
+			[1]: tbl_7_upvw (read and write)
+		]]
+		for i_6 in pairs(tbl_7_upvw) do
+			CleanupEgg(i_6)
+		end
+		tbl_7_upvw = {}
+		ClearEggFolder()
+	end
+	function CleanupMain() -- Line 783
+		--[[ Upvalues[1]:
+			[1]: tbl_6_upvw (read and write)
+		]]
+		for i_7 in pairs(tbl_6_upvw) do
+			CleanupEgg(i_7)
+		end
+		tbl_6_upvw = {}
+		ClearEggFolder()
+	end
+	function CleanupEgg(arg1) -- Line 791
+		--[[ Upvalues[3]:
+			[1]: tbl_21_upvr (readonly)
+			[2]: tbl_7_upvw (read and write)
+			[3]: tbl_6_upvw (read and write)
+		]]
+		local getEgg_result1 = getEgg(arg1)
+		if not getEgg_result1 then
+		else
+			getEgg_result1.Part:Destroy()
+			getEgg_result1.Stand:Destroy()
+			if getEgg_result1.HUD then
+				getEgg_result1.HUD:Destroy()
+			end
+			if getEgg_result1.Lock then
+				getEgg_result1.Lock:Destroy()
+			end
+			tbl_21_upvr[arg1] = nil
+			tbl_7_upvw[arg1] = nil
+			tbl_6_upvw[arg1] = nil
+		end
+	end
+	function getEgg(arg1) -- Line 813
+		--[[ Upvalues[1]:
+			[1]: tbl_21_upvr (readonly)
+		]]
+		return tbl_21_upvr[arg1]
+	end
+	local module_upvr = {}
+	function CachedProperty(arg1, arg2) -- Line 817
+		--[[ Upvalues[1]:
+			[1]: module_upvr (readonly)
+		]]
+		if not module_upvr[arg1] then
+			module_upvr[arg1] = {}
+		end
+		if not module_upvr[arg1][arg2] then
+			module_upvr[arg1][arg2] = arg1[arg2]
+		end
+		return module_upvr[arg1][arg2]
+	end
+	local GUIFX_upvr = require(game.ReplicatedStorage.Library.Client.GUIFX)
+	local Balancing_upvr = require(game.ReplicatedStorage.Library.Balancing)
+	function UpdateChance(arg1, arg2, arg3) -- Line 829
+		--[[ Upvalues[4]:
+			[1]: GUIFX_upvr (readonly)
+			[2]: Functions_upvr (readonly)
+			[3]: LocalPlayer_upvr (readonly)
+			[4]: Balancing_upvr (readonly)
+		]]
+		if arg2 < 0.1 then
+			arg3.Chance.Text = "??"
+			GUIFX_upvr.Rainbow(arg3.Chance, "TextColor3")
+		else
+			local any_ToHSV_result1, any_ToHSV_result2, any_ToHSV_result3 = Color3.fromRGB(49, 255, 39):Lerp(Color3.fromRGB(255, 75, 39), math.clamp(math.pow(0.9315, arg2) * 94.2467 / 100, 0, 1)):ToHSV()
+			arg3.Chance.TextColor3 = Color3.fromHSV(any_ToHSV_result1, any_ToHSV_result2, any_ToHSV_result3 * 2)
+			arg3.Chance.Text = `{Functions_upvr.FormatFigures(arg2, 3, 5)}%`
+		end
+		if LocalPlayer_upvr.Name == "CoderJoey" then
+			arg3.Chance.Text = `{Functions_upvr.FormatFigures(arg2, 3, 5)}% ({Balancing_upvr.CalcPetPower(arg1)})`
+		end
+	end
+	local tbl_22_upvw = {}
+	function UpdateBillboardPercents(arg1) -- Line 851
+		--[[ Upvalues[3]:
+			[1]: tbl_22_upvw (read and write)
+			[2]: EggCmds_upvr (readonly)
+			[3]: Directory_upvr (readonly)
+		]]
+		local EggInfo = arg1.Stand:FindFirstChild("EggInfo")
+		if not EggInfo then
+		else
+			for _, v_24 in ipairs(tbl_22_upvw) do
+				v_24()
+			end
+			tbl_22_upvw = {}
+			for i_28, v_25 in pairs(EggCmds_upvr.GetProbabilityMap(arg1.Dir._id)) do
+				local SOME_4 = EggInfo:FindFirstChild("Frame"):FindFirstChild("Pets"):FindFirstChild(i_28)
+				if SOME_4 then
+					UpdateChance(Directory_upvr.Pets[i_28], v_25 * 100, SOME_4)
+				end
+			end
+		end
+	end
+	function CreateModifier(arg1) -- Line 881
+		--[[ Upvalues[1]:
+			[1]: Assets_upvr (readonly)
+		]]
+		local any_Icon_result1 = arg1.Icon()
+		if not any_Icon_result1 then
+			return nil
+		end
+		local clone_7 = Assets_upvr.UI.Eggs.Modifier:Clone()
+		clone_7.Icon.Image = any_Icon_result1
+		if arg1.IsPotion then
+			clone_7:SetAttribute("Potion", any_Icon_result1)
+		end
+		return clone_7
+	end
+	local PlaceFile_upvr = require(game.ReplicatedStorage.Library.Modules.PlaceFile)
+	local Items_upvr = require(game.ReplicatedStorage.Library.Items)
+	local ItemUI_upvr = require(game.ReplicatedStorage.Library.Client.UI.ItemUI)
+	local RandomActiveDropCmds_upvr = require(game.ReplicatedStorage.Library.Client.RandomActiveDropCmds)
+	function ShowBillboard(arg1, arg2) -- Line 897
+		--[[ Upvalues[12]:
+			[1]: EggCmds_upvr (readonly)
+			[2]: Save_upvr (readonly)
+			[3]: EggsUtil_upvr (readonly)
+			[4]: FFlags_upvr (readonly)
+			[5]: PlaceFile_upvr (readonly)
+			[6]: Assets_upvr (readonly)
+			[7]: LuckModifiers_upvr (readonly)
+			[8]: Functions_upvr (readonly)
+			[9]: Items_upvr (readonly)
+			[10]: ItemUI_upvr (readonly)
+			[11]: Directory_upvr (readonly)
+			[12]: RandomActiveDropCmds_upvr (readonly)
+		]]
+		-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+		local Stand_2 = arg2.Stand
+		assert(Stand_2.PrimaryPart)
+		local Dir_2 = arg2.Dir
+		local any_IsEggLocked_result1_3_upvr = EggCmds_upvr.IsEggLocked(Dir_2.name)
+		local EggInfo_5 = Stand_2:FindFirstChild("EggInfo")
+		local var425
+		if EggInfo_5 then
+			var425 = "Locked"
+			if EggInfo_5:GetAttribute(var425) == any_IsEggLocked_result1_3_upvr then return end
+			EggInfo_5:Destroy()
+		end
+		local any_Get_result1_4_upvr = Save_upvr.Get()
+		local var427 = any_Get_result1_4_upvr
+		if var427 then
+			var427 = false
+			var425 = any_Get_result1_4_upvr.Rebirths
+			if 2 <= var425 then
+				var425 = Dir_2.eggNumber
+				if var425 ~= EggsUtil_upvr.GetMaximumEggNumber() then
+					var427 = false
+				else
+					var427 = true
+				end
+			end
+		end
+		var425 = FFlags_upvr.Get(FFlags_upvr.Keys.HugeHappyComputerEvent)
+		if var425 then
+			var425 = PlaceFile_upvr.IsWorld2
+		end
+		local pets_2 = Dir_2.pets
+		if var427 then
+			pets_2 = 1
+		else
+			pets_2 = 0
+		end
+		if var425 then
+		else
+		end
+		local clone_5_upvr = Assets_upvr.UI.Eggs.EggInfo:Clone()
+		clone_5_upvr.MaxDistance = 75
+		clone_5_upvr.Size = UDim2.new(4 * (#pets_2 + pets_2 + 0), 0, 6, 0)
+		clone_5_upvr.Frame.Title.Text = Dir_2.name
+		clone_5_upvr.Adornee = Stand_2:FindFirstChild("Center")
+		clone_5_upvr.Parent = Stand_2
+		clone_5_upvr:SetAttribute("Locked", any_IsEggLocked_result1_3_upvr)
+		if not any_IsEggLocked_result1_3_upvr then
+			for var434, v_6 in pairs(LuckModifiers_upvr) do
+				if v_6.Callback() then
+					local CreateModifier_result1_2 = CreateModifier(v_6)
+					if CreateModifier_result1_2 then
+						CreateModifier_result1_2.LayoutOrder = v_6.Order
+						CreateModifier_result1_2.Parent = clone_5_upvr.Frame.Modifiers
+					end
+				end
+			end
+		end
+		function var434(arg1_8) -- Line 949
+			local var435
+			if arg1_8.Name ~= "Pet" then
+				var435 = false
+			else
+				var435 = true
+			end
+			return var435
+		end
+		var434 = nil
+		for _, v_7 in Functions_upvr.Filter(clone_5_upvr.Frame.Pets:GetChildren(), var434), nil do
+			v_7:Destroy()
+		end
+		clone_5_upvr.Size = UDim2.new()
+		Functions_upvr.Tween(clone_5_upvr, {
+			Size = clone_5_upvr.Size;
+		}, {0.25, "Back", "Out"})
+		if not any_Get_result1_4_upvr or not any_Get_result1_4_upvr.ItemIndex then
+		end
+		local function INLINED_9() -- Internal function, doesn't exist in bytecode
+			-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+			return nil.Pets
+		end
+		if not nil or not INLINED_9() then
+		end
+		local any_GetProbabilityMap_result1 = EggCmds_upvr.GetProbabilityMap(Dir_2._id)
+		for i_10, _ in pairs(any_GetProbabilityMap_result1) do
+			table.insert({}, i_10)
+			local var443
+		end
+		table.sort(var443, function(arg1_9, arg2_4) -- Line 971
+			--[[ Upvalues[1]:
+				[1]: Items_upvr (copied, readonly)
+			]]
+			local var445
+			if Items_upvr.Pet(arg1_9):CompareTo(Items_upvr.Pet(arg2_4)) >= 0 then
+				var445 = false
+			else
+				var445 = true
+			end
+			return var445
+		end)
+		local tbl_10_upvr = {}
+		for i_11, v_9 in ipairs(var443) do
+			tbl_10_upvr[v_9] = #var443 + 10 - i_11
+			local _
+		end
+		local var451_upvw
+		local var452_upvw
+		for i_12, v_10 in pairs(any_GetProbabilityMap_result1) do
+			(function(arg1_10, arg2_5, arg3, arg4) -- Line 980, Named "addPet"
+				--[[ Upvalues[8]:
+					[1]: Items_upvr (copied, readonly)
+					[2]: Assets_upvr (copied, readonly)
+					[3]: ItemUI_upvr (copied, readonly)
+					[4]: any_IsEggLocked_result1_3_upvr (readonly)
+					[5]: var452_upvw (read and write)
+					[6]: tbl_10_upvr (readonly)
+					[7]: var451_upvw (read and write)
+					[8]: clone_5_upvr (readonly)
+				]]
+				-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+				-- KONSTANTERROR: [0] 1. Error Block 31 start (CF ANALYSIS FAILED)
+				local any_Freeze_result1_4 = Items_upvr.Pet(arg1_10):Freeze()
+				local clone = Assets_upvr.UI.Eggs.Pet:Clone()
+				local tbl = {
+					NoActionMenu = true;
+					NoOverlay = true;
+					HideQuantity = true;
+					HideStrength = true;
+				}
+				local any_Create_result1_2 = ItemUI_upvr.Create(any_Freeze_result1_4, tbl)
+				any_Create_result1_2.Parent = clone.Holder
+				clone.Name = arg1_10
+				tbl = any_IsEggLocked_result1_3_upvr
+				local var457
+				if var457 then
+					var457 = clone.Chance
+					var457.TextColor3 = Color3.new(255, 255, 255)
+					var457 = clone.Chance
+					var457.Text = "??"
+					var457 = Color3.new(0, 0, 0)
+					any_Create_result1_2:FindFirstChild("Icon").ImageColor3 = var457
+					-- KONSTANTWARNING: GOTO [115] #85
+				end
+				-- KONSTANTERROR: [0] 1. Error Block 31 end (CF ANALYSIS FAILED)
+				-- KONSTANTERROR: [72] 51. Error Block 32 start (CF ANALYSIS FAILED)
+				local function INLINED_10() -- Internal function, doesn't exist in bytecode
+					var457 = var452_upvw[any_Freeze_result1_4.Class.Name]
+					return var457
+				end
+				if not var452_upvw or not INLINED_10() then
+					var457 = nil
+				end
+				if not var457 or var457[any_Freeze_result1_4:StackKey()] == nil then
+				end
+				if not nil then
+					-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+					any_Create_result1_2:FindFirstChild("Icon").ImageColor3 = Color3.fromRGB(179, 179, 179)
+				else
+					-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+					any_Create_result1_2:FindFirstChild("Icon").ImageColor3 = Color3.fromRGB(255, 255, 255)
+				end
+				UpdateChance(arg3, arg2_5, clone)
+				var457 = arg4
+				if not var457 then
+					var457 = tbl_10_upvr[arg1_10]
+				end
+				clone.LayoutOrder = var457
+				if not var451_upvw or var451_upvw < clone.LayoutOrder then
+					var451_upvw = clone.LayoutOrder
+				end
+				clone.Parent = clone_5_upvr.Frame.Pets
+				-- KONSTANTERROR: [72] 51. Error Block 32 end (CF ANALYSIS FAILED)
+			end)(i_12, v_10 * 100, Directory_upvr.Pets[i_12])
+			local var461
+		end
+		if FFlags_upvr.Get(FFlags_upvr.Keys.HugeHappyComputerEvent) and PlaceFile_upvr.IsWorld2 then
+			local any_Get_result1_2 = FFlags_upvr.Get(FFlags_upvr.Keys.HugeHappyComputerChance)
+			local var463 = any_Get_result1_2
+			if var463 then
+				if typeof(any_Get_result1_2) ~= "number" then
+					var463 = false
+				else
+					var463 = true
+				end
+			end
+			assert(var463)
+			var461("Huge Happy Computer", any_Get_result1_2 * 100, Directory_upvr.Pets["Huge Happy Computer"], var451_upvw + 1)
+		end
+		if var427 then
+			for _, v_11 in ipairs(RandomActiveDropCmds_upvr.GetServerPool()) do
+				table.insert({}, Directory_upvr.Pets[v_11])
+				local var468_upvr
+			end
+			task.spawn(function() -- Line 1039
+				--[[ Upvalues[8]:
+					[1]: var468_upvr (readonly)
+					[2]: Items_upvr (copied, readonly)
+					[3]: Assets_upvr (copied, readonly)
+					[4]: ItemUI_upvr (copied, readonly)
+					[5]: clone_5_upvr (readonly)
+					[6]: var452_upvw (read and write)
+					[7]: any_Get_result1_4_upvr (readonly)
+					[8]: any_IsEggLocked_result1_3_upvr (readonly)
+				]]
+				-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+				local const_number = 1
+				local clone_11 = Assets_upvr.UI.Eggs.Pet:Clone()
+				local any_Create_result1_3 = ItemUI_upvr.Create(Items_upvr.Pet(var468_upvr[const_number]):Freeze(), {
+					NoActionMenu = true;
+					NoOverlay = true;
+					HideQuantity = true;
+					HideStrength = true;
+				})
+				any_Create_result1_3.Parent = clone_11.Holder
+				clone_11.Name = "Active Huge"
+				clone_11.LayoutOrder = 9998
+				clone_11.Parent = clone_5_upvr.Frame.Pets
+				while true do
+					local var474
+					if not clone_5_upvr.Parent then break end
+					local var475 = var468_upvr[const_number]
+					var474 = "Icon"
+					local SOME_2 = any_Create_result1_3:FindFirstChild(var474)
+					var474 = Items_upvr
+					var474 = var475._id
+					local any_Freeze_result1_2 = var474.Pet(var474):Freeze()
+					var474 = var475.thumbnail
+					SOME_2.Image = var474
+					if not any_Get_result1_4_upvr or not any_Get_result1_4_upvr.ItemIndex then
+					end
+					var452_upvw = nil
+					if any_IsEggLocked_result1_3_upvr then
+						clone_11.Chance.TextColor3 = Color3.new(255, 255, 255)
+						clone_11.Chance.Text = "??"
+						SOME_2.ImageColor3 = Color3.new(0, 0, 0)
+					else
+						if not var452_upvw or not var452_upvw[any_Freeze_result1_2.Class.Name] then
+						end
+						local function INLINED_11() -- Internal function, doesn't exist in bytecode
+							-- KONSTANTERROR: Expression was reused, decompilation is incorrect
+							return nil[any_Freeze_result1_2:StackKey()] == nil
+						end
+						if not nil or INLINED_11() then
+						end
+						if not nil then
+							SOME_2.ImageColor3 = Color3.fromRGB(179, 179, 179)
+						else
+							SOME_2.ImageColor3 = Color3.fromRGB(255, 255, 255)
+						end
+						if not false then
+							UpdateChance(var475, 0, clone_11)
+						end
+					end
+					if #var468_upvr < const_number + 1 then
+					else
+					end
+					task.wait(1.5)
+				end
+			end)
+		end
+	end
+	function HideBillboard(arg1) -- Line 1105
+		--[[ Upvalues[1]:
+			[1]: Functions_upvr (readonly)
+		]]
+		local EggInfo_7_upvr = arg1.Stand:FindFirstChild("EggInfo")
+		if not EggInfo_7_upvr then
+		else
+			EggInfo_7_upvr:SetAttribute("TweeningOut", true)
+			Functions_upvr.Tween(EggInfo_7_upvr, {
+				Size = UDim2.new();
+			}, {0.25, "Back", "In"}).Completed:Connect(function() -- Line 1118
+				--[[ Upvalues[1]:
+					[1]: EggInfo_7_upvr (readonly)
+				]]
+				EggInfo_7_upvr:Destroy()
+			end)
+		end
+	end
+	function UpdateBillboard(arg1) -- Line 1124
+		if not arg1.Stand:FindFirstChild("EggInfo") then
+		else
+			UpdateBillboardPercents(arg1)
+		end
+	end
+	Signal.Fired("Hatching"):Connect(function(arg1) -- Line 1140
+		--[[ Upvalues[3]:
+			[1]: tbl_21_upvr (readonly)
+			[2]: HatchingCmds_upvr (readonly)
+			[3]: Hatching_upvr (readonly)
+		]]
+		local var483 = tbl_21_upvr[arg1]
+		if var483 and (HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN) or HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.CHARGED)) then
+			ApplyModifier(var483, HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.GOLDEN), HatchingCmds_upvr.IsEnabled(Hatching_upvr.Options.CHARGED))
+		end
+	end)
+	local var485_upvw = 0
+	RunService_upvr.Heartbeat:Connect(function(arg1) -- Line 1150
+		--[[ Upvalues[2]:
+			[1]: var485_upvw (read and write)
+			[2]: var24_upvw (read and write)
+		]]
+		var485_upvw += arg1
+		if 1 <= var485_upvw and var24_upvw and var24_upvw.Clear < workspace:GetServerTimeNow() then
+			ApplyModifier(var24_upvw.Entry, false, false)
+		end
+	end)
+	InstancingCmds.AddEnterListener(function(arg1) -- Line 1159
+		task.spawn(function() -- Line 1160
+			CleanupMain()
+		end)
+	end)
+	InstancingCmds.AddLeaveListener(function(arg1) -- Line 1164
+		task.spawn(function() -- Line 1166
+			RenderMain()
+		end)
+	end)
+	Save_upvr.GetStatChangedSignal("UnlockedEggs"):Connect(UpdateAllEggs)
+	Save_upvr.GetStatChangedSignal("MaximumAvailableEgg"):Connect(function() -- Line 1170
+		--[[ Upvalues[1]:
+			[1]: tbl_21_upvr (readonly)
+		]]
+		UpdateAllEggs()
+		for _, v_12 in pairs(tbl_21_upvr) do
+			HideBillboard(v_12)
+		end
+	end)
+	Signal.Fired("Update Egg Chances"):Connect(function() -- Line 1177
+		--[[ Upvalues[2]:
+			[1]: tbl_21_upvr (readonly)
+			[2]: var27_upvw (read and write)
+		]]
+		for _, v_13 in pairs(tbl_21_upvr) do
+			if var27_upvw == var27_upvw then
+				UpdateBillboard(v_13)
+			end
+		end
+	end)
+	while not Save_upvr.Get() do
+		task.wait()
+	end
+	task.wait(0.5)
+	RenderMain()
+	task.spawn(function() -- Line 1193
+		--[[ Upvalues[2]:
+			[1]: FFlags_upvr (readonly)
+			[2]: tbl_21_upvr (readonly)
+		]]
+		while task.wait(0.5) do
+			if not FFlags_upvr.Get(FFlags_upvr.Keys.DisableWorldFrontend) then
+				for _, v_14 in pairs(tbl_21_upvr) do
+					UpdatePrice(v_14)
+				end
+			end
+		end
+	end)
+	RunService_upvr.RenderStepped:Connect(function(arg1) -- Line 1206
+		--[[ Upvalues[4]:
+			[1]: FFlags_upvr (readonly)
+			[2]: Eggs_upvr (readonly)
+			[3]: Player_upvr (readonly)
+			[4]: zero_vector3_upvw (read and write)
+		]]
+		if FFlags_upvr.Get(FFlags_upvr.Keys.DisableWorldFrontend) then
+		else
+			local Highlight = Eggs_upvr:FindFirstChild("Highlight")
+			if not Highlight then return end
+			local any_PrimaryPart_result1_6 = Player_upvr.Optional.PrimaryPart()
+			if not any_PrimaryPart_result1_6 then return end
+			local Magnitude_4 = (any_PrimaryPart_result1_6.Position - zero_vector3_upvw).Magnitude
+			if Magnitude_4 < 100 then
+				Highlight.OutlineTransparency = 0.65
+				return
+			end
+			Highlight.OutlineTransparency = math.min(Magnitude_4 - 100, 50) / 50 * 0.35 + 0.65
+		end
+	end)
+	task.spawn(function() -- Line 1240
+		--[[ Upvalues[7]:
+			[1]: FFlags_upvr (readonly)
+			[2]: Player_upvr (readonly)
+			[3]: tbl_21_upvr (readonly)
+			[4]: var27_upvw (read and write)
+			[5]: HatchingCmds_upvr (readonly)
+			[6]: Hatching_upvr (readonly)
+			[7]: NotificationCmds_upvr (readonly)
+		]]
+		-- KONSTANTWARNING: Variable analysis failed. Output will have some incorrect variable assignments
+		while task.wait(0.1) do
+			if not FFlags_upvr.Get(FFlags_upvr.Keys.DisableWorldFrontend) then
+				local any_PrimaryPart_result1_3 = Player_upvr.PrimaryPart()
+				local var541
+				if any_PrimaryPart_result1_3 then
+					var541 = nil
+					for i_17, v_15 in pairs(tbl_21_upvr) do
+						local Stand_7 = v_15.Stand
+						local PrimaryPart_2 = Stand_7.PrimaryPart
+						local var547
+						local function INLINED_15() -- Internal function, doesn't exist in bytecode
+							var547 = (any_PrimaryPart_result1_3.Position - PrimaryPart_2.Position).Magnitude
+							return var541
+						end
+						if PrimaryPart_2 and (not INLINED_15() or var547 < var541) then
+							var541 = var547
+							local var548 = v_15
+							var27_upvw = Stand_7
+						end
+					end
+					if var541 then
+						i_17 = Hatching_upvr
+						local function INLINED_16() -- Internal function, doesn't exist in bytecode
+							assert(any_GetEggDirectory_result1)
+							local any_GetEggDirectory_result1 = HatchingCmds_upvr.GetEggDirectory()
+							return var548.Dir
+						end
+						local function INLINED_17() -- Internal function, doesn't exist in bytecode
+							i_17 = var548.Dir
+							return any_GetEggDirectory_result1._id ~= i_17._id
+						end
+						if HatchingCmds_upvr.IsEnabled(i_17.Options.AUTO) and HatchingCmds_upvr.IsHatching() and not HatchingCmds_upvr.IsCustomMode() and (not INLINED_16() or INLINED_17() or 20 < var541) then
+							i_17 = NotificationCmds_upvr
+							local tbl_19 = {}
+							i_17 = "Auto Hatch has stopped!"
+							tbl_19.Message = i_17
+							i_17 = Color3.fromRGB
+							v_15 = 255
+							i_17 = i_17(v_15, 0, 0)
+							tbl_19.Color = i_17
+							i_17.Message.Bottom(tbl_19)
+							HatchingCmds_upvr.StopHatching()
+						end
+						if 100 < var541 then
+							task.wait(1)
+						end
+					end
+				end
+			end
+		end
+	end)
+	function _insert(arg1, arg2, arg3) -- Line 1295
+		if #arg1 < arg3 then
+			table.insert(arg1, arg2)
+		else
+			arg1[arg3] = arg2
+		end
+	end
+	function _trim(arg1, arg2) -- Line 1303
+		for i_18 = #arg1, arg2 + 1, -1 do
+			table.remove(arg1, i_18)
+		end
+	end
+	local var553_upvw = 0
+	local var554_upvw = 0
+	local var555_upvw = 0
+	local tbl_5_upvr = {}
+	local tbl_11_upvr = {}
+	RunService_upvr.RenderStepped:Connect(function(arg1) -- Line 1316
+		--[[ Upvalues[10]:
+			[1]: var553_upvw (read and write)
+			[2]: var554_upvw (read and write)
+			[3]: FFlags_upvr (readonly)
+			[4]: Player_upvr (readonly)
+			[5]: zero_vector3_upvw (read and write)
+			[6]: Functions_upvr (readonly)
+			[7]: var555_upvw (read and write)
+			[8]: tbl_5_upvr (readonly)
+			[9]: tbl_11_upvr (readonly)
+			[10]: tbl_21_upvr (readonly)
+		]]
+		var553_upvw += arg1
+		var554_upvw += 1
+		if var553_upvw < 0.03333333333333333 or var554_upvw < 2 then
+		else
+			if FFlags_upvr.Get(FFlags_upvr.Keys.DisableWorldFrontend) then return end
+			var553_upvw = 0
+			var554_upvw = 0
+			local any_PrimaryPart_result1_2 = Player_upvr.PrimaryPart()
+			if not any_PrimaryPart_result1_2 then return end
+			local Magnitude_3 = (any_PrimaryPart_result1_2.Position - zero_vector3_upvw).Magnitude
+			if 250 < Magnitude_3 then return end
+			local var601
+			if Magnitude_3 < 210 then
+				var601 = 1
+			else
+				var601 = 1 - Functions_upvr.RangeMap(Magnitude_3, 210, 250, 0, 1)
+			end
+			var555_upvw += var553_upvw * var601
+			local var602 = tbl_5_upvr
+			local var603 = tbl_11_upvr
+			for i_29, v_26 in pairs(tbl_21_upvr) do
+				local Part_2 = v_26.Part
+				if Part_2 then
+					local Center = Part_2:FindFirstChild("Center")
+					if Center then
+						local Center_3 = v_26.Stand:FindFirstChild("Center")
+						if Center_3 then
+							local var610 = (Center_3.CFrame - Center.Position) * (CFrame.new(math.sin(tick()) * 0.6 * var601, 0, 0) * CFrame.Angles((math.pi/2) + var555_upvw * 0.33, 0, (-math.pi/2)))
+							local var611 = 0 + 1
+							_insert(var602, Part_2, var611)
+							_insert(var603, var610, var611)
+							for _, v_27 in pairs(Part_2:GetChildren()) do
+								if v_27:IsA("MeshPart") then
+									local var615 = var611 + 1
+									_insert(var602, v_27, var615)
+									_insert(var603, var610 + v_27:GetAttribute("Offset"), var615)
+								end
+							end
+						end
+					end
+				end
+			end
+			_trim(var602, var615)
+			_trim(var603, var615)
+			if 0 < var615 then
+				i_29 = var603
+				v_26 = Enum.BulkMoveMode.FireCFrameChanged
+				workspace:BulkMoveTo(var602, i_29, v_26)
+			end
+		end
+	end)
+	local var617_upvw = 0
+	local var618_upvw = 0
+	local Variables_upvr = require(game.ReplicatedStorage.Library.Variables)
+	RunService_upvr.RenderStepped:Connect(function(arg1) -- Line 1405
+		--[[ Upvalues[8]:
+			[1]: var617_upvw (read and write)
+			[2]: var618_upvw (read and write)
+			[3]: FFlags_upvr (readonly)
+			[4]: Player_upvr (readonly)
+			[5]: Variables_upvr (readonly)
+			[6]: TabController_upvr (readonly)
+			[7]: tbl_21_upvr (readonly)
+			[8]: var27_upvw (read and write)
+		]]
+		var617_upvw += 1
+		var618_upvw += arg1
+		local var624
+		local function INLINED_18() -- Internal function, doesn't exist in bytecode
+			var624 = 0.25
+			return var618_upvw < var624
+		end
+		if var617_upvw < var624 or INLINED_18() then
+		else
+			var617_upvw = 0
+			var618_upvw = 0
+			var624 = FFlags_upvr
+			var624 = FFlags_upvr.Keys.DisableWorldFrontend
+			if var624.Get(var624) then return end
+			var624 = Player_upvr.Optional
+			local any_PrimaryPart_result1 = var624.PrimaryPart()
+			if not any_PrimaryPart_result1 then return end
+			var624 = false
+			if Variables_upvr.Locks.HideUI:IsLocked() then
+				var624 = true
+			end
+			if TabController_upvr.Get() ~= nil then
+				var624 = true
+			end
+			for _, v_28 in pairs(tbl_21_upvr) do
+				local Stand_6 = v_28.Stand
+				local PrimaryPart_5 = Stand_6.PrimaryPart
+				if PrimaryPart_5 then
+					local Magnitude = (any_PrimaryPart_result1.Position - PrimaryPart_5.Position).Magnitude
+					local EggInfo_4 = Stand_6:FindFirstChild("EggInfo")
+					if EggInfo_4 and Variables_upvr.Locks.HideUI:IsLocked() then
+						HideBillboard(v_28)
+					elseif not EggInfo_4 and Magnitude < 20 and var27_upvw == Stand_6 and not var624 then
+						ShowBillboard(any_PrimaryPart_result1, v_28)
+					elseif EggInfo_4 and (25 < Magnitude or var624 or var27_upvw ~= Stand_6) then
+						if not EggInfo_4:GetAttribute("TweeningOut") then
+							HideBillboard(v_28)
+						end
+					end
+				end
+			end
+		end
+	end)
+	Network_upvr.Fired("Rebirth_Success"):Connect(function(arg1, arg2) -- Line 1460
+		--[[ Upvalues[1]:
+			[1]: LocalPlayer_upvr (readonly)
+		]]
+		if arg1 == LocalPlayer_upvr then
+			task.delay(1, function() -- Line 1462
+				CleanupMain()
+				RenderMain()
+			end)
+		end
+	end)
+	Network_upvr.Fired("Potions: Update"):Connect(function(arg1) -- Line 1469
+		--[[ Upvalues[2]:
+			[1]: tbl_21_upvr (readonly)
+			[2]: LuckModifiers_upvr (readonly)
+		]]
+		task.defer(function() -- Line 1470
+			--[[ Upvalues[2]:
+				[1]: tbl_21_upvr (copied, readonly)
+				[2]: LuckModifiers_upvr (copied, readonly)
+			]]
+			for _, v_16 in pairs(tbl_21_upvr) do
+				local EggInfo_2 = v_16.Stand:FindFirstChild("EggInfo")
+				if EggInfo_2 then
+					local Modifiers = EggInfo_2:FindFirstChild("Frame"):FindFirstChild("Modifiers")
+					for _, v_17 in pairs(Modifiers:GetChildren()) do
+						if v_17:GetAttribute("Potion") then
+							local LuckPotion = LuckModifiers_upvr.LuckPotion
+							if v_17:GetAttribute("Potion") ~= LuckPotion.Icon() then
+								v_17:Destroy()
+								local CreateModifier_result1 = CreateModifier(LuckPotion)
+								if CreateModifier_result1 then
+									CreateModifier_result1.LayoutOrder = LuckPotion.Order
+									CreateModifier_result1.Parent = Modifiers
+								end
+							end
+						end
+					end
+				end
+			end
+		end)
+	end)
+	require(game.ReplicatedStorage.Library.Client.MasteryCmds).LevelUp:Connect(function(arg1, arg2) -- Line 1498
+		--[[ Upvalues[3]:
+			[1]: tbl_21_upvr (readonly)
+			[2]: CurrencyUtil_upvr (readonly)
+			[3]: CalcEggPricePlayer_upvr (readonly)
+		]]
+		for _, v_18 in pairs(tbl_21_upvr) do
+			if v_18.Stand:GetAttribute("Unlocked") and v_18.HUD then
+				local currency_2 = v_18.Dir.currency
+				if currency_2 then
+					CurrencyUtil_upvr.SetupPriceFrame(v_18.HUD, currency_2, CalcEggPricePlayer_upvr(v_18.Dir), 2)
+				end
+			end
+		end
+	end)
+end
